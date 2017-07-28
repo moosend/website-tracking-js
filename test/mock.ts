@@ -1,0 +1,63 @@
+/// <reference path="../src/local.d.ts" />
+
+import tape = require("tape");
+
+interface IMockAPI {
+  createStorage(t: tape.Test, props?: any): ITrackerStorage;
+  createAgent(t: tape.Test, overrides?: any): ITrackerAgent;
+  createBrowser(t: tape.Test, overrides?: any): IBrowser;
+}
+
+export default {
+  createStorage(t: tape.Test, overrides: any = {}): ITrackerStorage {
+    const mock: ITrackerStorage = [
+      "getSessionNumber",
+      "setSessionNumber",
+
+      "getUserId",
+      "setUserId",
+
+      "getEmail",
+      "setEmail",
+
+      "getCampaignId",
+      "setCampaignId",
+
+      "getSessionId",
+      "setSessionId",
+
+      "getCurrentPageUrl",
+    ].reduce((acc: any, next: string) => {
+        const override = overrides[next];
+        acc[next] = override instanceof Function ? override : _noop;
+        return acc;
+      }, {});
+
+    return mock;
+  },
+
+  createAgent(t: tape.Test, overrides: any = {}): ITrackerAgent {
+    return {
+      sendIdentify: (overrides.sendIdentify instanceof Function && overrides.sendIdentify) || _noop,
+      sendTrack:    (overrides.sendTrack instanceof Function && overrides.sendTrack) || _noop,
+    };
+  },
+
+  createBrowser(t: tape.Test, overrides: any = {}): IBrowser {
+    const mock: IBrowser = [
+      "fingerPrint",
+    ].reduce((acc: any, next: string) => {
+      const override = overrides[next];
+      acc[next] = override instanceof Function ? override : _noop;
+      return acc;
+    }, {});
+
+    return mock;
+  },
+};
+
+/**
+ * HELPERS
+ */
+// tslint:disable-next-line:no-empty
+function _noop(p: any): void {}

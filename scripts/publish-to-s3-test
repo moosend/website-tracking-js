@@ -1,0 +1,4 @@
+#!/bin/sh
+./scripts/test
+NODE_ENV=stage webpack --config ./webpack.config.min.js
+aws s3 cp ./dist/bundle.min.js s3://tracker-lib/track.js --profile moo-eb-cli

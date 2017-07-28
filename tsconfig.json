@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "outDir": "lib",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "target": "es3",
+    "module": "commonjs",
+    "declaration": true,
+    "pretty": true,
+    "declarationDir": "lib",
+    "types": [
+      "tape",
+      "node",
+      "uuid",
+      "sinon",
+      "es6-shim"
+    ]
+  },
+  "files": [
+    "src/main.ts"
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "test/**/*"
+  ]
+}
