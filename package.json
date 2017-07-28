@@ -26,6 +26,7 @@
     "body-parser": "^1.17.2",
     "debug": "^2.6.8",
     "express": "^4.15.3",
+    "jest": "^20.0.4",
     "jsdom": "^11.1.0",
     "jsdom-global": "^3.0.2",
     "node-libs-browser": "^2.0.0",
