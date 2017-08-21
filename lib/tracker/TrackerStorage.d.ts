@@ -3,7 +3,7 @@ export default class TrackerStorage implements ITrackerStorage {
     private storage;
     constructor(storage: IStorage);
     getUserId(): string;
-    setUserId(userId: string): void;
+    setUserId(userId: string, options?: any): void;
     getCampaignId(): string;
     setCampaignId(campaignId: string): void;
     getEmail(): string;

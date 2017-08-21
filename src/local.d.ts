@@ -115,7 +115,7 @@ interface IBrowser {
 interface ITrackerStorage {
 
     getUserId(): string;
-    setUserId(value: string): void;
+    setUserId(value: string, options?: any): void;
 
     getCampaignId(): string;
     setCampaignId(value: string): void;

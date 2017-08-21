@@ -20,8 +20,8 @@ export default class TrackerStorage implements ITrackerStorage {
         return this.storage.getItem(TrackerStorage.Keys.USER_ID);
     }
 
-    public setUserId(userId: string): void {
-        this.storage.setItem(TrackerStorage.Keys.USER_ID, userId);
+    public setUserId(userId: string, options?: any): void {
+        this.storage.setItem(TrackerStorage.Keys.USER_ID, userId, options);
     }
 
     public getCampaignId(): string {

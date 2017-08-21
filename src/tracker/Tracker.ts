@@ -277,7 +277,7 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
             let generatedUserId = uuidV4();
             generatedUserId = generatedUserId.replace(/-/g, "");
 
-            this.storage.setUserId(generatedUserId);
+            this.storage.setUserId(generatedUserId, { expires: 3650 });
         }
         if (!sessionId) {
             let generatedSessionId = uuidV4();
