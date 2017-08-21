@@ -109,7 +109,7 @@ test("Tracker Identify API", (t: test.Test) => {
     const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
     const ContactEmailAddress = "john.doe@mail.com";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
@@ -123,7 +123,7 @@ test("Tracker Identify API", (t: test.Test) => {
                 ContactEmailAddress: "john.doe@mail.com",
                 ContactId: "f245124e-8f61-4277-a089-8d233bc99492",
                 actionType: "IDENTIFY",
-                sessionId: "f245124e-8f61-4277-a089-8d233bc99494",
+                sessionId: "f245124e8f614277a0898d233bc99494",
                 siteId: "f245124e-8f61-4277-a089-8d233bc99491",
             };
 
@@ -264,9 +264,9 @@ test("Tracker Track API", (t: test.Test) => {
 test("Tracker Track Product View", (t: test.Test) => {
 
     const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
-    const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
-    const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const ContactId = "f245124e8f614277a089-8d233bc99492";
+    const CampaignId = "f245124e-8f614277a089-8d233bc99493";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
     const url = "https://someurl.com";
 
     let tAgent: ITrackerAgent;
@@ -357,7 +357,7 @@ test("Tracker Track Product View with Default Values", (t: test.Test) => {
     const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
     const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
     const url = "https://someurl.com";
 
     let tAgent: ITrackerAgent;
@@ -448,7 +448,7 @@ test("Tracker trackPageView API", (t: test.Test) => {
     const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
     const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
     const url = "https://someurl.com";
 
     let tAgent: ITrackerAgent;
@@ -499,7 +499,7 @@ test("Tracker trackAddToOrder API", (t: test.Test) => {
     const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
     const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
 
     const itemCode = "Product-101";
     const itemPrice = 12.02;
@@ -570,7 +570,7 @@ test("Tracker trackAddToOrder API with 2 parameters (product and extraProps only
     const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
     const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
 
     const productInfo: IProduct = {
         extraProps: { color: "Red", size: "XXL" },
@@ -651,7 +651,7 @@ test("trackAddToOrder test default values with 2 parameters (product and extraPr
     const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
     const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
@@ -698,7 +698,7 @@ test("trackAddToOrder test default values", (t: test.Test) => {
     const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
     const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
@@ -780,7 +780,7 @@ test("Tracker trackOrderCompleted API", (t: test.Test) => {
     const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
     const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
     const product: IProduct = {
         color: "Red",
         itemCode: "Product-101",
@@ -888,7 +888,7 @@ test("Tracker trackOrderCompleted test default values", (t: test.Test) => {
     const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
     const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
-    const sessionId = "f245124e-8f61-4277-a089-8d233bc99494";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;

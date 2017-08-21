@@ -274,12 +274,14 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         this.browser.fingerPrint((browserFingerprint: IBrowserComponents) => this.ping(browserFingerprint));
 
         if (!userId) {
-            const generatedUserId = uuidV4();
+            let generatedUserId = uuidV4();
+            generatedUserId = generatedUserId.replace(/-/g, "");
 
             this.storage.setUserId(generatedUserId);
         }
         if (!sessionId) {
-            const generatedSessionId = uuidV4();
+            let generatedSessionId = uuidV4();
+            generatedSessionId = generatedSessionId.replace(/-/g, "");
 
             this.storage.setSessionId(generatedSessionId, { expires: 1 });
             return;
@@ -288,7 +290,7 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
 
     public getPayload(action: ActionType, props?: any): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload {
         if (!TrackerActions[action]) {
-            throw new Error(`ActionType ${action} is invalid.`);
+            throw new Error(`ActionType ${action} is invalid. Supported ActionTypes are PING, IDENTIFY, PAGE_VIEWED, ADDED_TO_ORDER, ORDER_COMPLETED`);
         }
 
         const payload: ITrackPayload = {
