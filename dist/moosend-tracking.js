@@ -390,9 +390,9 @@ exports["default"] = CookieStorage;
 "use strict";
 
 exports.__esModule = true;
-var apiUrl = "//t.stat-track.com";
+var apiUrl = "https://t.stat-track.com";
 if (true) {
-    apiUrl = "//t.stat-track-staging.com";
+    apiUrl = "https://t.stat-track-staging.com";
 }
 exports["default"] = {
     apiUrl: apiUrl
@@ -3562,10 +3562,8 @@ var Tracker = (function () {
         if (!isArray(products)) {
             throw new Error("products type should be an array");
         }
-        products.forEach(function (product) {
-            product = _this.formatProductPayload(product);
-        });
-        var payload = this.getPayload(exports.TrackerActions.ORDER_COMPLETED, { products: products, totalPrice: totalPrice });
+        products.map(function (product) { return product = _this.formatProductPayload(product); });
+        var payload = this.getPayload(exports.TrackerActions.ORDER_COMPLETED, [{ products: products, totalPrice: totalPrice }]);
         this.agent.sendTrack(payload);
     };
     Tracker.prototype.init = function (siteId) {
