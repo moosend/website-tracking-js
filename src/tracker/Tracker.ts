@@ -256,7 +256,7 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         this.agent.sendTrack(payload);
     }
 
-    public init(siteId: string) {
+    public init(siteId: string): void {
 
         if (!siteId) {
             throw new Error("siteId cannot be undefined or empty");
@@ -361,7 +361,7 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         return product;
     }
 
-    private _isInitialized() {
+    private _isInitialized(): boolean {
 
         if (!this.siteId) {
             console.warn("moo: You need initialize Tracker before it can be used");
