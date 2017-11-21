@@ -20,6 +20,8 @@ interface IdentifyAPI {
 }
 
 interface TrackingAPI {
+    setCookieNames(cookieNames: ICookieNames): void;
+    init(siteId: string): void;
     /**
      *  Send action track info
      *  @description Makes a POST to http://requestb.in/15t3ics1
@@ -113,6 +115,7 @@ interface IBrowser {
  * Tracker specific storage API
  */
 interface ITrackerStorage {
+    setCookieNames(cookieNames: ICookieProperties): void;
 
     getUserId(): string;
     setUserId(value: string, options?: any): void;
@@ -136,6 +139,19 @@ interface IStorage {
     getItem(key: string): string;
     setItem(key: string, value: string, options?: any): void;
     removeItem(key: string): void;
+}
+
+interface ICookieProperties {
+    userIdName: string;
+    sessionIdName: string;
+    emailName: string;
+}
+
+interface ICookieNames extends ICookieProperties {
+    getUserIdName(): string;
+    setUserIdName(userIdName: string): void;
+    getSessionIdName(): string;
+    setSessionIdName(sessionIdName: string): void;
 }
 
 interface Window { XDomainRequest: any; XMLHttpRequest: any;

@@ -1,7 +1,10 @@
-export default class TrackerStorage implements ITrackerStorage {
+import CookieNames from "../cookies/CookieNames";
+export default class TrackerStorage extends CookieNames implements ITrackerStorage {
     private static Keys;
     private storage;
+    private cookieNames;
     constructor(storage: IStorage);
+    setCookieNames(cookieNames: ICookieNames): void;
     getUserId(): string;
     setUserId(userId: string, options?: any): void;
     getCampaignId(): string;

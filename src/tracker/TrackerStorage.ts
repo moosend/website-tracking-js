@@ -1,27 +1,50 @@
+import Utils from "../common/utils";
+import CookieNames from "../cookies/CookieNames";
 import Tracker from "./Tracker";
 
-// TODO: save data in single cookie via JSON.stringify rather separate cookies for each key
-export default class TrackerStorage implements ITrackerStorage {
+enum CookieKeys {
+    CAMPAIGN_ID = "cmid",
+}
 
-    private static Keys = {
-        CAMPAIGN_ID: "cmid",
-        EMAIL: "email",
-        SESSION_NUMBER: "sessionid",
-        USER_ID: "uid",
-    };
+export default class TrackerStorage extends CookieNames
+    implements ITrackerStorage {
+    private static Keys = CookieKeys;
 
     private storage: IStorage;
+    private cookieNames: CookieNames;
 
     constructor(storage: IStorage) {
+        super();
         this.storage = storage;
     }
 
+    public setCookieNames(cookieNames: ICookieNames): void {
+        for (const property in cookieNames) {
+            if (property) {
+                if (property === "userIdName") {
+                    const propertyValue = this.storage.getItem(
+                        cookieNames[property],
+                    );
+                    if (!propertyValue || !Utils.isValidUUID(propertyValue)) {
+                        throw new Error(
+                            `Property ${property} is empty or has invalid UUID.`,
+                        );
+                    }
+                    this.setUserIdName(cookieNames[property]);
+                }
+                if (property === "emailName") {
+                    this.setEmailName(cookieNames[property]);
+                }
+            }
+        }
+    }
+
     public getUserId(): string {
-        return this.storage.getItem(TrackerStorage.Keys.USER_ID);
+        return this.storage.getItem(this.userIdName);
     }
 
     public setUserId(userId: string, options?: any): void {
-        this.storage.setItem(TrackerStorage.Keys.USER_ID, userId, options);
+        this.storage.setItem(this.userIdName, userId, options);
     }
 
     public getCampaignId(): string {
@@ -33,19 +56,19 @@ export default class TrackerStorage implements ITrackerStorage {
     }
 
     public getEmail(): string {
-        return this.storage.getItem(TrackerStorage.Keys.EMAIL);
+        return this.storage.getItem(this.emailName);
     }
 
     public setEmail(email: string): void {
-        this.storage.setItem(TrackerStorage.Keys.EMAIL, email);
+        this.storage.setItem(this.emailName, email);
     }
 
     public getSessionId(): string {
-        return this.storage.getItem(TrackerStorage.Keys.SESSION_NUMBER);
+        return this.storage.getItem(this.sessionIdName);
     }
 
     public setSessionId(sessionId: string, options?: any): void {
-        this.storage.setItem(TrackerStorage.Keys.SESSION_NUMBER, sessionId, options);
+        this.storage.setItem(this.sessionIdName, sessionId, options);
     }
 
     public getCurrentPageUrl(): string {
