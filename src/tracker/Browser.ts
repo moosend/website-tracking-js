@@ -1,6 +1,6 @@
 const FingerPrint = require("fingerprintjs2");
 
-export class Browser implements IBrowser {
+export default class Browser implements IBrowser {
 
     public fingerPrint(done: (browserComponents: IBrowserComponents) => void) {
 

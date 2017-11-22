@@ -4,29 +4,34 @@ const isPlainObject = require("lodash/isPlainObject");
 const assign = require("lodash/assign");
 const isArray = require("lodash/isArray");
 
-export const TrackerActions = {
-    ADDED_TO_ORDER: "ADDED_TO_ORDER", // || Basically Add to Cart
-    IDENTIFY: "IDENTIFY",
-    ORDER_COMPLETED: "ORDER_COMPLETED",
-    PAGE_VIEWED: "PAGE_VIEWED",
-    PING: "PING",
-};
+import CookieNames from "../cookies/CookieNames";
 
-export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, PayloadAPI {
+export enum TrackerActions {
+    ADDED_TO_ORDER = "ADDED_TO_ORDER", // || Basically Add to Cart
+    IDENTIFY = "IDENTIFY",
+    ORDER_COMPLETED = "ORDER_COMPLETED",
+    PAGE_VIEWED = "PAGE_VIEWED",
+    PING = "PING",
+}
 
+export default class Tracker
+    implements IdentifyAPI, TrackingAPI, PingAPI, PayloadAPI {
     private siteId: string;
     private agent: ITrackerAgent;
     private storage: ITrackerStorage;
     private browser: IBrowser;
 
-    constructor(agent: ITrackerAgent, storage: ITrackerStorage, browser: IBrowser) {
+    constructor(
+        agent: ITrackerAgent,
+        storage: ITrackerStorage,
+        browser: IBrowser,
+    ) {
         this.agent = agent;
         this.storage = storage;
         this.browser = browser;
     }
 
-    public identify(email: string, name?: string, props?: any|any[]): void {
-
+    public identify(email: string, name?: string, props?: any | any[]): void {
         if (!this._isInitialized()) {
             return;
         }
@@ -77,8 +82,10 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         this.agent.sendIdentify(payload);
     }
 
-    public track(action: ActionType, props?: [{ product: IProduct }] | any): void {
-
+    public track(
+        action: ActionType,
+        props?: [{ product: IProduct }] | any,
+    ): void {
         if (!this._isInitialized()) {
             return;
         }
@@ -89,7 +96,7 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         }
 
         if (isArray(props)) {
-            if (props[0].hasOwnProperty("product")) {
+            if (props.length && props[0].hasOwnProperty("product")) {
                 let { product } = props[0];
                 product = this.formatProductPayload(product);
             }
@@ -101,7 +108,6 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
     }
 
     public trackPageView(url?: string): void {
-
         if (!this._isInitialized()) {
             return;
         }
@@ -129,7 +135,6 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
     }
 
     public ping(browserComponents: IBrowserComponents): void {
-
         if (!this._isInitialized()) {
             return;
         }
@@ -156,34 +161,53 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         this.agent.sendPing(payload);
     }
 
-    public trackAddToOrder(itemCode: string | IProduct, itemPrice?: number | object, itemUrl?: string, itemQuantity?: number, itemTotalPrice?: number, itemName?: string, itemImage?: string, props?: object): void {
+    public trackAddToOrder(
+        itemCode: string | IProduct,
+        itemPrice?: number | object,
+        itemUrl?: string,
+        itemQuantity?: number,
+        itemTotalPrice?: number,
+        itemName?: string,
+        itemImage?: string,
+        props?: object,
+    ): void {
         let payload: ITrackPayload;
         if (typeof itemCode === "object") {
-
             itemCode = this.formatProductPayload(itemCode);
 
             if (itemPrice !== undefined && !isPlainObject(itemPrice)) {
-                throw new Error("props should be a plain object eg : {props: value}");
+                throw new Error(
+                    "props should be a plain object eg : {props: value}",
+                );
             }
 
-            let addToOrderPayload = { itemCode: itemCode.itemCode, itemPrice: itemCode.itemPrice, itemUrl: itemCode.itemUrl, itemQuantity: itemCode.itemQuantity, itemTotalPrice: itemCode.itemTotalPrice };
+            let addToOrderPayload = {
+                itemCode: itemCode.itemCode,
+                itemPrice: itemCode.itemPrice,
+                itemQuantity: itemCode.itemQuantity,
+                itemTotalPrice: itemCode.itemTotalPrice,
+                itemUrl: itemCode.itemUrl,
+            };
 
             if (itemCode.itemName) {
-
-                addToOrderPayload = assign(addToOrderPayload, { itemName: itemCode.itemName });
+                addToOrderPayload = assign(addToOrderPayload, {
+                    itemName: itemCode.itemName,
+                });
             }
 
             if (itemCode.itemImage) {
-
-                addToOrderPayload = assign(addToOrderPayload, { itemImage: itemCode.itemImage });
+                addToOrderPayload = assign(addToOrderPayload, {
+                    itemImage: itemCode.itemImage,
+                });
             }
 
             if (!isEmpty(itemPrice)) {
-
                 addToOrderPayload = assign(addToOrderPayload, itemPrice);
             }
 
-            payload = this.getPayload(TrackerActions.ADDED_TO_ORDER, [{ product: addToOrderPayload }]);
+            payload = this.getPayload(TrackerActions.ADDED_TO_ORDER, [
+                { product: addToOrderPayload },
+            ]);
 
             this.agent.sendTrack(payload);
             return;
@@ -200,7 +224,9 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
 
         if (!itemUrl || !isUrl(itemUrl)) {
             itemUrl = this.storage.getCurrentPageUrl();
-            console.warn("itemUrl is missing or invalid, defaults to current url");
+            console.warn(
+                "itemUrl is missing or invalid, defaults to current url",
+            );
         }
 
         if (!isNumber(itemQuantity) || !itemQuantity) {
@@ -218,46 +244,64 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         }
 
         if (props !== undefined && !isPlainObject(props)) {
-            throw new Error("props should be a plain object eg : {props: value}");
+            throw new Error(
+                "props should be a plain object eg : {props: value}",
+            );
         }
 
-        let addedToOrderPayload = { itemCode, itemPrice, itemUrl, itemQuantity, itemTotalPrice };
+        let addedToOrderPayload = {
+            itemCode,
+            itemPrice,
+            itemQuantity,
+            itemTotalPrice,
+            itemUrl,
+        };
 
         if (itemName) {
-
             addedToOrderPayload = assign(addedToOrderPayload, { itemName });
         }
 
         if (itemImage) {
-
             addedToOrderPayload = assign(addedToOrderPayload, { itemImage });
         }
 
         if (!isEmpty(props)) {
-
             addedToOrderPayload = assign(addedToOrderPayload, props);
         }
 
-        payload = this.getPayload(TrackerActions.ADDED_TO_ORDER, [{ product: addedToOrderPayload }]);
+        payload = this.getPayload(TrackerActions.ADDED_TO_ORDER, [
+            { product: addedToOrderPayload },
+        ]);
 
         this.agent.sendTrack(payload);
     }
 
-    public trackOrderCompleted(products: IProduct[], totalPrice?: number): void {
-
+    public trackOrderCompleted(
+        products: IProduct[],
+        totalPrice?: number,
+    ): void {
         if (!isArray(products)) {
             throw new Error("products type should be an array");
         }
 
-        products.map((product: IProduct) => product = this.formatProductPayload(product));
+        products.map(
+            (product: IProduct) =>
+                (product = this.formatProductPayload(product)),
+        );
 
-        const payload: ITrackPayload = this.getPayload(TrackerActions.ORDER_COMPLETED, [{ products, totalPrice }]);
+        const payload: ITrackPayload = this.getPayload(
+            TrackerActions.ORDER_COMPLETED,
+            [{ products, totalPrice }],
+        );
 
         this.agent.sendTrack(payload);
     }
 
-    public init(siteId: string) {
+    public setCookieNames(cookieNames: ICookieProperties): void {
+        this.storage.setCookieNames(cookieNames);
+    }
 
+    public init(siteId: string): void {
         if (!siteId) {
             throw new Error("siteId cannot be undefined or empty");
         }
@@ -271,7 +315,9 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         const userId = this.storage.getUserId();
         const sessionId = this.storage.getSessionId();
 
-        this.browser.fingerPrint((browserFingerprint: IBrowserComponents) => this.ping(browserFingerprint));
+        this.browser.fingerPrint((browserFingerprint: IBrowserComponents) =>
+            this.ping(browserFingerprint),
+        );
 
         if (!userId) {
             let generatedUserId = uuidV4();
@@ -288,9 +334,14 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         }
     }
 
-    public getPayload(action: ActionType, props?: any): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload {
+    public getPayload(
+        action: ActionType,
+        props?: any,
+    ): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload {
         if (!TrackerActions[action]) {
-            throw new Error(`ActionType ${action} is invalid. Supported ActionTypes are PING, IDENTIFY, PAGE_VIEWED, ADDED_TO_ORDER, ORDER_COMPLETED`);
+            throw new Error(
+                `ActionType ${action} is invalid. Supported ActionTypes are PING, IDENTIFY, PAGE_VIEWED, ADDED_TO_ORDER, ORDER_COMPLETED`,
+            );
         }
 
         const payload: ITrackPayload = {
@@ -337,7 +388,9 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
 
         if (!product.itemUrl || !isUrl(product.itemUrl)) {
             product.itemUrl = this.storage.getCurrentPageUrl();
-            console.warn("itemUrl is missing or invalid, defaults to current url");
+            console.warn(
+                "itemUrl is missing or invalid, defaults to current url",
+            );
         }
 
         if (!isNumber(product.itemQuantity) || !product.itemQuantity) {
@@ -351,7 +404,9 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         }
 
         if (product.itemName !== undefined && !isString(product.itemName)) {
-            throw new Error("itemName type should be a string : " + productJson);
+            throw new Error(
+                "itemName type should be a string : " + productJson,
+            );
         }
 
         if (product.itemImage !== undefined && !isUrl(product.itemImage)) {
@@ -361,10 +416,11 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
         return product;
     }
 
-    private _isInitialized() {
-
+    private _isInitialized(): boolean {
         if (!this.siteId) {
-            console.warn("moo: You need initialize Tracker before it can be used");
+            console.warn(
+                "moo: You need initialize Tracker before it can be used",
+            );
             return false;
         }
 
@@ -437,9 +493,15 @@ function isUrl(url: string): boolean {
  * @returns {boolean}
  */
 function isValidUUID(uuidString: string) {
-
     const validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-    return validUUIDRegex.test(uuidString) || validUUIDRegex.test(uuidString.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi, "$1-$2-$3-$4-$5"));
-
+    return (
+        validUUIDRegex.test(uuidString) ||
+        validUUIDRegex.test(
+            uuidString.replace(
+                /(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi,
+                "$1-$2-$3-$4-$5",
+            ),
+        )
+    );
 }

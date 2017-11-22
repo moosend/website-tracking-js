@@ -1,8 +1,8 @@
-/// <reference path="../src/local.d.ts" />
-
 import "jsdom-global/register";
-import test = require("tape");
 import sinon = require("sinon");
+import test = require("tape");
+import CookieNames from "../src/cookies/CookieNames";
+import CookieStorage from "../src/storage/CookieStorage";
 import Tracker, { TrackerActions } from "../src/tracker/Tracker";
 import mock from "./mock";
 
@@ -925,5 +925,41 @@ test("Tracker trackOrderCompleted test default values", (t: test.Test) => {
 
     tracker.init(siteId);
     tracker.trackOrderCompleted(products, 1);
+
+});
+
+test("Tracker should be initialized with custom userId cookie name", (t: test.Test) => {
+
+    const cookieNames = new CookieNames();
+    const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
+
+    let tAgent: ITrackerAgent;
+    let tStorage: ITrackerStorage;
+    const tBrowser: IBrowser = mock.createBrowser(t);
+
+    const userIdName = "userIdExample";
+    const sessionIdName = "sessionIdExample";
+    const emailName = "emailNameExample";
+
+    tStorage = mock.createStorage(t, {
+        userIdName,
+        setCookieNames(cookieNameProperties: ICookieProperties) {
+            t.pass("setCookieNames was called");
+            this.setUserIdName(cookieNameProperties.userIdName);
+        },
+        setUserIdName(name: string) {
+            t.pass("setUserIdName was called");
+        },
+    });
+
+    tAgent = mock.createAgent(t);
+
+    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+
+    tracker.setCookieNames({ userIdName, sessionIdName, emailName });
+    tracker.init(siteId);
+
+    t.plan(2);
+    t.end();
 
 });

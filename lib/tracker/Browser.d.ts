@@ -1,3 +1,3 @@
-export declare class Browser implements IBrowser {
+export default class Browser implements IBrowser {
     fingerPrint(done: (browserComponents: IBrowserComponents) => void): void;
 }

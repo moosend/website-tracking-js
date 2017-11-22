@@ -11,8 +11,9 @@ interface IMockAPI {
 export default {
   createStorage(t: tape.Test, overrides: any = {}): ITrackerStorage {
     const mock: ITrackerStorage = [
-      "getSessionNumber",
-      "setSessionNumber",
+      "storage",
+
+      "setCookieNames",
 
       "getUserId",
       "setUserId",
@@ -27,6 +28,8 @@ export default {
       "setSessionId",
 
       "getCurrentPageUrl",
+
+      "setUserIdName",
     ].reduce((acc: any, next: string) => {
         const override = overrides[next];
         acc[next] = override instanceof Function ? override : _noop;
