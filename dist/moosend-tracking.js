@@ -901,16 +901,51 @@ module.exports = isIndex;
 
 "use strict";
 
-exports.__esModule = true;
-var TrackerStorage = (function () {
-    function TrackerStorage(storage) {
-        this.storage = storage;
-    }
-    TrackerStorage.prototype.getUserId = function () {
-        return this.storage.getItem(TrackerStorage.Keys.USER_ID);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    TrackerStorage.prototype.setUserId = function (userId) {
-        this.storage.setItem(TrackerStorage.Keys.USER_ID, userId);
+})();
+exports.__esModule = true;
+var utils_1 = __webpack_require__(77);
+var CookieNames_1 = __webpack_require__(78);
+var CookieKeys;
+(function (CookieKeys) {
+    CookieKeys["CAMPAIGN_ID"] = "cmid";
+})(CookieKeys || (CookieKeys = {}));
+var TrackerStorage = (function (_super) {
+    __extends(TrackerStorage, _super);
+    function TrackerStorage(storage) {
+        var _this = _super.call(this) || this;
+        _this.storage = storage;
+        return _this;
+    }
+    TrackerStorage.prototype.setCookieNames = function (cookieNames) {
+        for (var property in cookieNames) {
+            if (property) {
+                if (property === "userIdName") {
+                    var propertyValue = this.storage.getItem(cookieNames[property]);
+                    if (!propertyValue || !utils_1["default"].isValidUUID(propertyValue)) {
+                        throw new Error("Property " + property + " is empty or has invalid UUID.");
+                    }
+                    this.setUserIdName(cookieNames[property]);
+                }
+                if (property === "emailName") {
+                    this.setEmailName(cookieNames[property]);
+                }
+            }
+        }
+    };
+    TrackerStorage.prototype.getUserId = function () {
+        return this.storage.getItem(this.userIdName);
+    };
+    TrackerStorage.prototype.setUserId = function (userId, options) {
+        this.storage.setItem(this.userIdName, userId, options);
     };
     TrackerStorage.prototype.getCampaignId = function () {
         return this.storage.getItem(TrackerStorage.Keys.CAMPAIGN_ID);
@@ -919,28 +954,23 @@ var TrackerStorage = (function () {
         this.storage.setItem(TrackerStorage.Keys.CAMPAIGN_ID, campaignId);
     };
     TrackerStorage.prototype.getEmail = function () {
-        return this.storage.getItem(TrackerStorage.Keys.EMAIL);
+        return this.storage.getItem(this.emailName);
     };
     TrackerStorage.prototype.setEmail = function (email) {
-        this.storage.setItem(TrackerStorage.Keys.EMAIL, email);
+        this.storage.setItem(this.emailName, email);
     };
     TrackerStorage.prototype.getSessionId = function () {
-        return this.storage.getItem(TrackerStorage.Keys.SESSION_NUMBER);
+        return this.storage.getItem(this.sessionIdName);
     };
     TrackerStorage.prototype.setSessionId = function (sessionId, options) {
-        this.storage.setItem(TrackerStorage.Keys.SESSION_NUMBER, sessionId, options);
+        this.storage.setItem(this.sessionIdName, sessionId, options);
     };
     TrackerStorage.prototype.getCurrentPageUrl = function () {
         return window.location.href;
     };
-    TrackerStorage.Keys = {
-        CAMPAIGN_ID: "cmid",
-        EMAIL: "email",
-        SESSION_NUMBER: "sessionid",
-        USER_ID: "uid"
-    };
+    TrackerStorage.Keys = CookieKeys;
     return TrackerStorage;
-}());
+}(CookieNames_1["default"]));
 exports["default"] = TrackerStorage;
 
 
@@ -955,7 +985,7 @@ __webpack_require__(30);
 var CookieStorage_1 = __webpack_require__(10);
 var TrackerFactory_1 = __webpack_require__(32);
 var TrackerStorage_1 = __webpack_require__(28);
-var queryString = __webpack_require__(77);
+var queryString = __webpack_require__(79);
 var trackerStorage = new TrackerStorage_1["default"](new CookieStorage_1["default"]());
 var tracker = TrackerFactory_1["default"].CreateWithCookieStorage();
 if (typeof location === "object" && location.search) {
@@ -3074,7 +3104,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * JavaScript Cookie v2.1.4
+ * JavaScript Cookie v2.2.0
  * https://github.com/js-cookie/js-cookie
  *
  * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
@@ -3188,7 +3218,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 				var parts = cookies[i].split('=');
 				var cookie = parts.slice(1).join('=');
 
-				if (cookie.charAt(0) === '"') {
+				if (!this.json && cookie.charAt(0) === '"') {
 					cookie = cookie.slice(1, -1);
 				}
 
@@ -3263,7 +3293,7 @@ exports["default"] = {
         if (this.CreateWithCookieStorageInstance !== null) {
             return this.CreateWithCookieStorageInstance;
         }
-        this.CreateWithCookieStorageInstance = new Tracker_1["default"](new TrackerAgent_1["default"](config_1["default"].apiUrl), new TrackerStorage_1["default"](new CookieStorage_1["default"](cookieSettings)), new Browser_1.Browser());
+        this.CreateWithCookieStorageInstance = new Tracker_1["default"](new TrackerAgent_1["default"](config_1["default"].apiUrl), new TrackerStorage_1["default"](new CookieStorage_1["default"](cookieSettings)), new Browser_1["default"]());
         return this.CreateWithCookieStorageInstance;
     }
 };
@@ -3367,7 +3397,7 @@ var Browser = (function () {
     };
     return Browser;
 }());
-exports.Browser = Browser;
+exports["default"] = Browser;
 
 
 /***/ }),
@@ -3393,13 +3423,14 @@ var isEmpty = __webpack_require__(39);
 var isPlainObject = __webpack_require__(58);
 var assign = __webpack_require__(60);
 var isArray = __webpack_require__(8);
-exports.TrackerActions = {
-    ADDED_TO_ORDER: "ADDED_TO_ORDER",
-    IDENTIFY: "IDENTIFY",
-    ORDER_COMPLETED: "ORDER_COMPLETED",
-    PAGE_VIEWED: "PAGE_VIEWED",
-    PING: "PING"
-};
+var TrackerActions;
+(function (TrackerActions) {
+    TrackerActions["ADDED_TO_ORDER"] = "ADDED_TO_ORDER";
+    TrackerActions["IDENTIFY"] = "IDENTIFY";
+    TrackerActions["ORDER_COMPLETED"] = "ORDER_COMPLETED";
+    TrackerActions["PAGE_VIEWED"] = "PAGE_VIEWED";
+    TrackerActions["PING"] = "PING";
+})(TrackerActions = exports.TrackerActions || (exports.TrackerActions = {}));
 var Tracker = (function () {
     function Tracker(agent, storage, browser) {
         this.agent = agent;
@@ -3425,7 +3456,7 @@ var Tracker = (function () {
         payload = {
             ContactEmailAddress: email,
             ContactId: ContactId,
-            actionType: exports.TrackerActions.IDENTIFY,
+            actionType: TrackerActions.IDENTIFY,
             sessionId: sessionId,
             siteId: siteId
         };
@@ -3448,7 +3479,7 @@ var Tracker = (function () {
             return;
         }
         if (isArray(props)) {
-            if (props[0].hasOwnProperty("product")) {
+            if (props.length && props[0].hasOwnProperty("product")) {
                 var product = props[0].product;
                 product = this.formatProductPayload(product);
             }
@@ -3463,7 +3494,7 @@ var Tracker = (function () {
         var payload = {
             ContactId: this.storage.getUserId(),
             Url: url || this.storage.getCurrentPageUrl(),
-            actionType: exports.TrackerActions.PAGE_VIEWED,
+            actionType: TrackerActions.PAGE_VIEWED,
             sessionId: this.storage.getSessionId(),
             siteId: this.siteId
         };
@@ -3484,7 +3515,7 @@ var Tracker = (function () {
         var payload = {
             BrowserComponents: browserComponents,
             ContactId: this.storage.getUserId(),
-            actionType: exports.TrackerActions.PING,
+            actionType: TrackerActions.PING,
             sessionId: this.storage.getSessionId(),
             siteId: this.siteId
         };
@@ -3505,17 +3536,29 @@ var Tracker = (function () {
             if (itemPrice !== undefined && !isPlainObject(itemPrice)) {
                 throw new Error("props should be a plain object eg : {props: value}");
             }
-            var addToOrderPayload = { itemCode: itemCode.itemCode, itemPrice: itemCode.itemPrice, itemUrl: itemCode.itemUrl, itemQuantity: itemCode.itemQuantity, itemTotalPrice: itemCode.itemTotalPrice };
+            var addToOrderPayload = {
+                itemCode: itemCode.itemCode,
+                itemPrice: itemCode.itemPrice,
+                itemQuantity: itemCode.itemQuantity,
+                itemTotalPrice: itemCode.itemTotalPrice,
+                itemUrl: itemCode.itemUrl
+            };
             if (itemCode.itemName) {
-                addToOrderPayload = assign(addToOrderPayload, { itemName: itemCode.itemName });
+                addToOrderPayload = assign(addToOrderPayload, {
+                    itemName: itemCode.itemName
+                });
             }
             if (itemCode.itemImage) {
-                addToOrderPayload = assign(addToOrderPayload, { itemImage: itemCode.itemImage });
+                addToOrderPayload = assign(addToOrderPayload, {
+                    itemImage: itemCode.itemImage
+                });
             }
             if (!isEmpty(itemPrice)) {
                 addToOrderPayload = assign(addToOrderPayload, itemPrice);
             }
-            payload = this.getPayload(exports.TrackerActions.ADDED_TO_ORDER, [{ product: addToOrderPayload }]);
+            payload = this.getPayload(TrackerActions.ADDED_TO_ORDER, [
+                { product: addToOrderPayload },
+            ]);
             this.agent.sendTrack(payload);
             return;
         }
@@ -3544,7 +3587,13 @@ var Tracker = (function () {
         if (props !== undefined && !isPlainObject(props)) {
             throw new Error("props should be a plain object eg : {props: value}");
         }
-        var addedToOrderPayload = { itemCode: itemCode, itemPrice: itemPrice, itemUrl: itemUrl, itemQuantity: itemQuantity, itemTotalPrice: itemTotalPrice };
+        var addedToOrderPayload = {
+            itemCode: itemCode,
+            itemPrice: itemPrice,
+            itemQuantity: itemQuantity,
+            itemTotalPrice: itemTotalPrice,
+            itemUrl: itemUrl
+        };
         if (itemName) {
             addedToOrderPayload = assign(addedToOrderPayload, { itemName: itemName });
         }
@@ -3554,7 +3603,9 @@ var Tracker = (function () {
         if (!isEmpty(props)) {
             addedToOrderPayload = assign(addedToOrderPayload, props);
         }
-        payload = this.getPayload(exports.TrackerActions.ADDED_TO_ORDER, [{ product: addedToOrderPayload }]);
+        payload = this.getPayload(TrackerActions.ADDED_TO_ORDER, [
+            { product: addedToOrderPayload },
+        ]);
         this.agent.sendTrack(payload);
     };
     Tracker.prototype.trackOrderCompleted = function (products, totalPrice) {
@@ -3562,9 +3613,14 @@ var Tracker = (function () {
         if (!isArray(products)) {
             throw new Error("products type should be an array");
         }
-        products.map(function (product) { return product = _this.formatProductPayload(product); });
-        var payload = this.getPayload(exports.TrackerActions.ORDER_COMPLETED, [{ products: products, totalPrice: totalPrice }]);
+        products.map(function (product) {
+            return (product = _this.formatProductPayload(product));
+        });
+        var payload = this.getPayload(TrackerActions.ORDER_COMPLETED, [{ products: products, totalPrice: totalPrice }]);
         this.agent.sendTrack(payload);
+    };
+    Tracker.prototype.setCookieNames = function (cookieNames) {
+        this.storage.setCookieNames(cookieNames);
     };
     Tracker.prototype.init = function (siteId) {
         var _this = this;
@@ -3577,20 +3633,24 @@ var Tracker = (function () {
         this.siteId = siteId;
         var userId = this.storage.getUserId();
         var sessionId = this.storage.getSessionId();
-        this.browser.fingerPrint(function (browserFingerprint) { return _this.ping(browserFingerprint); });
+        this.browser.fingerPrint(function (browserFingerprint) {
+            return _this.ping(browserFingerprint);
+        });
         if (!userId) {
             var generatedUserId = uuidV4();
-            this.storage.setUserId(generatedUserId);
+            generatedUserId = generatedUserId.replace(/-/g, "");
+            this.storage.setUserId(generatedUserId, { expires: 3650 });
         }
         if (!sessionId) {
             var generatedSessionId = uuidV4();
+            generatedSessionId = generatedSessionId.replace(/-/g, "");
             this.storage.setSessionId(generatedSessionId, { expires: 1 });
             return;
         }
     };
     Tracker.prototype.getPayload = function (action, props) {
-        if (!exports.TrackerActions[action]) {
-            throw new Error("ActionType " + action + " is invalid.");
+        if (!TrackerActions[action]) {
+            throw new Error("ActionType " + action + " is invalid. Supported ActionTypes are PING, IDENTIFY, PAGE_VIEWED, ADDED_TO_ORDER, ORDER_COMPLETED");
         }
         var payload = {
             ContactId: this.storage.getUserId(),
@@ -3672,7 +3732,8 @@ function isUrl(url) {
 }
 function isValidUUID(uuidString) {
     var validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    return validUUIDRegex.test(uuidString) || validUUIDRegex.test(uuidString.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi, "$1-$2-$3-$4-$5"));
+    return (validUUIDRegex.test(uuidString) ||
+        validUUIDRegex.test(uuidString.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi, "$1-$2-$3-$4-$5")));
 }
 
 
@@ -5946,13 +6007,72 @@ module.exports = __webpack_amd_options__;
 
 "use strict";
 
-
-exports.decode = exports.parse = __webpack_require__(78);
-exports.encode = exports.stringify = __webpack_require__(79);
+exports.__esModule = true;
+var Utils = (function () {
+    function Utils() {
+    }
+    Utils.isValidUUID = function (uuidString) {
+        var validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        return (validUUIDRegex.test(uuidString) ||
+            validUUIDRegex.test(uuidString.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi, "$1-$2-$3-$4-$5")));
+    };
+    return Utils;
+}());
+exports["default"] = Utils;
 
 
 /***/ }),
 /* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var CookieNames = (function () {
+    function CookieNames(userIdName, sessionIdName, emailName) {
+        if (userIdName === void 0) { userIdName = "uid"; }
+        if (sessionIdName === void 0) { sessionIdName = "sessionid"; }
+        if (emailName === void 0) { emailName = "email"; }
+        this.userIdName = userIdName;
+        this.sessionIdName = sessionIdName;
+        this.emailName = emailName;
+    }
+    CookieNames.prototype.getUserIdName = function () {
+        return this.userIdName;
+    };
+    CookieNames.prototype.setUserIdName = function (userIdName) {
+        this.userIdName = userIdName;
+    };
+    CookieNames.prototype.getSessionIdName = function () {
+        return this.sessionIdName;
+    };
+    CookieNames.prototype.setSessionIdName = function (sessionIdName) {
+        this.sessionIdName = sessionIdName;
+    };
+    CookieNames.prototype.getEmailName = function () {
+        return this.emailName;
+    };
+    CookieNames.prototype.setEmailName = function (emailName) {
+        this.emailName = emailName;
+    };
+    return CookieNames;
+}());
+exports["default"] = CookieNames;
+
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.decode = exports.parse = __webpack_require__(80);
+exports.encode = exports.stringify = __webpack_require__(81);
+
+
+/***/ }),
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6043,7 +6163,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 79 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
