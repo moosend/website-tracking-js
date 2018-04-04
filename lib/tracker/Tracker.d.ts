@@ -21,7 +21,7 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
     trackOrderCompleted(products: IProduct[], totalPrice?: number): void;
     setCookieNames(cookieNames: ICookieProperties): void;
     init(siteId: string): void;
-    getPayload(action: ActionType, props?: any): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload;
+    getPayload(action: ActionType | any, props?: any): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload;
     formatProductPayload(product: IProduct): IProduct;
     private _isInitialized();
 }

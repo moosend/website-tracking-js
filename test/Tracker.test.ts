@@ -216,10 +216,10 @@ test("Tracker Track with Different ActionType", (t: test.Test) => {
     const getPayload: any = sinon.spy(tracker, "getPayload");
 
     tracker.init("f245124e-8f61-4277-a089-8d233bc99491");
-    t.throws(() => tracker.track("DIFFERENT_ACTION_TYPE", { status: "completed" }), /ActionType DIFFERENT_ACTION_TYPE is invalid./, "throw different action type cannot be empty");
+    tracker.track("DIFFERENT_ACTION_TYPE", { status: "completed" });
 
-    t.ok(getUserId.calledOnce, "ITrackerStorage.getUserId should be called twice");
-    t.ok(!getEmail.calledOnce, "ITrackerStorage.getEmail should not be called once");
+    t.ok(getUserId.calledTwice, "ITrackerStorage.getUserId should be called twice");
+    t.ok(getEmail.calledOnce, "ITrackerStorage.getEmail should be called once");
     t.ok(getPayload.calledOnce, "getPayload should be called once");
 
     t.end();

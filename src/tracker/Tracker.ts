@@ -335,14 +335,9 @@ export default class Tracker
     }
 
     public getPayload(
-        action: ActionType,
+        action: ActionType | any,
         props?: any,
     ): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload {
-        if (!TrackerActions[action]) {
-            throw new Error(
-                `ActionType ${action} is invalid. Supported ActionTypes are PING, IDENTIFY, PAGE_VIEWED, ADDED_TO_ORDER, ORDER_COMPLETED`,
-            );
-        }
 
         const payload: ITrackPayload = {
             ContactId: this.storage.getUserId(),
