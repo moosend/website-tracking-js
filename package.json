@@ -18,20 +18,20 @@
   },
   "dependencies": {
     "es5-shim": "^4.5.10",
-    "fingerprintjs2": "^1.6.1",
+    "fingerprintjs2": "^1.8.0",
     "js-cookie": "^2.2.0",
     "json3": "^3.3.2",
-    "lodash-es": "^4.17.8",
+    "lodash-es": "^4.17.10",
     "randombytes": "^2.0.6",
-    "rollup": "^0.57.1",
-    "typescript": "^2.8.1",
+    "rollup": "^0.58.2",
+    "typescript": "^2.8.3",
     "uuid-random": "^1.0.6"
   },
   "devDependencies": {
     "@types/fingerprintjs2": "^1.5.2",
     "@types/jest": "^22.2.3",
     "@types/js-cookie": "^2.1.0",
-    "@types/node": "^9.6.5",
+    "@types/node": "^9.6.6",
     "@types/uuid": "^3.4.3",
     "cross-env": "^5.1.4",
     "jest": "^22.4.3",
@@ -44,9 +44,9 @@
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-typescript2": "^0.13.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "ts-jest": "^22.4.3",
+    "ts-jest": "^22.4.4",
     "tslint": "^5.9.1",
-    "tslint-config-prettier": "^1.10.0",
+    "tslint-config-prettier": "^1.12.0",
     "tslint-config-standard": "^7.0.0"
   }
 }
