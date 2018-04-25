@@ -164,3 +164,7 @@ declare var _ENV_: string;
 declare var API_URL: string;
 declare var window: Window;
 declare var XDomainRequest: any;
+declare module "*.json" {
+    const value: any;
+    export default value;
+}

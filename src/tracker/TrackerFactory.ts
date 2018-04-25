@@ -1,6 +1,6 @@
+import Browser from "../browser/Browser";
 import config from "../common/config";
 import CookieStorage from "../storage/CookieStorage";
-import Browser from "./Browser";
 import Tracker from "./Tracker";
 import TrackerAgent from "./TrackerAgent";
 import TrackerStorage from "./TrackerStorage";

@@ -1,5 +1,5 @@
+import JSON3 from "json3";
 import config from "../common/config";
-const JSON3 = require("json3");
 
 export default class TrackerAgent implements ITrackerAgent {
     private url: string;

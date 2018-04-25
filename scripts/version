@@ -1,2 +1,0 @@
-#!/bin/sh
-NODE_PATH=./ node -e "var pkg = require('package.json'); process.stdout.write(pkg.version);"

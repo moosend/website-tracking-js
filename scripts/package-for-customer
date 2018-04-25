@@ -1,8 +1,0 @@
-#!/bin/sh
-./scripts/test
-
-mkdir -p ./packages && git archive -o packages/tracker-"$(./scripts/version)".zip HEAD
-
-#Also create loader archive for convenience
-npm run bundle-loader && zip -r ./packages/loader-"$(./scripts/version)".zip ./dist/loader.ts
-cp ./EXAMPLE.md ./docs/EXAMPLE-"$(./scripts/version)".md

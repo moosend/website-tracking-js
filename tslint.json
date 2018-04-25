@@ -1,19 +1,20 @@
 {
-    "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+        "tslint:latest",
+        "tslint-config-standard",
+        "tslint-config-prettier"
     ],
-    "jsRules": {},
     "rules": {
-        "no-var-requires": false,
-        "max-line-length": [
-            false
-        ],
-        "no-console": [
-            true,
-            "log"
-        ],
-        "no-reference": false
-    },
-    "rulesDirectory": []
+        "no-console": false,
+        "no-implicit-dependencies": [true, "dev"],
+        "no-submodule-imports": false,
+        "no-use-before-declare": true,
+        "await-promise": false,
+        "no-unused-variable": true,
+        "return-undefined": true,
+        "no-floating-promises": true,
+        "no-unnecessary-qualifier": true,
+        "strict-type-predicates": true,
+        "unified-signatures": false
+    }
 }

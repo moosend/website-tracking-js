@@ -1,20 +1,13 @@
-const uuidV4 = require("uuid/v4");
-const isEmpty = require("lodash/isEmpty");
-const isPlainObject = require("lodash/isPlainObject");
-const assign = require("lodash/assign");
-const isArray = require("lodash/isArray");
+import isArray from "lodash-es/isArray";
+import isEmpty from "lodash-es/isEmpty";
+import isPlainObject from "lodash-es/isPlainObject";
+import uuid from "uuid-random";
 
+import { isNumber, isString, isUrl, isValidUUID, toStr } from "../common/utils";
 import CookieNames from "../cookies/CookieNames";
+import TrackerActions from "./TrackerActions";
 
-export enum TrackerActions {
-    ADDED_TO_ORDER = "ADDED_TO_ORDER", // || Basically Add to Cart
-    IDENTIFY = "IDENTIFY",
-    ORDER_COMPLETED = "ORDER_COMPLETED",
-    PAGE_VIEWED = "PAGE_VIEWED",
-    PING = "PING",
-}
-
-export default class Tracker
+export default class TrackerMethods
     implements IdentifyAPI, TrackingAPI, PingAPI, PayloadAPI {
     private siteId: string;
     private agent: ITrackerAgent;
@@ -163,7 +156,7 @@ export default class Tracker
 
     public trackAddToOrder(
         itemCode: string | IProduct,
-        itemPrice?: number | object,
+        itemPrice?: number | any,
         itemUrl?: string,
         itemQuantity?: number,
         itemTotalPrice?: number,
@@ -181,7 +174,7 @@ export default class Tracker
                 );
             }
 
-            let addToOrderPayload = {
+            let addToOrderPayload: IProduct = {
                 itemCode: itemCode.itemCode,
                 itemPrice: itemCode.itemPrice,
                 itemQuantity: itemCode.itemQuantity,
@@ -190,19 +183,15 @@ export default class Tracker
             };
 
             if (itemCode.itemName) {
-                addToOrderPayload = assign(addToOrderPayload, {
-                    itemName: itemCode.itemName,
-                });
+                addToOrderPayload = { ...addToOrderPayload, itemName: itemCode.itemName };
             }
 
             if (itemCode.itemImage) {
-                addToOrderPayload = assign(addToOrderPayload, {
-                    itemImage: itemCode.itemImage,
-                });
+                addToOrderPayload = { ...addToOrderPayload, itemImage: itemCode.itemImage };
             }
 
             if (!isEmpty(itemPrice)) {
-                addToOrderPayload = assign(addToOrderPayload, itemPrice);
+                addToOrderPayload = { ...addToOrderPayload, ...itemPrice };
             }
 
             payload = this.getPayload(TrackerActions.ADDED_TO_ORDER, [
@@ -249,7 +238,7 @@ export default class Tracker
             );
         }
 
-        let addedToOrderPayload = {
+        let addedToOrderPayload: IProduct = {
             itemCode,
             itemPrice,
             itemQuantity,
@@ -258,15 +247,15 @@ export default class Tracker
         };
 
         if (itemName) {
-            addedToOrderPayload = assign(addedToOrderPayload, { itemName });
+            addedToOrderPayload = { ...addedToOrderPayload,  itemName };
         }
 
         if (itemImage) {
-            addedToOrderPayload = assign(addedToOrderPayload, { itemImage });
+            addedToOrderPayload = { ...addedToOrderPayload,  itemImage };
         }
 
         if (!isEmpty(props)) {
-            addedToOrderPayload = assign(addedToOrderPayload, props);
+            addedToOrderPayload = { ...addedToOrderPayload, ...props };
         }
 
         payload = this.getPayload(TrackerActions.ADDED_TO_ORDER, [
@@ -302,6 +291,7 @@ export default class Tracker
     }
 
     public init(siteId: string): void {
+        console.log(123);
         if (!siteId) {
             throw new Error("siteId cannot be undefined or empty");
         }
@@ -320,13 +310,12 @@ export default class Tracker
         );
 
         if (!userId) {
-            let generatedUserId = uuidV4();
+            let generatedUserId = uuid();
             generatedUserId = generatedUserId.replace(/-/g, "");
-
             this.storage.setUserId(generatedUserId, { expires: 3650 });
         }
         if (!sessionId) {
-            let generatedSessionId = uuidV4();
+            let generatedSessionId = uuid();
             generatedSessionId = generatedSessionId.replace(/-/g, "");
 
             this.storage.setSessionId(generatedSessionId, { expires: 1 });
@@ -335,7 +324,7 @@ export default class Tracker
     }
 
     public getPayload(
-        action: ActionType | any,
+        action: ActionType|any,
         props?: any,
     ): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload {
 
@@ -421,82 +410,4 @@ export default class Tracker
 
         return true;
     }
-}
-
-/**
- * HELPERS
- */
-function toStr(value: any) {
-    return Object.prototype.toString.call(value);
-}
-
-/**
- * Check whether value is of type String
- * @param {any} value
- * @returns {boolean}
- */
-function isString(value: any): boolean {
-    return toStr(value) === "[object String]";
-}
-
-/**
- * Check whether value is of type String
- * @param {any} value
- * @returns {boolean}
- */
-function isNumber(value: any): boolean {
-    return toStr(value) === "[object Number]" || !isNaN(parseFloat(value));
-}
-
-/**
- * Check whether value is of type Object
- * @param {any} value
- * @returns {boolean}
- */
-function isObject(value: any): boolean {
-    return toStr(value) === "[object Object]";
-}
-
-/**
- * Check whether value is a valid URL
- * @param {any} string
- * @returns {boolean}
- */
-function isUrl(url: string): boolean {
-    const regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    return regexp.test(url);
-}
-
-// function allPropsAreScalar(obj: any): boolean {
-//     let keys = Object.keys(obj);
-
-//     for (let i = 0; i < keys.length; i++) {
-//         const val = obj[keys[i]];
-//         const isAllowedScalar = isNumber(val) || isString(val);
-
-//         if (!isAllowedScalar) {
-//             return false;
-//         }
-//     }
-
-//     return true;
-// }
-
-/**
- * Check whether string is valid with or without dashes
- * @param {string} string
- * @returns {boolean}
- */
-function isValidUUID(uuidString: string) {
-    const validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-    return (
-        validUUIDRegex.test(uuidString) ||
-        validUUIDRegex.test(
-            uuidString.replace(
-                /(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi,
-                "$1-$2-$3-$4-$5",
-            ),
-        )
-    );
 }

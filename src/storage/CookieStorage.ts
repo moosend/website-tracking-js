@@ -1,4 +1,4 @@
-const cookie = require("js-cookie");
+import cookie from 'js-cookie';
 
 export default class CookieStorage implements IStorage {
 

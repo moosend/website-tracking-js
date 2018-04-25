@@ -1,4 +1,4 @@
-import Utils from "../common/utils";
+import { isValidUUID } from "../common/utils";
 import CookieNames from "../cookies/CookieNames";
 import Tracker from "./Tracker";
 
@@ -25,7 +25,7 @@ export default class TrackerStorage extends CookieNames
                     const propertyValue = this.storage.getItem(
                         cookieNames[property],
                     );
-                    if (!propertyValue || !Utils.isValidUUID(propertyValue)) {
+                    if (!propertyValue || !isValidUUID(propertyValue)) {
                         throw new Error(
                             `Property ${property} is empty or has invalid UUID.`,
                         );
