@@ -46,15 +46,15 @@ global[API_KEY] = callTrackerMethod.bind(this);
 
 const timeEntered = performance.now();
 
-if(trackerStorage.getMouseOutFlag() == "true"){
-    document.documentElement.addEventListener("mouseleave", callMouseOutEvent);
+if(trackerStorage.getExitIntentFlag() == "true"){
+    document.documentElement.addEventListener("mouseleave", callExitIntentEvent);
 }
 
-function callMouseOutEvent(){
+function callExitIntentEvent(){
     const timeExited = performance.now();
     const timeElapsed = timeExited - timeEntered / 1000;
-    tracker.trackMouseOut(timeElapsed);
-    document.documentElement.removeEventListener("mouseleave", callMouseOutEvent)
+    tracker.trackExitIntent(timeElapsed);
+    document.documentElement.removeEventListener("mouseleave", callExitIntentEvent)
 }
 
 function callTrackerMethod() {
