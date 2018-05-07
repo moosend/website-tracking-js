@@ -29,6 +29,9 @@ test("Tracker Initialisation", (t: test.Test) => {
         setUserId() {
             t.pass("ITrackerStorage.setUserId was called during initialisation");
         },
+        setExitIntentFlag() {
+            t.pass("ITrackerStorage.setExitIntentFlag was called during initialisation");
+        }
     });
 
     tBrowser = mock.createBrowser(t, {
@@ -37,11 +40,11 @@ test("Tracker Initialisation", (t: test.Test) => {
         },
     });
 
-    t.plan(5);
+    t.plan(6);
 
     const tracker = new Tracker(tAgent, tStorage, tBrowser);
 
-    tracker.init("f245124e-8f61-4277-a089-8d233bc99491");
+    tracker.init("f245124e-8f61-4277-a089-8d233bc99491", false);
 });
 
 test("Tracker initialization which has siteId without dashes", (t: test.Test) => {
@@ -79,7 +82,7 @@ test("Tracker initialization which has siteId without dashes", (t: test.Test) =>
 
     const tracker = new Tracker(tAgent, tStorage, tBrowser);
 
-    tracker.init("f245124e8f614277a0898d233bc99491");
+    tracker.init("f245124e8f614277a0898d233bc99491", false);
 
 });
 
@@ -97,7 +100,7 @@ test("Tracker initialization should throw error if siteId has invalid UUID", (t:
 
     const tracker = new Tracker(tAgent, tStorage, tBrowser);
 
-    t.throws(() => tracker.init("123"), /siteId should be a valid uuid/, "throw siteId should be a valid uuid");
+    t.throws(() => tracker.init("123", false), /siteId should be a valid uuid/, "throw siteId should be a valid uuid");
 
     t.end();
 
@@ -150,7 +153,7 @@ test("Tracker Identify API", (t: test.Test) => {
 
     t.plan(6);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.identify(ContactEmailAddress);
 });
 
@@ -181,8 +184,8 @@ test("Tracker Track getPayload", (t: test.Test) => {
 
     const getPayload: any = sinon.spy(tracker, "getPayload");
 
-    tracker.init("f245124e-8f61-4277-a089-8d233bc99491");
-    tracker.track(TrackerActions.PAGE_VIEWED, { status: "completed" });
+    tracker.init("f245124e-8f61-4277-a089-8d233bc99491", false);
+    tracker.track(TrackerActions.PAGE_VIEWED, [{ status: "completed" }]);
 
     t.ok(getUserId.calledTwice, "ITrackerStorage.getUserId should be called twice");
     t.ok(getEmail.calledOnce, "ITrackerStorage.getEmail should be called once");
@@ -215,8 +218,8 @@ test("Tracker Track with Different ActionType", (t: test.Test) => {
 
     const getPayload: any = sinon.spy(tracker, "getPayload");
 
-    tracker.init("f245124e-8f61-4277-a089-8d233bc99491");
-    tracker.track("DIFFERENT_ACTION_TYPE", { status: "completed" });
+    tracker.init("f245124e-8f61-4277-a089-8d233bc99491", false);
+    tracker.track("DIFFERENT_ACTION_TYPE", [{ status: "completed" }]);
 
     t.ok(getUserId.calledTwice, "ITrackerStorage.getUserId should be called twice");
     t.ok(getEmail.calledOnce, "ITrackerStorage.getEmail should be called once");
@@ -251,8 +254,8 @@ test("Tracker Track API", (t: test.Test) => {
 
     const tracker = new Tracker(tAgent, tStorage, tBrowser);
 
-    tracker.init("f245124e-8f61-4277-a089-8d233bc99491");
-    tracker.track(TrackerActions.PAGE_VIEWED, { status: "completed" });
+    tracker.init("f245124e-8f61-4277-a089-8d233bc99491", false);
+    tracker.track(TrackerActions.PAGE_VIEWED, [{ status: "completed" }]);
 
     t.ok(getUserId.calledTwice, "ITrackerStorage.getUserId should be called twice");
     t.ok(getEmail.calledOnce, "ITrackerStorage.getEmail should be called once");
@@ -331,7 +334,7 @@ test("Tracker Track Product View", (t: test.Test) => {
 
     t.plan(7);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.track(TrackerActions.PAGE_VIEWED, [
         {
             product: {
@@ -425,7 +428,7 @@ test("Tracker Track Product View with Default Values", (t: test.Test) => {
 
     t.plan(10);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.track(TrackerActions.PAGE_VIEWED, [
         {
             product: {
@@ -441,6 +444,59 @@ test("Tracker Track Product View with Default Values", (t: test.Test) => {
 
     t.equal(formatProductPayload.calledOnce, true, "formatProductPayload should be called");
 
+});
+
+test("Tracker trackExitIntent API", (t: test.Test) => {
+
+    const siteId = "f245124e-8f61-4277-a089-8d233bc99491";
+    const ContactId = "f245124e-8f61-4277-a089-8d233bc99492";
+    const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
+    const sessionId = "f245124e8f614277a0898d233bc99494";
+    const url = "https://someurl.com";
+    const timeElapsed = 30;
+
+    let tAgent: ITrackerAgent;
+    let tStorage: ITrackerStorage;
+    const tBrowser: IBrowser = mock.createBrowser(t);
+
+    tStorage = mock.createStorage(t, {
+        getCampaignId: () => {
+            t.pass("ITrackerStorage.getCampaignId was called");
+            return CampaignId;
+        },
+        getSessionId: () => {
+            t.pass("ITrackerStorage.getSessionId was called");
+            return sessionId;
+        },
+        getUserId: () => {
+            t.pass("ITrackerStorage.getUserId was called");
+            return ContactId;
+        }
+    });
+
+    tAgent = mock.createAgent(t, {
+        sendTrack: (payload: ITrackExitIntentPayload): void => {
+
+            const expectedPayload = {
+                CampaignId,
+                ContactId,
+                TimeElapsed: timeElapsed,
+                Url: url,
+                actionType: TrackerActions.EXIT_INTENT,
+                sessionId,
+                siteId
+            };
+
+            t.deepEqual(payload, expectedPayload, "ITrackerAgent.sendTrack was not called with expected payload");
+        },
+    });
+
+    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+
+    t.plan(6);
+
+    tracker.init(siteId, true);
+    tracker.trackExitIntent(timeElapsed, url);
 });
 
 test("Tracker trackPageView API", (t: test.Test) => {
@@ -490,7 +546,7 @@ test("Tracker trackPageView API", (t: test.Test) => {
 
     t.plan(6);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.trackPageView(url);
 });
 
@@ -561,7 +617,7 @@ test("Tracker trackAddToOrder API", (t: test.Test) => {
 
     t.plan(6);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.trackAddToOrder(itemCode, itemPrice, itemUrl, itemQuantity, itemTotalPrice, itemName, itemImage, extraProps);
 });
 
@@ -643,7 +699,7 @@ test("Tracker trackAddToOrder API with 2 parameters (product and extraProps only
 
     t.plan(6);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.trackAddToOrder(productInfo, extraProps);
 });
 
@@ -689,7 +745,7 @@ test("trackAddToOrder test default values with 2 parameters (product and extraPr
 
     t.plan(7);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.trackAddToOrder(product);
 });
 
@@ -736,7 +792,7 @@ test("trackAddToOrder test default values", (t: test.Test) => {
 
     t.plan(7);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.trackAddToOrder(product.itemCode, null, product.itemUrl, null, null, product.itemName);
 
 });
@@ -837,7 +893,7 @@ test("Tracker trackOrderCompleted API", (t: test.Test) => {
 
     t.plan(6);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.trackOrderCompleted(products, totalPrice);
 });
 
@@ -923,7 +979,7 @@ test("Tracker trackOrderCompleted test default values", (t: test.Test) => {
 
     t.plan(5);
 
-    tracker.init(siteId);
+    tracker.init(siteId, false);
     tracker.trackOrderCompleted(products, 1);
 
 });
@@ -940,6 +996,7 @@ test("Tracker should be initialized with custom userId cookie name", (t: test.Te
     const userIdName = "userIdExample";
     const sessionIdName = "sessionIdExample";
     const emailName = "emailNameExample";
+    const exitIntentFlagName = "exitIntentFlagExample";
 
     tStorage = mock.createStorage(t, {
         userIdName,
@@ -956,8 +1013,8 @@ test("Tracker should be initialized with custom userId cookie name", (t: test.Te
 
     const tracker = new Tracker(tAgent, tStorage, tBrowser);
 
-    tracker.setCookieNames({ userIdName, sessionIdName, emailName });
-    tracker.init(siteId);
+    tracker.setCookieNames({ userIdName, sessionIdName, emailName, exitIntentFlagName });
+    tracker.init(siteId, false);
 
     t.plan(2);
     t.end();
