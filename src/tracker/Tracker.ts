@@ -11,7 +11,7 @@ export enum TrackerActions {
     IDENTIFY = "IDENTIFY",
     ORDER_COMPLETED = "ORDER_COMPLETED",
     PAGE_VIEWED = "PAGE_VIEWED",
-    MOUSE_OUT = "MOUSE_OUT",
+    EXIT_INTENT = "EXIT_INTENT",
     PING = "PING"
 }
 
@@ -136,15 +136,15 @@ export default class Tracker
         this.agent.sendTrack(payload);
     }
 
-    public trackMouseOut(timeElapsed?: number, url?: string): void {
+    public trackExitIntent(timeElapsed?: number, url?: string): void {
         if (!this._isInitialized()) {
             return;
         }
         
-        const payload: ITrackMouseOutPayload = {
+        const payload: ITrackExitIntentPayload = {
             ContactId: this.storage.getUserId(),
             Url: url || this.storage.getCurrentPageUrl(),
-            actionType: TrackerActions.MOUSE_OUT,
+            actionType: TrackerActions.EXIT_INTENT,
             sessionId: this.storage.getSessionId(),
             siteId: this.siteId,
             TimeElapsed: timeElapsed
@@ -331,7 +331,7 @@ export default class Tracker
         this.storage.setCookieNames(cookieNames);
     }
 
-    public init(siteId: string, mouseOutEventFlag: true): void {
+    public init(siteId: string, exitIntentEventFlag: boolean): void {
         if (!siteId) {
             throw new Error("siteId cannot be undefined or empty");
         }
@@ -340,13 +340,14 @@ export default class Tracker
             throw new Error("siteId should be a valid uuid");
         }
 
-        if (typeof mouseOutEventFlag != "boolean"){
-            throw new Error("mouseOutEventFlag should be a boolean")
+        if (exitIntentEventFlag != null && typeof exitIntentEventFlag != "boolean"){
+            throw new Error("exitIntentEventFlag should be a boolean")
+        }else{
+            this.storage.setExitIntentFlag(String(exitIntentEventFlag));
         }
-
+        
         this.siteId = siteId;
-        this.storage.setMouseOutFlag(String(mouseOutEventFlag));
-
+        
         const userId = this.storage.getUserId();
         const sessionId = this.storage.getSessionId();
 
@@ -367,9 +368,8 @@ export default class Tracker
             this.storage.setSessionId(generatedSessionId, { expires: 1 });
             return;
         }
-        if (!mouseOutEventFlag) {
-            let generatedMouseOutFlag = String(true);
-            this.storage.setMouseOutFlag(generatedMouseOutFlag);
+        if (exitIntentEventFlag == null) {
+            this.storage.setExitIntentFlag(String(true));
             return;
         }
     }

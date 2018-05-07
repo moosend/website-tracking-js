@@ -75,12 +75,12 @@ export default class TrackerStorage extends CookieNames
         return window.location.href;
     }
 
-    public setMouseOutFlag(mouseOutFlag: string): void {
-        this.storage.setItem(this.mouseOutFlagName, mouseOutFlag);
+    public setExitIntentFlag(exitIntentFlag: string): void {
+        this.storage.setItem(this.exitIntentFlagName, exitIntentFlag);
     }
 
-    public getMouseOutFlag(): string {
-        return this.storage.getItem(this.mouseOutFlagName);
+    public getExitIntentFlag(): string {
+        return this.storage.getItem(this.exitIntentFlagName);
     }
     
 }
