@@ -44,6 +44,19 @@ const trackerStub = typeof(window) !== "undefined" ? window[API_KEY] : [];
 // Expose real API
 global[API_KEY] = callTrackerMethod.bind(this);
 
+const timeEntered = performance.now();
+
+if(trackerStorage.getMouseOutFlag() == "true"){
+    document.documentElement.addEventListener("mouseleave", callMouseOutEvent);
+}
+
+function callMouseOutEvent(){
+    const timeExited = performance.now();
+    const timeElapsed = timeExited - timeEntered / 1000;
+    tracker.trackMouseOut(timeElapsed);
+    document.documentElement.removeEventListener("mouseleave", callMouseOutEvent)
+}
+
 function callTrackerMethod() {
 
     const args = Array.prototype.slice.call(arguments);
