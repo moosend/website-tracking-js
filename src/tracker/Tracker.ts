@@ -11,7 +11,8 @@ export enum TrackerActions {
     IDENTIFY = "IDENTIFY",
     ORDER_COMPLETED = "ORDER_COMPLETED",
     PAGE_VIEWED = "PAGE_VIEWED",
-    PING = "PING",
+    MOUSE_OUT = "MOUSE_OUT",
+    PING = "PING"
 }
 
 export default class Tracker
@@ -26,6 +27,7 @@ export default class Tracker
         storage: ITrackerStorage,
         browser: IBrowser,
     ) {
+        
         this.agent = agent;
         this.storage = storage;
         this.browser = browser;
@@ -84,7 +86,7 @@ export default class Tracker
 
     public track(
         action: ActionType,
-        props?: [{ product: IProduct }] | any,
+        props?: [{ product: IProduct }] | Array<any>,
     ): void {
         if (!this._isInitialized()) {
             return;
@@ -118,6 +120,34 @@ export default class Tracker
             actionType: TrackerActions.PAGE_VIEWED,
             sessionId: this.storage.getSessionId(),
             siteId: this.siteId,
+        };
+
+        const email = this.storage.getEmail();
+        const campaignId = this.storage.getCampaignId();
+
+        if (email) {
+            payload.ContactEmailAddress = email;
+        }
+
+        if (campaignId) {
+            payload.CampaignId = campaignId;
+        }
+
+        this.agent.sendTrack(payload);
+    }
+
+    public trackMouseOut(timeElapsed?: number, url?: string): void {
+        if (!this._isInitialized()) {
+            return;
+        }
+        
+        const payload: ITrackMouseOutPayload = {
+            ContactId: this.storage.getUserId(),
+            Url: url || this.storage.getCurrentPageUrl(),
+            actionType: TrackerActions.MOUSE_OUT,
+            sessionId: this.storage.getSessionId(),
+            siteId: this.siteId,
+            TimeElapsed: timeElapsed
         };
 
         const email = this.storage.getEmail();
@@ -301,7 +331,7 @@ export default class Tracker
         this.storage.setCookieNames(cookieNames);
     }
 
-    public init(siteId: string): void {
+    public init(siteId: string, mouseOutEventFlag: true): void {
         if (!siteId) {
             throw new Error("siteId cannot be undefined or empty");
         }
@@ -310,7 +340,12 @@ export default class Tracker
             throw new Error("siteId should be a valid uuid");
         }
 
+        if (typeof mouseOutEventFlag != "boolean"){
+            throw new Error("mouseOutEventFlag should be a boolean")
+        }
+
         this.siteId = siteId;
+        this.storage.setMouseOutFlag(String(mouseOutEventFlag));
 
         const userId = this.storage.getUserId();
         const sessionId = this.storage.getSessionId();
@@ -332,11 +367,16 @@ export default class Tracker
             this.storage.setSessionId(generatedSessionId, { expires: 1 });
             return;
         }
+        if (!mouseOutEventFlag) {
+            let generatedMouseOutFlag = String(true);
+            this.storage.setMouseOutFlag(generatedMouseOutFlag);
+            return;
+        }
     }
 
     public getPayload(
         action: ActionType | any,
-        props?: any,
+        props?: Array<any>,
     ): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload {
 
         const payload: ITrackPayload = {
