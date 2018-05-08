@@ -453,7 +453,7 @@ test("Tracker trackExitIntent API", (t: test.Test) => {
     const CampaignId = "f245124e-8f61-4277-a089-8d233bc99493";
     const sessionId = "f245124e8f614277a0898d233bc99494";
     const url = "https://someurl.com";
-    const timeElapsed = 30;
+    const secondsOnPage = 30;
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
@@ -480,7 +480,7 @@ test("Tracker trackExitIntent API", (t: test.Test) => {
             const expectedPayload = {
                 CampaignId,
                 ContactId,
-                TimeElapsed: timeElapsed,
+                SecondsOnPage: secondsOnPage,
                 Url: url,
                 actionType: TrackerActions.EXIT_INTENT,
                 sessionId,
@@ -496,7 +496,7 @@ test("Tracker trackExitIntent API", (t: test.Test) => {
     t.plan(6);
 
     tracker.init(siteId, true);
-    tracker.trackExitIntent(timeElapsed, url);
+    tracker.trackExitIntent(secondsOnPage, url);
 });
 
 test("Tracker trackPageView API", (t: test.Test) => {

@@ -136,7 +136,7 @@ export default class Tracker
         this.agent.sendTrack(payload);
     }
 
-    public trackExitIntent(timeElapsed?: number, url?: string): void {
+    public trackExitIntent(secondsOnPage?: number, url?: string): void {
         if (!this._isInitialized()) {
             return;
         }
@@ -147,7 +147,7 @@ export default class Tracker
             actionType: TrackerActions.EXIT_INTENT,
             sessionId: this.storage.getSessionId(),
             siteId: this.siteId,
-            TimeElapsed: timeElapsed
+            SecondsOnPage: secondsOnPage
         };
 
         const email = this.storage.getEmail();

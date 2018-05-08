@@ -34,7 +34,7 @@ interface TrackingAPI {
 
     trackPageView(url?: string): void;
 
-    trackExitIntent(timeElapsed?: number, url?: string): void;
+    trackExitIntent(secondsOnPage?: number, url?: string): void;
 
     trackAddToOrder(itemCode: string, itemPrice: number, itemUrl: string, itemQuantity: number, itemTotal?: number, itemName?: string, itemImage?: string, props?: Object): void;
 
@@ -65,7 +65,7 @@ interface ITrackPageViewPayload extends ITrackPayload {
 
 interface ITrackExitIntentPayload extends ITrackPayload {
     Url: string;
-    TimeElapsed: number;
+    SecondsOnPage: number;
 }
 
 interface ITrackIdentifyPayload extends ITrackPayload {
