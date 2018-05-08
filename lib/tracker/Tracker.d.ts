@@ -15,7 +15,7 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
     identify(email: string, name?: string, props?: any | any[]): void;
     track(action: ActionType, props?: [{
         product: IProduct;
-    }] | Array<any>): void;
+    }] | any[]): void;
     trackPageView(url?: string): void;
     trackExitIntent(secondsOnPage?: number, url?: string): void;
     ping(browserComponents: IBrowserComponents): void;
@@ -23,7 +23,7 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
     trackOrderCompleted(products: IProduct[], totalPrice?: number): void;
     setCookieNames(cookieNames: ICookieProperties): void;
     init(siteId: string, exitIntentEventFlag: boolean): void;
-    getPayload(action: ActionType | any, props?: Array<any>): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload;
+    getPayload(action: ActionType | any, props?: any[]): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload;
     formatProductPayload(product: IProduct): IProduct;
     private _isInitialized();
 }
