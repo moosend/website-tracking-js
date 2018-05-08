@@ -12,6 +12,7 @@
     "clean-dist": "rm -r dist/**",
     "build": "webpack",
     "build-prod": "webpack --config webpack.config.prod.js",
+    "build-staging": "webpack --config webpack.config.staging.js",
     "build-min": "webpack --config webpack.config.min.js",
     "build-demo": "webpack --config webpack.config.demo.js",
     "bundle-stage": "NODE_ENV=stage webpack",

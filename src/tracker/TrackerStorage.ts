@@ -82,5 +82,4 @@ export default class TrackerStorage extends CookieNames
     public getExitIntentFlag(): boolean {
         return this.storage.getItem(this.exitIntentFlagName);
     }
-    
 }

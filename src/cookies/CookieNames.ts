@@ -8,7 +8,7 @@ export default class CookieNames implements ICookieNames {
         userIdName: string = "uid",
         sessionIdName: string = "sessionid",
         emailName: string = "email",
-        exitIntentFlagName: string = "exitIntentFlag"
+        exitIntentFlagName: string = "exitIntentFlag",
     ) {
         this.userIdName = userIdName;
         this.sessionIdName = sessionIdName;

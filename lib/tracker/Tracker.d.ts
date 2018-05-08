@@ -3,6 +3,7 @@ export declare enum TrackerActions {
     IDENTIFY = "IDENTIFY",
     ORDER_COMPLETED = "ORDER_COMPLETED",
     PAGE_VIEWED = "PAGE_VIEWED",
+    EXIT_INTENT = "EXIT_INTENT",
     PING = "PING",
 }
 export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, PayloadAPI {
@@ -14,14 +15,15 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PingAPI, Paylo
     identify(email: string, name?: string, props?: any | any[]): void;
     track(action: ActionType, props?: [{
         product: IProduct;
-    }] | any): void;
+    }] | Array<any>): void;
     trackPageView(url?: string): void;
+    trackExitIntent(secondsOnPage?: number, url?: string): void;
     ping(browserComponents: IBrowserComponents): void;
     trackAddToOrder(itemCode: string | IProduct, itemPrice?: number | object, itemUrl?: string, itemQuantity?: number, itemTotalPrice?: number, itemName?: string, itemImage?: string, props?: object): void;
     trackOrderCompleted(products: IProduct[], totalPrice?: number): void;
     setCookieNames(cookieNames: ICookieProperties): void;
-    init(siteId: string): void;
-    getPayload(action: ActionType | any, props?: any): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload;
+    init(siteId: string, exitIntentEventFlag: boolean): void;
+    getPayload(action: ActionType | any, props?: Array<any>): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload;
     formatProductPayload(product: IProduct): IProduct;
     private _isInitialized();
 }

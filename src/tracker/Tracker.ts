@@ -12,7 +12,7 @@ export enum TrackerActions {
     ORDER_COMPLETED = "ORDER_COMPLETED",
     PAGE_VIEWED = "PAGE_VIEWED",
     EXIT_INTENT = "EXIT_INTENT",
-    PING = "PING"
+    PING = "PING",
 }
 
 export default class Tracker
@@ -27,7 +27,7 @@ export default class Tracker
         storage: ITrackerStorage,
         browser: IBrowser,
     ) {
-        
+
         this.agent = agent;
         this.storage = storage;
         this.browser = browser;
@@ -86,7 +86,7 @@ export default class Tracker
 
     public track(
         action: ActionType,
-        props?: [{ product: IProduct }] | Array<any>,
+        props?: [{ product: IProduct }] | any[],
     ): void {
         if (!this._isInitialized()) {
             return;
@@ -140,14 +140,14 @@ export default class Tracker
         if (!this._isInitialized()) {
             return;
         }
-        
+
         const payload: ITrackExitIntentPayload = {
             ContactId: this.storage.getUserId(),
+            SecondsOnPage: secondsOnPage,
             Url: url || this.storage.getCurrentPageUrl(),
             actionType: TrackerActions.EXIT_INTENT,
             sessionId: this.storage.getSessionId(),
             siteId: this.siteId,
-            SecondsOnPage: secondsOnPage
         };
 
         const email = this.storage.getEmail();
@@ -340,14 +340,14 @@ export default class Tracker
             throw new Error("siteId should be a valid uuid");
         }
 
-        if (exitIntentEventFlag != null && typeof exitIntentEventFlag != "boolean"){
-            throw new Error("exitIntentEventFlag should be a boolean")
-        }else{
+        if (exitIntentEventFlag != null && typeof exitIntentEventFlag !== "boolean") {
+            throw new Error("exitIntentEventFlag should be a boolean");
+        } else {
             this.storage.setExitIntentFlag(exitIntentEventFlag);
         }
-        
+
         this.siteId = siteId;
-        
+
         const userId = this.storage.getUserId();
         const sessionId = this.storage.getSessionId();
 
@@ -376,7 +376,7 @@ export default class Tracker
 
     public getPayload(
         action: ActionType | any,
-        props?: Array<any>,
+        props?: any[],
     ): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload {
 
         const payload: ITrackPayload = {

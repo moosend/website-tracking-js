@@ -14,6 +14,6 @@ export default class TrackerStorage extends CookieNames implements ITrackerStora
     getSessionId(): string;
     setSessionId(sessionId: string, options?: any): void;
     getCurrentPageUrl(): string;
-    setMouseOutFlag(mouseOutFlag: string): void;
-    getMouseOutFlag(): string;
+    setExitIntentFlag(exitIntentFlag: boolean): void;
+    getExitIntentFlag(): boolean;
 }
