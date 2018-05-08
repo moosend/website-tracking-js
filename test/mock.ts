@@ -27,6 +27,9 @@ export default {
       "getSessionId",
       "setSessionId",
 
+      "getExitIntentFlag",
+      "setExitIntentFlag",
+
       "getCurrentPageUrl",
 
       "setUserIdName",

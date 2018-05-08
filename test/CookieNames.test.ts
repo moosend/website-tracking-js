@@ -11,8 +11,9 @@ test("CookieNames default values", (t: test.Test) => {
         "default sessionIdName is 'sessionid'",
     );
     t.equal(cookieNames.getEmailName(), "email", "default email is 'email'");
+    t.equal(cookieNames.getExitIntentFlagName(), "exitIntentFlag", "default exitIntentFlagName is exitIntentFlag");
 
-    t.plan(3);
+    t.plan(4);
     t.end();
 });
 
@@ -22,10 +23,12 @@ test("CookieNames update default values", (t: test.Test) => {
     const userIdName = "userIdExample";
     const sessionIdName = "sessionIdExample";
     const emailName = "emailExample";
+    const exitIntentFlagName = "exitIntentFlag";
 
     cookieNames.setUserIdName(userIdName);
     cookieNames.setSessionIdName(sessionIdName);
     cookieNames.setEmailName(emailName);
+    cookieNames.setExitIntentFlagName(exitIntentFlagName);
 
     t.notEqual(
         cookieNames.getUserIdName(),
@@ -42,6 +45,7 @@ test("CookieNames update default values", (t: test.Test) => {
         "email",
         "email is not default value 'email'",
     );
+    
 
     t.equal(
         cookieNames.getUserIdName(),

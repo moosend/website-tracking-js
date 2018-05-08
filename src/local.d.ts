@@ -21,7 +21,7 @@ interface IdentifyAPI {
 
 interface TrackingAPI {
     setCookieNames(cookieNames: ICookieNames): void;
-    init(siteId: string): void;
+    init(siteId: string, exitIntentFlag: boolean): void;
     /**
      *  Send action track info
      *  @description Makes a POST to http://requestb.in/15t3ics1
@@ -31,7 +31,10 @@ interface TrackingAPI {
     /**
      *  Sends current page info
      */
+
     trackPageView(url?: string): void;
+
+    trackExitIntent(secondsOnPage?: number, url?: string): void;
 
     trackAddToOrder(itemCode: string, itemPrice: number, itemUrl: string, itemQuantity: number, itemTotal?: number, itemName?: string, itemImage?: string, props?: Object): void;
 
@@ -58,6 +61,11 @@ interface ITrackPayload {
 
 interface ITrackPageViewPayload extends ITrackPayload {
     Url: string;
+}
+
+interface ITrackExitIntentPayload extends ITrackPayload {
+    Url: string;
+    SecondsOnPage: number;
 }
 
 interface ITrackIdentifyPayload extends ITrackPayload {
@@ -129,6 +137,9 @@ interface ITrackerStorage {
     getSessionId(): string;
     setSessionId(value: string, options?: any): void;
 
+    getExitIntentFlag(): boolean;
+    setExitIntentFlag(value: boolean): void;
+
     getCurrentPageUrl(): string;
 }
 
@@ -136,8 +147,8 @@ interface ITrackerStorage {
  * Plain Key/Value storage APi
  */
 interface IStorage {
-    getItem(key: string): string;
-    setItem(key: string, value: string, options?: any): void;
+    getItem(key: any): any;
+    setItem(key: any, value: any, options?: any): void;
     removeItem(key: string): void;
 }
 
@@ -145,6 +156,7 @@ interface ICookieProperties {
     userIdName: string;
     sessionIdName: string;
     emailName: string;
+    exitIntentFlagName: string;
 }
 
 interface ICookieNames extends ICookieProperties {
@@ -152,6 +164,8 @@ interface ICookieNames extends ICookieProperties {
     setUserIdName(userIdName: string): void;
     getSessionIdName(): string;
     setSessionIdName(sessionIdName: string): void;
+    getExitIntentFlagName(): string;
+    setExitIntentFlagName(exitIntentFlagName: string): void;
 }
 
 interface Window { XDomainRequest: any; XMLHttpRequest: any;

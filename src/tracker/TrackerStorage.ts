@@ -74,4 +74,13 @@ export default class TrackerStorage extends CookieNames
     public getCurrentPageUrl(): string {
         return window.location.href;
     }
+
+    public setExitIntentFlag(exitIntentFlag: boolean): void {
+        this.storage.setItem(this.exitIntentFlagName, exitIntentFlag);
+    }
+
+    public getExitIntentFlag(): boolean {
+        return this.storage.getItem(this.exitIntentFlagName);
+    }
+    
 }

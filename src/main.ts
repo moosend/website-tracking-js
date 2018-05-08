@@ -44,6 +44,19 @@ const trackerStub = typeof(window) !== "undefined" ? window[API_KEY] : [];
 // Expose real API
 global[API_KEY] = callTrackerMethod.bind(this);
 
+const timeEntered = performance.now();
+
+if(trackerStorage.getExitIntentFlag() == true){
+    document.documentElement.addEventListener("mouseleave", callExitIntentEvent);
+}
+
+function callExitIntentEvent(){
+    const timeExited = performance.now();
+    const timeElapsed = timeExited - timeEntered / 1000;
+    tracker.trackExitIntent(timeElapsed);
+    document.documentElement.removeEventListener("mouseleave", callExitIntentEvent)
+}
+
 function callTrackerMethod() {
 
     const args = Array.prototype.slice.call(arguments);
