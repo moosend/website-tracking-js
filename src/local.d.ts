@@ -137,8 +137,8 @@ interface ITrackerStorage {
     getSessionId(): string;
     setSessionId(value: string, options?: any): void;
 
-    getExitIntentFlag(): string;
-    setExitIntentFlag(value: string): void;
+    getExitIntentFlag(): boolean;
+    setExitIntentFlag(value: boolean): void;
 
     getCurrentPageUrl(): string;
 }
@@ -147,8 +147,8 @@ interface ITrackerStorage {
  * Plain Key/Value storage APi
  */
 interface IStorage {
-    getItem(key: string): string;
-    setItem(key: string, value: string, options?: any): void;
+    getItem(key: any): any;
+    setItem(key: any, value: any, options?: any): void;
     removeItem(key: string): void;
 }
 
@@ -156,7 +156,7 @@ interface ICookieProperties {
     userIdName: string;
     sessionIdName: string;
     emailName: string;
-    exitIntentFlagName: string;
+    exitIntentFlagName: boolean;
 }
 
 interface ICookieNames extends ICookieProperties {
@@ -164,8 +164,8 @@ interface ICookieNames extends ICookieProperties {
     setUserIdName(userIdName: string): void;
     getSessionIdName(): string;
     setSessionIdName(sessionIdName: string): void;
-    getExitIntentFlag(): string;
-    setExitIntentFlag(exitIntentFlagName: string): void;
+    getExitIntentFlag(): boolean;
+    setExitIntentFlag(exitIntentFlagName: boolean): void;
 }
 
 interface Window { XDomainRequest: any; XMLHttpRequest: any;

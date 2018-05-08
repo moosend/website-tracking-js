@@ -46,7 +46,7 @@ global[API_KEY] = callTrackerMethod.bind(this);
 
 const timeEntered = performance.now();
 
-if(trackerStorage.getExitIntentFlag() == "true"){
+if(trackerStorage.getExitIntentFlag() == true){
     document.documentElement.addEventListener("mouseleave", callExitIntentEvent);
 }
 

@@ -343,7 +343,7 @@ export default class Tracker
         if (exitIntentEventFlag != null && typeof exitIntentEventFlag != "boolean"){
             throw new Error("exitIntentEventFlag should be a boolean")
         }else{
-            this.storage.setExitIntentFlag(String(exitIntentEventFlag));
+            this.storage.setExitIntentFlag(exitIntentEventFlag);
         }
         
         this.siteId = siteId;
@@ -369,7 +369,7 @@ export default class Tracker
             return;
         }
         if (exitIntentEventFlag == null) {
-            this.storage.setExitIntentFlag(String(true));
+            this.storage.setExitIntentFlag(true);
             return;
         }
     }
