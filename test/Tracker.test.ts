@@ -996,7 +996,7 @@ test("Tracker should be initialized with custom userId cookie name", (t: test.Te
     const userIdName = "userIdExample";
     const sessionIdName = "sessionIdExample";
     const emailName = "emailNameExample";
-    const exitIntentFlagName = "exitIntentFlagExample";
+    const exitIntentFlagName = "exitIntentFlag";
 
     tStorage = mock.createStorage(t, {
         userIdName,

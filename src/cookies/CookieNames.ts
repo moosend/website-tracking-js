@@ -2,13 +2,13 @@ export default class CookieNames implements ICookieNames {
     public userIdName: string;
     public sessionIdName: string;
     public emailName: string;
-    public exitIntentFlagName: boolean;
+    public exitIntentFlagName: string;
 
     constructor(
         userIdName: string = "uid",
         sessionIdName: string = "sessionid",
         emailName: string = "email",
-        exitIntentFlagName: boolean = true
+        exitIntentFlagName: string = "exitIntentFlag"
     ) {
         this.userIdName = userIdName;
         this.sessionIdName = sessionIdName;
@@ -40,11 +40,11 @@ export default class CookieNames implements ICookieNames {
         this.emailName = emailName;
     }
 
-    public getExitIntentFlag(): boolean {
+    public getExitIntentFlagName(): string {
         return this.exitIntentFlagName;
     }
 
-    public setExitIntentFlag(exitIntentFlagName: boolean): void {
+    public setExitIntentFlagName(exitIntentFlagName: string): void {
         this.exitIntentFlagName = exitIntentFlagName;
     }
 }

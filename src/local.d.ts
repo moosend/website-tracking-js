@@ -156,7 +156,7 @@ interface ICookieProperties {
     userIdName: string;
     sessionIdName: string;
     emailName: string;
-    exitIntentFlagName: boolean;
+    exitIntentFlagName: string;
 }
 
 interface ICookieNames extends ICookieProperties {
@@ -164,8 +164,8 @@ interface ICookieNames extends ICookieProperties {
     setUserIdName(userIdName: string): void;
     getSessionIdName(): string;
     setSessionIdName(sessionIdName: string): void;
-    getExitIntentFlag(): boolean;
-    setExitIntentFlag(exitIntentFlagName: boolean): void;
+    getExitIntentFlagName(): string;
+    setExitIntentFlagName(exitIntentFlagName: string): void;
 }
 
 interface Window { XDomainRequest: any; XMLHttpRequest: any;
