@@ -52,8 +52,8 @@ if (trackerStorage.getExitIntentFlag()) {
 
 function callExitIntentEvent() {
     const timeExited = performance.now();
-    const timeElapsed = timeExited - timeEntered / 1000;
-    tracker.trackExitIntent(timeElapsed);
+    const timeElapsed = (timeExited - timeEntered) / 1000;
+    tracker.trackExitIntent(Math.round(timeElapsed));
     document.documentElement.removeEventListener("mouseleave", callExitIntentEvent);
 }
 
