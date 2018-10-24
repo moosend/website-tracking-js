@@ -2,7 +2,7 @@ import cookie from 'js-cookie';
 
 export default class CookieStorage implements IStorage {
 
-    private cookieSettings: any;
+    public cookieSettings: any;
 
     constructor(cookieSettings?: any) {
         this.cookieSettings = cookieSettings;

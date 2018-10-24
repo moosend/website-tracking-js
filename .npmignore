@@ -1,9 +1,0 @@
-.npmignore
-.gitignore
-.travis.yml
-jest.config.js
-yarn-error.log
-npm-debug.log
-coverage/
-test/
-LICENSE

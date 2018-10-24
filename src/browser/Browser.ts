@@ -1,52 +1,72 @@
-import FingerPrint from "fingerprintjs2";
+import Fingerprint2 from "fingerprintjs2";
 
 export default class Browser implements IBrowser {
 
     public fingerPrint(done: (browserComponents: IBrowserComponents) => void) {
 
         let browserComponents: IBrowserComponents;
+        const options = {
+            excludes: {
+                addBehavior: true,
+                audio: true,
+                deviceMemory: true,
+                doNotTrack: true,
+                enumerateDevices: true,
+                fontsFlash: true,
+                hardwareConcurrency: true,
+                pixelRatio: false,
+                timezone: true,
+                userAgent: true,
+                webglVendorAndRenderer: true,
+            },
+            fonts: {
+                extendedJsFonts: false
+            }
+        };
 
-        new FingerPrint().get((browserHash: string, components: any) => {
+        Fingerprint2.get(options, (components: any) => {
+            const values = components.map((component) => component.value);
+            const browserHash = Fingerprint2.x64hash128(values.join(''), 31);
 
             browserComponents = {
-                browserHash,
+                browserHash
             };
 
             components.forEach((component: any) => {
 
                 switch (component.key) {
                     case "language": browserComponents.language = component.value; break;
-                    case "color_depth": browserComponents.colorDepth = component.value; break;
-                    case "pixel_ratio": browserComponents.pixelRatio = component.value; break;
-                    case "resolution":
+                    case "colorDepth": browserComponents.colorDepth = component.value; break;
+                    case "pixelRatio": browserComponents.pixelRatio = component.value; break;
+                    case "screenResolution":
                         browserComponents.screenResolution = {
                             height: component.value[1],
                             width: component.value[0],
                         };
                         break;
-                    case "available_resolution":
-                        browserComponents.screenResolution = {
+                    case "availableScreenResolution":
+                        browserComponents.availableResolution = {
                             height: component.value[1],
                             width: component.value[0],
                         };
                         break;
-                    case "timezone_offset": browserComponents.timeZoneOffset = component.value; break;
-                    case "session_storage": browserComponents.sessionStorage = component.value; break;
-                    case "local_storage": browserComponents.localStorage = component.value; break;
-                    case "indexed_db": browserComponents.indexedDb = component.value; break;
-                    case "open_database": browserComponents.openDatabase = component.value; break;
-                    case "cpu_class": browserComponents.cpuClass = component.value; break;
-                    case "navigator_platform": browserComponents.navigatorPlatform = component.value; break;
-                    case "regular_plugins": browserComponents.plugins = component.value; break;
+                    case "timezoneOffset": browserComponents.timeZoneOffset = component.value; break;
+                    case "sessionStorage": browserComponents.sessionStorage = component.value; break;
+                    case "localStorage": browserComponents.localStorage = component.value; break;
+                    case "indexedDb": browserComponents.indexedDb = component.value; break;
+                    case "openDatabase": browserComponents.openDatabase = component.value; break;
+                    case "cpuClass": browserComponents.cpuClass = component.value; break;
+                    case "platform": browserComponents.navigatorPlatform = component.value; break;
+                    case "plugins": browserComponents.plugins = component.value; break;
                     case "canvas": browserComponents.canvas = component.value; break;
                     case "webgl": browserComponents.webGl = component.value; break;
-                    case "adblock": browserComponents.adBlock = component.value; break;
-                    case "has_lied_languages": browserComponents.triedToHideLanguage = component.value; break;
-                    case "has_lied_resolution": browserComponents.triedToHideResolution = component.value; break;
-                    case "has_lied_os": browserComponents.triedToHideOs = component.value; break;
-                    case "has_lied_browser": browserComponents.triedToHideBrowser = component.value; break;
-                    case "touch_support": browserComponents.touchSupport = component.value[1]; break;
-                    case "js_fonts": browserComponents.jsFonts = component.value; break;
+                    case "adBlock": browserComponents.adBlock = component.value; break;
+                    case "hasLiedLanguages": browserComponents.triedToHideLanguage = component.value; break;
+                    case "hasLiedResolution": browserComponents.triedToHideResolution = component.value; break;
+                    case "hasLiedOs": browserComponents.triedToHideOs = component.value; break;
+                    case "hasLiedBrowser": browserComponents.triedToHideBrowser = component.value; break;
+                    case "touchSupport": browserComponents.touchSupport = component.value[1]; break;
+                    case "fonts": browserComponents.jsFonts = component.value; break;
                 }
             });
 

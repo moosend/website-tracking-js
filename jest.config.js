@@ -1,7 +1,10 @@
 module.exports = {
+    moduleFileExtensions: ["ts", "js"],
+    preset: "ts-jest",
     transform: {
-      "^.+\\.tsx?$": "ts-jest",
+      "^.+\\.(j|t)sx?$": "ts-jest",
     },
-    testRegex: "(/test/.*|(\\.|/)(test|spec))\\.(ts?)$",
-    moduleFileExtensions: ["ts", "js"]
+    transformIgnorePatterns: [
+      "<rootDir>/node_modules/(?!lodash-es/.*)"
+    ]
 };

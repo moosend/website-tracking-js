@@ -10,11 +10,10 @@
         "no-submodule-imports": false,
         "no-use-before-declare": true,
         "await-promise": false,
-        "no-unused-variable": true,
         "return-undefined": true,
         "no-floating-promises": true,
         "no-unnecessary-qualifier": true,
-        "strict-type-predicates": true,
-        "unified-signatures": false
+        "unified-signatures": false,
+        "interface-name": false
     }
 }

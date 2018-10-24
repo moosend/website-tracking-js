@@ -1,3 +1,5 @@
+declare module 'fingerprintjs2';
+
 declare type ActionType = string;
 
 interface IProduct {
@@ -36,9 +38,9 @@ interface TrackingAPI {
 
     trackExitIntent(secondsOnPage?: number, url?: string): void;
 
-    trackAddToOrder(itemCode: string, itemPrice: number, itemUrl: string, itemQuantity: number, itemTotal?: number, itemName?: string, itemImage?: string, props?: Object): void;
+    trackAddToOrder(itemCode: string, itemPrice: number, itemUrl: string, itemQuantity: number, itemTotal?: number, itemName?: string, itemImage?: string, props?: object): void;
 
-    trackOrderCompleted(products: Array<Object>, totalPrice?: number): void;
+    trackOrderCompleted(products: object[], totalPrice?: number): void;
 }
 
 interface PayloadAPI {

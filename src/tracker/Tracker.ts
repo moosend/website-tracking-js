@@ -1,10 +1,7 @@
-import isArray from "lodash-es/isArray";
 import isEmpty from "lodash-es/isEmpty";
 import isPlainObject from "lodash-es/isPlainObject";
-import uuid from "uuid-random";
-
-import { isNumber, isString, isUrl, isValidUUID, toStr } from "../common/utils";
-import CookieNames from "../cookies/CookieNames";
+import uuid from "uuid/v4";
+import { isNumber, isString, isUrl, isValidUUID } from "../common/utils";
 import TrackerActions from "./TrackerActions";
 
 export default class TrackerMethods
@@ -77,7 +74,7 @@ export default class TrackerMethods
 
     public track(
         action: ActionType,
-        props?: [{ product: IProduct }] | any,
+        props?: [{ product: IProduct }] | any[],
     ): void {
         if (!this._isInitialized()) {
             return;
@@ -88,7 +85,7 @@ export default class TrackerMethods
             return;
         }
 
-        if (isArray(props)) {
+        if (Array.isArray(props)) {
             if (props.length && props[0].hasOwnProperty("product")) {
                 let { product } = props[0];
                 product = this.formatProductPayload(product);
@@ -109,6 +106,34 @@ export default class TrackerMethods
             ContactId: this.storage.getUserId(),
             Url: url || this.storage.getCurrentPageUrl(),
             actionType: TrackerActions.PAGE_VIEWED,
+            sessionId: this.storage.getSessionId(),
+            siteId: this.siteId,
+        };
+
+        const email = this.storage.getEmail();
+        const campaignId = this.storage.getCampaignId();
+
+        if (email) {
+            payload.ContactEmailAddress = email;
+        }
+
+        if (campaignId) {
+            payload.CampaignId = campaignId;
+        }
+
+        this.agent.sendTrack(payload);
+    }
+
+    public trackExitIntent(secondsOnPage?: number, url?: string): void {
+        if (!this._isInitialized()) {
+            return;
+        }
+
+        const payload: ITrackExitIntentPayload = {
+            ContactId: this.storage.getUserId(),
+            SecondsOnPage: secondsOnPage,
+            Url: url || this.storage.getCurrentPageUrl(),
+            actionType: TrackerActions.EXIT_INTENT,
             sessionId: this.storage.getSessionId(),
             siteId: this.siteId,
         };
@@ -269,7 +294,7 @@ export default class TrackerMethods
         products: IProduct[],
         totalPrice?: number,
     ): void {
-        if (!isArray(products)) {
+        if (!Array.isArray(products)) {
             throw new Error("products type should be an array");
         }
 
@@ -290,14 +315,19 @@ export default class TrackerMethods
         this.storage.setCookieNames(cookieNames);
     }
 
-    public init(siteId: string): void {
-        console.log(123);
+    public init(siteId: string, exitIntentEventFlag: boolean): void {
         if (!siteId) {
             throw new Error("siteId cannot be undefined or empty");
         }
 
         if (!isValidUUID(siteId)) {
             throw new Error("siteId should be a valid uuid");
+        }
+
+        if (exitIntentEventFlag != null && typeof exitIntentEventFlag !== "boolean") {
+            throw new Error("exitIntentEventFlag should be a boolean");
+        } else {
+            this.storage.setExitIntentFlag(exitIntentEventFlag);
         }
 
         this.siteId = siteId;
@@ -312,6 +342,7 @@ export default class TrackerMethods
         if (!userId) {
             let generatedUserId = uuid();
             generatedUserId = generatedUserId.replace(/-/g, "");
+
             this.storage.setUserId(generatedUserId, { expires: 3650 });
         }
         if (!sessionId) {
@@ -321,11 +352,15 @@ export default class TrackerMethods
             this.storage.setSessionId(generatedSessionId, { expires: 1 });
             return;
         }
+        if (exitIntentEventFlag == null) {
+            this.storage.setExitIntentFlag(true);
+            return;
+        }
     }
 
     public getPayload(
-        action: ActionType|any,
-        props?: any,
+        action: ActionType | any,
+        props?: any[],
     ): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload {
 
         const payload: ITrackPayload = {

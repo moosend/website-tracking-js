@@ -1,20 +1,30 @@
 {
     "compilerOptions": {
+        "declaration": false,
         "rootDir": "src",
-        "outDir": "lib",
-        "module": "commonjs",
+        "module": "es2015",
         "moduleResolution": "node",
-        "target": "es5",
+        "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
+        "allowJs": true,
         "pretty": true,
-        "lib": ["es2015", "dom", "scripthost"],
+        "noEmit": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "lib": [
+            "es2015",
+            "es2016",
+            "es2017",
+            "dom",
+            "scripthost"
+        ],
         "baseUrl": ".",
         "typeRoots": [
             "node_modules/@types"
         ],
         "paths": {
             "lodash/*": [
-              "node_modules/@types/lodash-es/*"
+                "node_modules/@types/lodash-es/*"
             ]
         }
     },

@@ -1,17 +1,15 @@
 /**
  * Entry file for demo bundle
  */
-import 'es5-shim';
+import './polyfills';
+// tslint:disable-next-line:ordered-imports
 import { parse } from "querystring";
 import CookieStorage from "./storage/CookieStorage";
-import TrackerActions from "./tracker/TrackerActions";
 import TrackerFactory from "./tracker/TrackerFactory";
 import TrackerStorage from "./tracker/TrackerStorage";
 
 const trackerStorage = new TrackerStorage(new CookieStorage());
 const tracker: TrackingAPI = TrackerFactory.CreateWithCookieStorage();
-
-export default tracker;
 
 if (typeof location === "object" && location.search) {
 
@@ -44,14 +42,22 @@ window[API_KEY] = callTrackerMethod;
 const timeEntered = performance.now();
 
 if (trackerStorage.getExitIntentFlag()) {
-    document.documentElement.addEventListener("mouseleave", callExitIntentEvent);
+    addExitIntentEventListener(document.documentElement, "mouseleave", callExitIntentEvent);
 }
 
 function callExitIntentEvent() {
     const timeExited = performance.now();
     const timeElapsed = (timeExited - timeEntered) / 1000;
     tracker.trackExitIntent(Math.round(timeElapsed));
-    document.documentElement.removeEventListener("mouseleave", callExitIntentEvent);
+    removeExitIntentEventListener(document.documentElement, "mouseleave", callExitIntentEvent);
+}
+
+function addExitIntentEventListener(element, event, callback) {
+    element.addEventListener ? element.addEventListener(event, callback) : element.attachEvent && element.attachEvent("on" + event, callback);
+}
+
+function removeExitIntentEventListener(element, event, callback) {
+    element.removeEventListener ? element.removeEventListener(event, callback) : element.detachEvent && element.detachEvent("on" + event, callback);
 }
 
 function callTrackerMethod() {

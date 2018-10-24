@@ -1,17 +1,15 @@
 import { isValidUUID } from "../common/utils";
 import CookieNames from "../cookies/CookieNames";
-import Tracker from "./Tracker";
 
 enum CookieKeys {
     CAMPAIGN_ID = "cmid",
 }
 
-export default class TrackerStorage extends CookieNames
-    implements ITrackerStorage {
+export default class TrackerStorage extends CookieNames implements ITrackerStorage {
     private static Keys = CookieKeys;
+    public cookieNames: CookieNames;
 
     private storage: IStorage;
-    private cookieNames: CookieNames;
 
     constructor(storage: IStorage) {
         super();
