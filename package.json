@@ -6,6 +6,7 @@
   "module": "dist/moosend-tracking.module.js",
   "jsnext:main": "dist/moosend-tracking.module.js",
   "author": "Shkumbin Maksuti <shkumbin@moosend.com>",
+  "types": "./dist/mootracker.d.ts",
   "homepage": "https://www.moosend.com/",
   "files": [
     "dist/"
