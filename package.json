@@ -5,8 +5,8 @@
   "umd:main": "dist/moosend-tracking.umd.js",
   "module": "dist/moosend-tracking.module.js",
   "jsnext:main": "dist/moosend-tracking.module.js",
-  "author": "Shkumbin Maksuti <shkumbin@moosend.com>",
   "types": "./dist/mootracker.d.ts",
+  "author": "Shkumbin Maksuti <shkumbin@moosend.com>",
   "homepage": "https://www.moosend.com/",
   "files": [
     "dist/"
