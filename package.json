@@ -1,6 +1,6 @@
 {
   "name": "mootracker",
-  "version": "1.0.0",
+  "version": "0.20",
   "main": "dist/moosend-tracking.js",
   "umd:main": "dist/moosend-tracking.umd.js",
   "module": "dist/moosend-tracking.module.js",
