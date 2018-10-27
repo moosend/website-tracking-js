@@ -1,4 +1,4 @@
-import Browser from '../../src/browser/Browser';
+import Browser from '../../src/browser';
 import Tracker from "../../src/tracker/Tracker";
 import TrackerActions from "../../src/tracker/TrackerActions";
 import TrackerAgent from '../../src/tracker/TrackerAgent';

@@ -1,4 +1,4 @@
-import CookieNames from "../src/cookies/CookieNames";
+import CookieNames from "../src/cookies";
 
 describe('CookieNames', () =>{
 
