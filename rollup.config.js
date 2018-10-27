@@ -6,10 +6,11 @@ import replace from 'rollup-plugin-replace';
 import typescript from 'rollup-plugin-typescript2';
 import { uglify } from 'rollup-plugin-uglify';
 
-function getConfig(dest, format, ugly) {
+function getConfig(dest, format, env, ugly) {
     const global_defs = {
         EXTEND_JS_FONTS: false
     };
+    const API_URL = env === 'staging' ? 'http://t.stat-track-staging.com' : 'http://t.stat-track.com';
     const config = {
         external: ['window'],
         input: './src/index.ts',
@@ -27,8 +28,8 @@ function getConfig(dest, format, ugly) {
         plugins: [
             typescript(),
             replace({
-                'process.env.API_URL': JSON.stringify('http://t.stat-track.com'),
-                'process.env.NODE_ENV': JSON.stringify('production')
+                'process.env.API_URL': JSON.stringify(API_URL),
+                'process.env.NODE_ENV': JSON.stringify(env)
             }),
             ugly &&
                 uglify(
@@ -87,10 +88,11 @@ function getConfig(dest, format, ugly) {
 };
 
 const config = [
-    getConfig("dist/moosend-tracking.js", "cjs", false),
-    getConfig("dist/moosend-tracking.umd.js", "umd", false),
-    getConfig("dist/moosend-tracking.min.js", "iife", true),
-    getConfig("dist/moosend-tracking.module.js", "es", false)
+    getConfig("dist/moosend-tracking.js", "cjs", "production", false),
+    getConfig("dist/moosend-tracking.umd.js", "umd", "production", false),
+    getConfig("dist/moosend-tracking.min.js", "iife", "production", true),
+    getConfig("dist/moosend-tracking-staging.min.js", "iife", "staging", true),
+    getConfig("dist/moosend-tracking.module.js", "es", "production", false)
 ];
 
 export default config;
