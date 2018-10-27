@@ -12,7 +12,6 @@ function getConfig(dest, format, env, ugly) {
     };
     const API_URL = env === 'staging' ? 'http://t.stat-track-staging.com' : 'http://t.stat-track.com';
     const config = {
-        external: ['window'],
         input: './src/index.ts',
         output: {
             file: dest,
