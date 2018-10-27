@@ -1,28 +1,12 @@
 import Fingerprint2 from "fingerprintjs2";
+import { IBrowser, IBrowserComponents } from "../types";
 
 export default class Browser implements IBrowser {
 
     public fingerPrint(done: (browserComponents: IBrowserComponents) => void) {
 
         let browserComponents: IBrowserComponents;
-        const options = {
-            excludes: {
-                addBehavior: true,
-                audio: true,
-                deviceMemory: true,
-                doNotTrack: true,
-                enumerateDevices: true,
-                fontsFlash: true,
-                hardwareConcurrency: true,
-                pixelRatio: false,
-                timezone: true,
-                userAgent: true,
-                webglVendorAndRenderer: true,
-            },
-            fonts: {
-                extendedJsFonts: false
-            }
-        };
+        const options = {};
 
         Fingerprint2.get(options, (components: any) => {
             const values = components.map((component) => component.value);

@@ -11,10 +11,15 @@ function getConfig(dest, format, ugly) {
         EXTEND_JS_FONTS: false
     };
     const config = {
+        external: ['window'],
         input: './src/index.ts',
         output: {
             file: dest,
             format,
+            name: 'mootrack',
+            globals: {
+                window: 'window'
+            },
             indent: false,
             interop: false,
             strict: false
@@ -59,6 +64,9 @@ function getConfig(dest, format, ugly) {
                     '{key:"userAgent"': 'false&&{key:"userAgent"',
                     '{key:"deviceMemory"': 'false&&{key:"deviceMemory"',
                     '{key:"hardwareConcurrency"': 'false&&{key:"hardwareConcurrency"',
+                    'U.getV18=function(i,o)': 'false&&function(i,o)',
+                    'U.getPromise=': 'false&&',
+                    'throw new Error("\'new Fingerprint()\' is deprecated, see https://github.com/Valve/fingerprintjs2#upgrade-guide-from-182-to-200")': 'return false',
                     't.fonts.extendedJsFonts': global_defs.EXTEND_JS_FONTS
                 }
             }),
@@ -68,7 +76,9 @@ function getConfig(dest, format, ugly) {
                 main: true,
                 browser: true
             }),
-            commonjs(),
+            commonjs({
+                ignoreGlobal: true
+            }),
             filesize()
         ]
     };

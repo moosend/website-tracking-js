@@ -1,4 +1,5 @@
 import cookie from 'js-cookie';
+import { IStorage } from '../types';
 
 export default class CookieStorage implements IStorage {
 

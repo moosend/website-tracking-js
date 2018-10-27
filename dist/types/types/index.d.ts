@@ -1,8 +1,5 @@
-declare module 'fingerprintjs2';
-
-declare type ActionType = string;
-
-interface IProduct {
+export declare type ActionType = string;
+export interface IProduct {
     itemCode?: string;
     itemPrice?: number | string;
     itemUrl?: string;
@@ -12,45 +9,26 @@ interface IProduct {
     itemName?: string;
     [key: string]: any;
 }
-
-interface PingAPI {
+export interface PingAPI {
     ping(browserComponents: IBrowserComponents): void;
 }
-
-interface IdentifyAPI {
-    identify(email: string, name?: string, props?: any|any[]): void;
+export interface IdentifyAPI {
+    identify(email: string, name?: string, props?: any | any[]): void;
 }
-
-interface TrackingAPI {
+export interface TrackingAPI {
     setCookieNames(cookieNames: ICookieNames): void;
     init(siteId: string, exitIntentFlag: boolean): void;
-    /**
-     *  Send action track info
-     *  @description Makes a POST to http://requestb.in/15t3ics1
-     */
-    track(action: ActionType, props?: any|any[]): void;
-
-    /**
-     *  Sends current page info
-     */
-
+    track(action: ActionType, props?: any | any[]): void;
     trackPageView(url?: string): void;
-
     trackExitIntent(secondsOnPage?: number, url?: string): void;
-
     trackAddToOrder(itemCode: string, itemPrice: number, itemUrl: string, itemQuantity: number, itemTotal?: number, itemName?: string, itemImage?: string, props?: object): void;
-
     trackOrderCompleted(products: object[], totalPrice?: number): void;
 }
-
-interface PayloadAPI {
+export interface PayloadAPI {
     formatProductPayload(product: IProduct): IProduct;
-
     getPayload(action: ActionType, props?: any): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload;
 }
-
-
-interface ITrackPayload {
+export interface ITrackPayload {
     ContactEmailAddress?: string;
     CampaignId?: string;
     ContactId: string;
@@ -60,38 +38,29 @@ interface ITrackPayload {
     Url?: string;
     sessionId: string;
 }
-
-interface ITrackPageViewPayload extends ITrackPayload {
+export interface ITrackPageViewPayload extends ITrackPayload {
     Url: string;
 }
-
-interface ITrackExitIntentPayload extends ITrackPayload {
+export interface ITrackExitIntentPayload extends ITrackPayload {
     Url: string;
     SecondsOnPage: number;
 }
-
-interface ITrackIdentifyPayload extends ITrackPayload {
+export interface ITrackIdentifyPayload extends ITrackPayload {
     ContactName?: string;
 }
-
-interface ITrackPingPayload extends ITrackPayload {
+export interface ITrackPingPayload extends ITrackPayload {
     BrowserComponents: IBrowserComponents;
 }
-
-interface ITrackerAgent {
+export interface ITrackerAgent {
     sendTrack(payload: ITrackPayload): void;
-
     sendIdentify(payload: ITrackIdentifyPayload): void;
-
     sendPing?(payload: ITrackPingPayload): void;
 }
-
-interface IScreenResolution {
+export interface IScreenResolution {
     width: number;
     height: number;
 }
-
-interface IBrowserComponents {
+export interface IBrowserComponents {
     browserHash: string;
     pixelRatio?: number;
     language?: string;
@@ -116,71 +85,39 @@ interface IBrowserComponents {
     jsFonts?: string[];
     touchSupport?: boolean;
 }
-
-interface IBrowser {
+export interface IBrowser {
     fingerPrint(done: (browserComponents: IBrowserComponents) => void): void;
 }
-
-/**
- * Tracker specific storage API
- */
-interface ITrackerStorage {
+export interface ITrackerStorage {
     setCookieNames(cookieNames: ICookieProperties): void;
-
     getUserId(): string;
     setUserId(value: string, options?: any): void;
-
     getCampaignId(): string;
     setCampaignId(value: string): void;
-
     getEmail(): string;
     setEmail(value: string): void;
-
     getSessionId(): string;
     setSessionId(value: string, options?: any): void;
-
     getExitIntentFlag(): boolean;
     setExitIntentFlag(value: boolean): void;
-
     getCurrentPageUrl(): string;
 }
-
-/**
- * Plain Key/Value storage APi
- */
-interface IStorage {
+export interface IStorage {
     getItem(key: any): any;
     setItem(key: any, value: any, options?: any): void;
     removeItem(key: string): void;
 }
-
-interface ICookieProperties {
+export interface ICookieProperties {
     userIdName: string;
     sessionIdName: string;
     emailName: string;
     exitIntentFlagName: string;
 }
-
-interface ICookieNames extends ICookieProperties {
+export interface ICookieNames extends ICookieProperties {
     getUserIdName(): string;
     setUserIdName(userIdName: string): void;
     getSessionIdName(): string;
     setSessionIdName(sessionIdName: string): void;
     getExitIntentFlagName(): string;
     setExitIntentFlagName(exitIntentFlagName: string): void;
-}
-
-interface Window { XDomainRequest: any; XMLHttpRequest: any;
-}
-
-/**
- *  Declare globals
- */
-declare var _ENV_: string;
-declare var API_URL: string;
-declare var window: Window;
-declare var XDomainRequest: any;
-declare module "*.json" {
-    const value: any;
-    export default value;
 }

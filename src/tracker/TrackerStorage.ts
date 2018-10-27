@@ -1,5 +1,6 @@
 import { isValidUUID } from "../common/utils";
-import CookieNames from "../cookies/CookieNames";
+import CookieNames from "../cookies";
+import { ICookieNames, IStorage, ITrackerStorage } from "../types";
 
 enum CookieKeys {
     CAMPAIGN_ID = "cmid",

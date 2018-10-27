@@ -1,12 +1,13 @@
 /**
  * Entry file for demo bundle
  */
+// tslint:disable:ordered-imports
 import './polyfills';
-// tslint:disable-next-line:ordered-imports
 import { parse } from "querystring";
-import CookieStorage from "./storage/CookieStorage";
+import CookieStorage from "./storage";
 import TrackerFactory from "./tracker/TrackerFactory";
 import TrackerStorage from "./tracker/TrackerStorage";
+import { TrackingAPI } from './types';
 
 const trackerStorage = new TrackerStorage(new CookieStorage());
 const tracker: TrackingAPI = TrackerFactory.CreateWithCookieStorage();
@@ -91,3 +92,5 @@ if (typeof trackerStub === "function" && typeof trackerStub.q === "object" && tr
         callTrackerMethod.apply(tracker, queueCall);
     });
 }
+
+export default tracker;

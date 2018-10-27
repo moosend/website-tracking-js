@@ -2,6 +2,24 @@ import isEmpty from "lodash-es/isEmpty";
 import isPlainObject from "lodash-es/isPlainObject";
 import uuid from "uuid/v4";
 import { isNumber, isString, isUrl, isValidUUID } from "../common/utils";
+import {
+    ActionType,
+    IBrowser,
+    IBrowserComponents,
+    ICookieProperties,
+    IdentifyAPI,
+    IProduct,
+    ITrackerAgent,
+    ITrackerStorage,
+    ITrackExitIntentPayload,
+    ITrackIdentifyPayload,
+    ITrackPageViewPayload,
+    ITrackPayload,
+    ITrackPingPayload,
+    PayloadAPI,
+    PingAPI,
+    TrackingAPI
+} from "../types";
 import TrackerActions from "./TrackerActions";
 
 export default class TrackerMethods

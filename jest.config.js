@@ -1,4 +1,11 @@
 module.exports = {
+    globals: {
+      'ts-jest': {
+        tsConfig: {
+          allowJs: true
+        }
+      }
+    },
     moduleFileExtensions: ["ts", "js"],
     preset: "ts-jest",
     transform: {

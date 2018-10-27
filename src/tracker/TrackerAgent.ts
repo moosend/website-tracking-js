@@ -1,5 +1,6 @@
 import JSON3 from "json3";
 import config from "../common/config";
+import { ITrackerAgent, ITrackIdentifyPayload, ITrackPayload, ITrackPingPayload } from "../types";
 
 export default class TrackerAgent implements ITrackerAgent {
     private url: string;

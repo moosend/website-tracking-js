@@ -1,3 +1,5 @@
+import { ICookieNames } from "../types";
+
 export default class CookieNames implements ICookieNames {
     public userIdName: string;
     public sessionIdName: string;
