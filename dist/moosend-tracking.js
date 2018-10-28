@@ -828,9 +828,14 @@ var Browser = (function () {
     }
     Browser.prototype.fingerPrint = function (done) {
         var browserComponents;
-        var options = {};
+        var options = {
+            excludes: {
+                pixelRatio: false
+            }
+        };
         fingerprint2_min.get(options, function (components) {
-            var values = components.map(function (component) { return component.value; });
+            var values = components.filter(function (component) { return component.key; })
+                .map(function (component) { return component.value; });
             var browserHash = fingerprint2_min.x64hash128(values.join(''), 31);
             browserComponents = {
                 browserHash: browserHash
@@ -2060,6 +2065,9 @@ var TrackerMethods = (function () {
         this.agent.sendPing(payload);
     };
     TrackerMethods.prototype.trackAddToOrder = function (itemCode, itemPrice, itemUrl, itemQuantity, itemTotalPrice, itemName, itemImage, props) {
+        if (!this._isInitialized()) {
+            return;
+        }
         var payload;
         if (typeof itemCode === "object") {
             itemCode = this.formatProductPayload(itemCode);
@@ -2136,6 +2144,9 @@ var TrackerMethods = (function () {
     };
     TrackerMethods.prototype.trackOrderCompleted = function (products, totalPrice) {
         var _this = this;
+        if (!this._isInitialized()) {
+            return;
+        }
         if (!Array.isArray(products)) {
             throw new Error("products type should be an array");
         }
@@ -3338,7 +3349,7 @@ function callTrackerMethod() {
     }
     tracker.track.apply(tracker, [methodName].concat(methodArguments));
 }
-if (typeof trackerStub === "function" && typeof trackerStub.q === "object" && trackerStub.q.length) {
+if (typeof trackerStub.q === "object" && trackerStub.q.length) {
     trackerStub.q.forEach(function (queueCall) {
         callTrackerMethod.apply(tracker, queueCall);
     });

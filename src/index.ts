@@ -3,7 +3,7 @@
  */
 // tslint:disable:ordered-imports
 import './polyfills';
-import { parse } from "querystring";
+import { parse, ParsedUrlQuery } from "querystring";
 import CookieStorage from "./storage";
 import TrackerFactory from "./tracker/TrackerFactory";
 import TrackerStorage from "./tracker/TrackerStorage";
@@ -14,7 +14,7 @@ const tracker: TrackingAPI = TrackerFactory.CreateWithCookieStorage();
 
 if (typeof location === "object" && location.search) {
 
-    const queryStringValues: any = parse(location.search.replace("?", ""));
+    const queryStringValues: ParsedUrlQuery = parse(location.search.replace("?", ""));
 
     if (queryStringValues.cmid) {
 
@@ -85,7 +85,7 @@ function callTrackerMethod() {
 /**
  * Replacy all calls made on API stub
  */
-if (typeof trackerStub === "function" && typeof trackerStub.q === "object" && trackerStub.q.length) {
+if (typeof trackerStub.q === "object" && trackerStub.q.length) {
 
     trackerStub.q.forEach((queueCall: any) => {
 

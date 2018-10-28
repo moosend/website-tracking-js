@@ -5,7 +5,7 @@ import TrackerAgent from '../../src/tracker/TrackerAgent';
 import TrackerStorage from '../../src/tracker/TrackerStorage';
 jest.mock('../../src/tracker/TrackerAgent');
 jest.mock('../../src/tracker/TrackerStorage');
-jest.mock('../../src/browser/Browser');
+jest.mock('../../src/browser');
 
 describe('Tracker', () => {
     let tAgent: any;

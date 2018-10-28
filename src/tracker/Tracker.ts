@@ -208,6 +208,7 @@ export default class TrackerMethods
         props?: object,
     ): void {
         let payload: ITrackPayload;
+        
         if (typeof itemCode === "object") {
             itemCode = this.formatProductPayload(itemCode);
 

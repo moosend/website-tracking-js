@@ -42,7 +42,7 @@ export default class TrackerStorage extends CookieNames implements ITrackerStora
         return this.storage.getItem(this.userIdName);
     }
 
-    public setUserId(userId: string, options?: any): void {
+    public setUserId(userId: string | string[], options?: any): void {
         this.storage.setItem(this.userIdName, userId, options);
     }
 
@@ -50,7 +50,7 @@ export default class TrackerStorage extends CookieNames implements ITrackerStora
         return this.storage.getItem(TrackerStorage.Keys.CAMPAIGN_ID);
     }
 
-    public setCampaignId(campaignId: string): void {
+    public setCampaignId(campaignId: string | string[]): void {
         this.storage.setItem(TrackerStorage.Keys.CAMPAIGN_ID, campaignId);
     }
 

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title></title>
+
+  <link rel="stylesheet" href="main.css" />
+  <!-- Moo API loader -->
+  <!-- //local.tracker.domain:5454/track.js -->
+  <script type='text/javascript'>
+    /**
+     * Tracker lib loader
+     */
+    (function (libURL) {
+      // Create stub and queue calls before lib gets loaded
+      if(!window.mootrack) {
+        window.mootrack = createAPIQueueingStub();
+      }
+      if(window.attachEvent)
+      {
+        window.attachEvent('onload', loadLib);
+      }else{
+        window.addEventListener('load', loadLib, false);
+      }
+      /**
+       * Functions
+       */
+      // Create script to load lib and insert in the document
+      function loadLib() {
+        // Calculate timestamp rounded to 5 minute
+        // Append it to library script url to avoid loading cached script
+        var bustCacheTS = ~~(Date.now() / (5 * 60 * 1000));
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.src = libURL + '?ts=' + (bustCacheTS);
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(script, s);
+      }
+      function createAPIQueueingStub() {
+        var callsQ = [];
+        return {
+          init: createQueueingMethodCall('init', callsQ),
+          ping: createQueueingMethodCall('ping', callsQ),
+          track: createQueueingMethodCall('track', callsQ),
+          identify: createQueueingMethodCall('identify', callsQ),
+          trackPageView: createQueueingMethodCall('trackPageView', callsQ),
+          trackLogin: createQueueingMethodCall('trackLogin', callsQ),
+          q: callsQ
+        };
+        function createQueueingMethodCall(methodName, queue) {
+          return function () {
+            queue.push([methodName].concat(Array.prototype.slice.call(arguments, 0)));
+          }
+        }
+      }
+    })('moosend-tracking.min.js');
+  </script>
+</head>
+<body>
+
+    <h2>Document Cookie</h2>
+    <div class="demo-cookie" id="demo-cookie">
+      <span id="cookie"></span>
+    </div>
+
+    <h2>API Demo</h2>
+    <div class="demo-item">
+      <div class="demo-item__description">
+        <h3>#Identfiy</h3>
+        @param {string} email - Mandatory parameter for identify call <br/>
+        @param {string=} name - Optional parameter <br/>
+      </div>
+      <input type="text" id="txt-identify-email" placeholder="enter email"/>
+      <input type="text" id="txt-identify-name" placeholder="enter name"/>
+      <button id="btn-identify">Identify</button>
+    </div>
+
+    <div class="demo-item">
+      <div class="demo-item__description">
+        <h3>#Track Page View</h3>
+      </div>
+      <button id="btn-track-page">Track Page View</button>
+    </div>
+
+    <div class="demo-item">
+      <div class="demo-item__description">
+        <h3>#Track Order Completed</h3>
+      </div>
+      <input type="text" id="txt-track-order-completed" placeholder="enter purchase amount" />
+      <button id="btn-track-order-completed">Track Order Completed</button>
+    </div>
+
+    <div class="demo-item">
+      <div class="demo-item__description">
+        <h3>#Track Custom Action</h3>
+      </div>
+      <input type="text" id="txt-track-action" placeholder="enter action" />
+      <textarea id="txt-track-action-props" placeholder="enter JSON props">[{ "SKU": 1234567 }, { "Price": 15.67}]</textarea>
+      <button id="btn-track-action">Track Action</button>
+    </div>
+
+    <script type="text/javascript">
+      /**
+       * Track init
+       */
+      // mootrack.init('97C425C7-928B-4856-BC02-C72074C8586C');
+      /**
+       * Identfiy
+       *
+       * @param {string} email - Mandatory parameter for identify call
+       * @param {string=} name - Optional parameter
+       */
+      (function () {
+        var btn = document.getElementById('btn-identify');
+        var inputEmail = document.getElementById('txt-identify-email');
+        var inputName = document.getElementById('txt-identify-name');
+        btn.addEventListener('click', function () {
+          var email = inputEmail.value;
+          var name = inputName.value;
+          var opts = {};
+          if(!email) {
+            inputEmail.classList.add('error');
+            return;
+          } else {
+            inputEmail.classList.remove('error');
+          }
+          opts.email = email;
+          if(name) {
+            opts.name = name;
+          }
+          mootrack.identify(opts.email, opts.name);
+        })
+      }());
+      /**
+       * Track Page View
+       */
+      (function () {
+        var btn = document.getElementById('btn-track-page');
+        btn.addEventListener('click', function () {
+          mootrack.trackPageView();
+        })
+      }());
+      /**
+       * Track Order Completed
+       */
+      (function () {
+        var btn = document.getElementById('btn-track-order-completed');
+        var inputPurchaseAmount = document.getElementById('txt-track-order-completed');
+        btn.addEventListener('click', function () {
+          var amount = Number(inputPurchaseAmount.value);
+          if(Number.isFinite(amount) && !Number.isNaN(amount) && amount > 0) {
+            inputPurchaseAmount.classList.remove('error');
+          } else {
+            inputPurchaseAmount.classList.add('error');
+            return;
+          }
+          mootrack.trackOrderCompleted(amount);
+        })
+      }());
+      /**
+       * Track Custom Action
+       */
+      (function () {
+        var btn = document.getElementById('btn-track-action');
+        var inputAction = document.getElementById('txt-track-action');
+        var inputActionProps = document.getElementById('txt-track-action-props');
+        btn.addEventListener('click', function () {
+          var action = inputAction.value;
+          var props = null;
+          var propsError = false;
+          if(!action) {
+            inputAction.classList.add('error');
+            return;
+          } else {
+            inputAction.classList.remove('error');
+          }
+          try{
+            props = JSON.parse(inputActionProps.value);
+            if(Object.keys(props).length === 0) {
+              propsError = true;
+            }
+          } catch(e) {
+            propsError = true;
+          }
+          if(propsError) {
+            inputActionProps.classList.add('error');
+            return;
+          } else {
+            inputActionProps.classList.remove('error');
+          }
+          mootrack.track(action, props);
+        })
+      }());
+      /**
+       * Update HTML element with cookie content on interval
+       */
+      setInterval(updateCookie, 700);
+      function updateCookie() {
+        var el = document.getElementById("cookie");
+        el.textContent = document.cookie || 'No cookie set';
+      }
+    </script>
+</body>
+</html>

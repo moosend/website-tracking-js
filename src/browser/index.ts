@@ -6,10 +6,15 @@ export default class Browser implements IBrowser {
     public fingerPrint(done: (browserComponents: IBrowserComponents) => void) {
 
         let browserComponents: IBrowserComponents;
-        const options = {};
+        const options = {
+            excludes: {
+                pixelRatio: false
+            }
+        };
 
         Fingerprint2.get(options, (components: any) => {
-            const values = components.map((component) => component.value);
+            const values = components.filter(component => component.key)
+                .map((component) => component.value);
             const browserHash = Fingerprint2.x64hash128(values.join(''), 31);
 
             browserComponents = {
