@@ -17,9 +17,6 @@ function getConfig(dest, format, env, ugly) {
             file: dest,
             format,
             name: 'mootrack',
-            globals: {
-                window: 'window'
-            },
             indent: false,
             interop: false,
             strict: false

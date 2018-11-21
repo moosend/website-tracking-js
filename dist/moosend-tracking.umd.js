@@ -2070,9 +2070,6 @@ var TrackerMethods = (function () {
         this.agent.sendPing(payload);
     };
     TrackerMethods.prototype.trackAddToOrder = function (itemCode, itemPrice, itemUrl, itemQuantity, itemTotalPrice, itemName, itemImage, props) {
-        if (!this._isInitialized()) {
-            return;
-        }
         var payload;
         if (typeof itemCode === "object") {
             itemCode = this.formatProductPayload(itemCode);
@@ -2149,9 +2146,6 @@ var TrackerMethods = (function () {
     };
     TrackerMethods.prototype.trackOrderCompleted = function (products, totalPrice) {
         var _this = this;
-        if (!this._isInitialized()) {
-            return;
-        }
         if (!Array.isArray(products)) {
             throw new Error("products type should be an array");
         }
