@@ -5,6 +5,7 @@ const assign = require("lodash/assign");
 const isArray = require("lodash/isArray");
 
 import CookieNames from "../cookies/CookieNames";
+import Helpers from "./Helpers";
 
 export enum TrackerActions {
     ADDED_TO_ORDER = "ADDED_TO_ORDER", // || Basically Add to Cart
@@ -41,7 +42,7 @@ export default class Tracker
         let payload: ITrackIdentifyPayload;
 
         // IF email is falsy or is not string THEN abort
-        if (!(email && isString(email))) {
+        if (!(email && Helpers.isString(email))) {
             throw new Error("email cannot be undefined or empty");
         }
 
@@ -66,7 +67,7 @@ export default class Tracker
         };
 
         // IF name is string THEN add it to payload
-        if (name && isString(name)) {
+        if (name && Helpers.isString(name)) {
             payload.ContactName = name;
         }
 
@@ -93,7 +94,7 @@ export default class Tracker
         }
 
         // IF action is falsy or not a string THEN abort
-        if (!(action && isString(action))) {
+        if (!(action && Helpers.isString(action))) {
             return;
         }
 
@@ -140,6 +141,9 @@ export default class Tracker
         if (!this._isInitialized()) {
             return;
         }
+
+        const now = new Date();
+        window.localStorage.setItem("lastExited", now.toString());
 
         const payload: ITrackExitIntentPayload = {
             ContactId: this.storage.getUserId(),
@@ -247,29 +251,29 @@ export default class Tracker
             throw new Error("itemCode cannot be empty");
         }
 
-        if (!isNumber(itemPrice) || !itemPrice) {
+        if (!Helpers.isNumber(itemPrice) || !itemPrice) {
             itemPrice = 0;
             console.warn("itemPrice is missing, defaults to 0");
         }
 
-        if (!itemUrl || !isUrl(itemUrl)) {
+        if (!itemUrl || !Helpers.isUrl(itemUrl)) {
             itemUrl = this.storage.getCurrentPageUrl();
             console.warn(
                 "itemUrl is missing or invalid, defaults to current url",
             );
         }
 
-        if (!isNumber(itemQuantity) || !itemQuantity) {
+        if (!Helpers.isNumber(itemQuantity) || !itemQuantity) {
             itemQuantity = 1;
             console.warn("itemQuantity is missing, defaults to 1");
         }
 
-        if (!isNumber(itemTotalPrice) || !itemTotalPrice) {
+        if (!Helpers.isNumber(itemTotalPrice) || !itemTotalPrice) {
             itemTotalPrice = 0;
             console.warn("itemTotalPrice is missing, defaults to 0");
         }
 
-        if (itemImage !== undefined && !isUrl(itemImage)) {
+        if (itemImage !== undefined && !Helpers.isUrl(itemImage)) {
             throw new Error("itemImage should be a valid url");
         }
 
@@ -336,7 +340,7 @@ export default class Tracker
             throw new Error("siteId cannot be undefined or empty");
         }
 
-        if (!isValidUUID(siteId)) {
+        if (!Helpers.isValidUUID(siteId)) {
             throw new Error("siteId should be a valid uuid");
         }
 
@@ -366,8 +370,8 @@ export default class Tracker
             generatedSessionId = generatedSessionId.replace(/-/g, "");
 
             this.storage.setSessionId(generatedSessionId, { expires: 1 });
-            return;
         }
+
         if (exitIntentEventFlag == null) {
             this.storage.setExitIntentFlag(true);
             return;
@@ -416,35 +420,35 @@ export default class Tracker
             throw new Error("itemCode cannot be empty : " + productJson);
         }
 
-        if (!isNumber(product.itemPrice) || !product.itemPrice) {
+        if (!Helpers.isNumber(product.itemPrice) || !product.itemPrice) {
             product.itemPrice = 0;
             console.warn("itemPrice is missing, defaults to 0");
         }
 
-        if (!product.itemUrl || !isUrl(product.itemUrl)) {
+        if (!product.itemUrl || !Helpers.isUrl(product.itemUrl)) {
             product.itemUrl = this.storage.getCurrentPageUrl();
             console.warn(
                 "itemUrl is missing or invalid, defaults to current url",
             );
         }
 
-        if (!isNumber(product.itemQuantity) || !product.itemQuantity) {
+        if (!Helpers.isNumber(product.itemQuantity) || !product.itemQuantity) {
             product.itemQuantity = 1;
             console.warn("itemQuantity is missing, defaults to 1");
         }
 
-        if (!isNumber(product.itemTotalPrice) || !product.itemTotalPrice) {
+        if (!Helpers.isNumber(product.itemTotalPrice) || !product.itemTotalPrice) {
             product.itemTotalPrice = 0;
             console.warn("itemTotalPrice is missing, defaults to 0");
         }
 
-        if (product.itemName !== undefined && !isString(product.itemName)) {
+        if (product.itemName !== undefined && !Helpers.isString(product.itemName)) {
             throw new Error(
                 "itemName type should be a string : " + productJson,
             );
         }
 
-        if (product.itemImage !== undefined && !isUrl(product.itemImage)) {
+        if (product.itemImage !== undefined && !Helpers.isUrl(product.itemImage)) {
             throw new Error("itemImage should be a valid URL : " + productJson);
         }
 
@@ -461,82 +465,4 @@ export default class Tracker
 
         return true;
     }
-}
-
-/**
- * HELPERS
- */
-function toStr(value: any) {
-    return Object.prototype.toString.call(value);
-}
-
-/**
- * Check whether value is of type String
- * @param {any} value
- * @returns {boolean}
- */
-function isString(value: any): boolean {
-    return toStr(value) === "[object String]";
-}
-
-/**
- * Check whether value is of type String
- * @param {any} value
- * @returns {boolean}
- */
-function isNumber(value: any): boolean {
-    return toStr(value) === "[object Number]" || !isNaN(parseFloat(value));
-}
-
-/**
- * Check whether value is of type Object
- * @param {any} value
- * @returns {boolean}
- */
-function isObject(value: any): boolean {
-    return toStr(value) === "[object Object]";
-}
-
-/**
- * Check whether value is a valid URL
- * @param {any} string
- * @returns {boolean}
- */
-function isUrl(url: string): boolean {
-    const regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    return regexp.test(url);
-}
-
-// function allPropsAreScalar(obj: any): boolean {
-//     let keys = Object.keys(obj);
-
-//     for (let i = 0; i < keys.length; i++) {
-//         const val = obj[keys[i]];
-//         const isAllowedScalar = isNumber(val) || isString(val);
-
-//         if (!isAllowedScalar) {
-//             return false;
-//         }
-//     }
-
-//     return true;
-// }
-
-/**
- * Check whether string is valid with or without dashes
- * @param {string} string
- * @returns {boolean}
- */
-function isValidUUID(uuidString: string) {
-    const validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-    return (
-        validUUIDRegex.test(uuidString) ||
-        validUUIDRegex.test(
-            uuidString.replace(
-                /(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi,
-                "$1-$2-$3-$4-$5",
-            ),
-        )
-    );
 }

@@ -3,6 +3,7 @@
  */
 require("es5-shim");
 import CookieStorage from "./storage/CookieStorage";
+import Helpers from "./tracker/Helpers";
 import { TrackerActions } from "./tracker/Tracker";
 import TrackerFactory from "./tracker/TrackerFactory";
 import TrackerStorage from "./tracker/TrackerStorage";
@@ -15,9 +16,8 @@ if (typeof location === "object" && location.search) {
 
     const queryStringValues = queryString.parse(location.search.replace("?", ""));
 
-    if (queryStringValues.cmid) {
-
-        trackerStorage.setCampaignId(queryStringValues.cmid);
+    if (queryStringValues.cid) {
+        trackerStorage.setUserId(queryStringValues.cid);
     }
 
     if (queryStringValues.cid) {
@@ -46,7 +46,30 @@ global[API_KEY] = callTrackerMethod.bind(this);
 
 const timeEntered = performance.now();
 
-if (trackerStorage.getExitIntentFlag()) {
+const email = Helpers.getParameterByName("email");
+const cmid = Helpers.getParameterByName("cmid");
+const mid = Helpers.getParameterByName("mid");
+
+if (Helpers.validateEmail(email)) {
+    trackerStorage.setEmail(email);
+    tracker.track("identify", email);
+}
+
+if (cmid != null && Helpers.isValidUUID(cmid)) {
+    trackerStorage.setCampaignId(cmid);
+}
+
+if (mid != null && Helpers.isValidUUID(mid)) {
+    trackerStorage.setMemberId(mid);
+}
+
+const lastExited = new Date(window.localStorage.getItem("lastExited"));
+const currentDate = new Date();
+currentDate.setDate(currentDate.getDate() - 1);
+const shouldFireExitIntent = (lastExited === null) ? true : currentDate > lastExited;
+
+if (trackerStorage.getExitIntentFlag() && shouldFireExitIntent) {
+
     document.documentElement.addEventListener("mouseleave", callExitIntentEvent);
 }
 
