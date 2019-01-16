@@ -12,7 +12,7 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 });
 
 var _core = createCommonjsModule(function (module) {
-var core = module.exports = { version: '2.5.7' };
+var core = module.exports = { version: '2.6.2' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 });
 var _core_1 = _core.version;
@@ -260,7 +260,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
 })('versions', []).push({
   version: _core.version,
   mode: _library ? 'pure' : 'global',
-  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
+  copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
 });
 });
 
@@ -458,106 +458,128 @@ var now = _core.Date.now;
  * User Timing polyfill (http://www.w3.org/TR/user-timing/)
  * @author RubaXa <trash@rubaxa.org>
  */
-(function (scope){
-	var
-		  startOffset = Date.now ? Date.now() : +(new Date)
-		, performance = scope.performance || {}
+(function (scope) {
+  var
+    startOffset = Date.now ? Date.now() : +(new Date)
+    , performance = scope.performance || {}
 
-		, _entries = []
-		, _marksIndex = {}
+    , _entries = []
+    , _marksIndex = {}
 
-		, _filterEntries = function (key, value){
-			var i = 0, n = _entries.length, result = [];
-			for( ; i < n; i++ ){
-				if( _entries[i][key] == value ){
-					result.push(_entries[i]);
-				}
-			}
-			return	result;
-		}
+    , _filterEntries = function (key, value) {
+      var i = 0, n = _entries.length, result = [];
+      for (; i < n; i++) {
+        if (_entries[i][key] == value) {
+          result.push(_entries[i]);
+        }
+      }
+      return result;
+    }
 
-		, _clearEntries = function (type, name){
-			var i = _entries.length, entry;
-			while( i-- ){
-				entry = _entries[i];
-				if( entry.entryType == type && (name === void 0 || entry.name == name) ){
-					_entries.splice(i, 1);
-				}
-			}
-		}
-	;
-
-
-	if( !performance.now ){
-		performance.now = performance.webkitNow || performance.mozNow || performance.msNow || function (){
-			return (Date.now ? Date.now() : +(new Date)) - startOffset;
-		};
-	}
+    , _clearEntries = function (type, name) {
+      var i = _entries.length, entry;
+      while (i--) {
+        entry = _entries[i];
+        if (entry.entryType == type && (name === void 0 || entry.name == name)) {
+          _entries.splice(i, 1);
+        }
+      }
+    }
+  ;
 
 
-	if( !performance.mark ){
-		performance.mark = performance.webkitMark || function (name){
-			var mark = {
-				  name:			name
-				, entryType:	'mark'
-				, startTime:	performance.now()
-				, duration:		0
-			};
-			_entries.push(mark);
-			_marksIndex[name] = mark;
-		};
-	}
+  if (!performance.now) {
+    performance.now = performance.webkitNow || performance.mozNow || performance.msNow || function () {
+      return (Date.now ? Date.now() : +(new Date)) - startOffset;
+    };
+  }
 
 
-	if( !performance.measure ){
-		performance.measure = performance.webkitMeasure || function (name, startMark, endMark){
-			startMark	= _marksIndex[startMark].startTime;
-			endMark		= _marksIndex[endMark].startTime;
-
-			_entries.push({
-				  name:			name
-				, entryType:	'measure'
-				, startTime:	startMark
-				, duration:		endMark - startMark
-			});
-		};
-	}
-
-
-	if( !performance.getEntriesByType ){
-		performance.getEntriesByType = performance.webkitGetEntriesByType || function (type){
-			return _filterEntries('entryType', type);
-		};
-	}
+  if (!performance.mark) {
+    performance.mark = performance.webkitMark || function (name) {
+      var mark = {
+        name: name
+        , entryType: 'mark'
+        , startTime: performance.now()
+        , duration: 0
+      };
+      _entries.push(mark);
+      _marksIndex[name] = mark;
+    };
+  }
 
 
-	if( !performance.getEntriesByName ){
-		performance.getEntriesByName = performance.webkitGetEntriesByName || function (name){
-			return _filterEntries('name', name);
-		};
-	}
+  if (!performance.measure) {
+    performance.measure = performance.webkitMeasure || function (name, startMark, endMark) {
+      var startTime;
+      var endTime;
+
+      if (endMark !== undefined && _marksIndex[endMark] === undefined) {
+        throw new SyntaxError("Failed to execute 'measure' on 'Performance': The mark '" + endMark + "' does not exist.");
+      }
+
+      if (startMark !== undefined && _marksIndex[startMark] === undefined) {
+        throw new SyntaxError("Failed to execute 'measure' on 'Performance': The mark '" + startMark + "' does not exist.");
+      }
+
+      if (_marksIndex[startMark]) {
+        startTime = _marksIndex[startMark].startTime;
+      } else {
+        startTime = 0;
+      }
+
+      if (_marksIndex[endMark]) {
+        endTime = _marksIndex[endMark].startTime;
+      } else {
+        endTime = performance.now();
+      }
+
+      _entries.push({
+        name: name
+        , entryType: 'measure'
+        , startTime: startTime
+        , duration: endTime - startTime
+      });
+    };
+  }
 
 
-	if( !performance.clearMarks ){
-		performance.clearMarks = performance.webkitClearMarks || function (name){
-			_clearEntries('mark', name);
-		};
-	}
+  if (!performance.getEntriesByType) {
+    performance.getEntriesByType = performance.webkitGetEntriesByType || function (type) {
+      return _filterEntries('entryType', type);
+    };
+  }
 
 
-	if( !performance.clearMeasures ){
-		performance.clearMeasures = performance.webkitClearMeasures || function (name){
-			_clearEntries('measure', name);
-		};
-	}
+  if (!performance.getEntriesByName) {
+    performance.getEntriesByName = performance.webkitGetEntriesByName || function (name) {
+      return _filterEntries('name', name);
+    };
+  }
 
 
-	// exports
-	scope.performance = performance;
+  if (!performance.clearMarks) {
+    performance.clearMarks = performance.webkitClearMarks || function (name) {
+      _clearEntries('mark', name);
+    };
+  }
 
-	if( typeof define === 'function' && (define.amd || define.ajs) ){
-		define('performance', [], function (){ return performance });
-	}
+
+  if (!performance.clearMeasures) {
+    performance.clearMeasures = performance.webkitClearMeasures || function (name) {
+      _clearEntries('measure', name);
+    };
+  }
+
+
+  // exports
+  scope.performance = performance;
+
+  if (typeof define === 'function' && (define.amd || define.ajs)) {
+    define('performance', [], function () {
+      return performance
+    });
+  }
 })(self);
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -816,11 +838,1155 @@ var CookieStorage = (function () {
     return CookieStorage;
 }());
 
-var fingerprint2_min = createCommonjsModule(function (module) {
-// Fingerprintjs2 - Copyright (c) 2018 Valentin Vasilyev (valentin.vasilyev@outlook.com)
-// Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
+var fingerprint2 = createCommonjsModule(function (module) {
+/*
+* Fingerprintjs2 2.0.5 - Modern & flexible browser fingerprint library v2
+* https://github.com/Valve/fingerprintjs2
+* Copyright (c) 2015 Valentin Vasilyev (valentin.vasilyev@outlook.com)
+* Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED. IN NO EVENT SHALL VALENTIN VASILYEV BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+* THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+/* global define */
+(function (name, context, definition) {
+  if (typeof window !== 'undefined' && typeof undefined === 'function' && undefined.amd) { undefined(definition); } else if (module.exports) { module.exports = definition(); } else if (context.exports) { context.exports = definition(); } else { context[name] = definition(); }
+})('Fingerprint2', this, function () {
 
-!function(e,t,n){"undefined"!=typeof window&&"function"==typeof window.define&&window.define.amd?window.define(n):module.exports?module.exports=n():t.exports?t.exports=n():t.Fingerprint2=n();}(0,this,function(){var d=function(e,t){e=[e[0]>>>16,65535&e[0],e[1]>>>16,65535&e[1]],t=[t[0]>>>16,65535&t[0],t[1]>>>16,65535&t[1]];var n=[0,0,0,0];return n[3]+=e[3]+t[3],n[2]+=n[3]>>>16,n[3]&=65535,n[2]+=e[2]+t[2],n[1]+=n[2]>>>16,n[2]&=65535,n[1]+=e[1]+t[1],n[0]+=n[1]>>>16,n[1]&=65535,n[0]+=e[0]+t[0],n[0]&=65535,[n[0]<<16|n[1],n[2]<<16|n[3]]},g=function(e,t){e=[e[0]>>>16,65535&e[0],e[1]>>>16,65535&e[1]],t=[t[0]>>>16,65535&t[0],t[1]>>>16,65535&t[1]];var n=[0,0,0,0];return n[3]+=e[3]*t[3],n[2]+=n[3]>>>16,n[3]&=65535,n[2]+=e[2]*t[3],n[1]+=n[2]>>>16,n[2]&=65535,n[2]+=e[3]*t[2],n[1]+=n[2]>>>16,n[2]&=65535,n[1]+=e[1]*t[3],n[0]+=n[1]>>>16,n[1]&=65535,n[1]+=e[2]*t[2],n[0]+=n[1]>>>16,n[1]&=65535,n[1]+=e[3]*t[1],n[0]+=n[1]>>>16,n[1]&=65535,n[0]+=e[0]*t[3]+e[1]*t[2]+e[2]*t[1]+e[3]*t[0],n[0]&=65535,[n[0]<<16|n[1],n[2]<<16|n[3]]},f=function(e,t){return 32===(t%=64)?[e[1],e[0]]:t<32?[e[0]<<t|e[1]>>>32-t,e[1]<<t|e[0]>>>32-t]:(t-=32,[e[1]<<t|e[0]>>>32-t,e[0]<<t|e[1]>>>32-t])},h=function(e,t){return 0===(t%=64)?e:t<32?[e[0]<<t|e[1]>>>32-t,e[1]<<t]:[e[1]<<t-32,0]},m=function(e,t){return [e[0]^t[0],e[1]^t[1]]},T=function(e){return e=m(e,[0,e[0]>>>1]),e=g(e,[4283543511,3981806797]),e=m(e,[0,e[0]>>>1]),e=g(e,[3301882366,444984403]),e=m(e,[0,e[0]>>>1])},l=function(e,t){t=t||0;for(var n=(e=e||"").length%16,a=e.length-n,r=[0,t],i=[0,t],o=[0,0],l=[0,0],s=[2277735313,289559509],c=[1291169091,658871167],u=0;u<a;u+=16)o=[255&e.charCodeAt(u+4)|(255&e.charCodeAt(u+5))<<8|(255&e.charCodeAt(u+6))<<16|(255&e.charCodeAt(u+7))<<24,255&e.charCodeAt(u)|(255&e.charCodeAt(u+1))<<8|(255&e.charCodeAt(u+2))<<16|(255&e.charCodeAt(u+3))<<24],l=[255&e.charCodeAt(u+12)|(255&e.charCodeAt(u+13))<<8|(255&e.charCodeAt(u+14))<<16|(255&e.charCodeAt(u+15))<<24,255&e.charCodeAt(u+8)|(255&e.charCodeAt(u+9))<<8|(255&e.charCodeAt(u+10))<<16|(255&e.charCodeAt(u+11))<<24],o=g(o,s),o=f(o,31),o=g(o,c),r=m(r,o),r=f(r,27),r=d(r,i),r=d(g(r,[0,5]),[0,1390208809]),l=g(l,c),l=f(l,33),l=g(l,s),i=m(i,l),i=f(i,31),i=d(i,r),i=d(g(i,[0,5]),[0,944331445]);switch(o=[0,0],l=[0,0],n){case 15:l=m(l,h([0,e.charCodeAt(u+14)],48));case 14:l=m(l,h([0,e.charCodeAt(u+13)],40));case 13:l=m(l,h([0,e.charCodeAt(u+12)],32));case 12:l=m(l,h([0,e.charCodeAt(u+11)],24));case 11:l=m(l,h([0,e.charCodeAt(u+10)],16));case 10:l=m(l,h([0,e.charCodeAt(u+9)],8));case 9:l=m(l,[0,e.charCodeAt(u+8)]),l=g(l,c),l=f(l,33),l=g(l,s),i=m(i,l);case 8:o=m(o,h([0,e.charCodeAt(u+7)],56));case 7:o=m(o,h([0,e.charCodeAt(u+6)],48));case 6:o=m(o,h([0,e.charCodeAt(u+5)],40));case 5:o=m(o,h([0,e.charCodeAt(u+4)],32));case 4:o=m(o,h([0,e.charCodeAt(u+3)],24));case 3:o=m(o,h([0,e.charCodeAt(u+2)],16));case 2:o=m(o,h([0,e.charCodeAt(u+1)],8));case 1:o=m(o,[0,e.charCodeAt(u)]),o=g(o,s),o=f(o,31),o=g(o,c),r=m(r,o);}return r=m(r,[0,e.length]),i=m(i,[0,e.length]),r=d(r,i),i=d(i,r),r=T(r),i=T(i),r=d(r,i),i=d(i,r),("00000000"+(r[0]>>>0).toString(16)).slice(-8)+("00000000"+(r[1]>>>0).toString(16)).slice(-8)+("00000000"+(i[0]>>>0).toString(16)).slice(-8)+("00000000"+(i[1]>>>0).toString(16)).slice(-8)},e={preprocessor:null,audio:{timeout:1e3,excludeIOS11:!0},fonts:{swfContainerId:"fingerprintjs2",swfPath:"flash/compiled/FontList.swf",userDefinedFonts:[],extendedJsFonts:!1},screen:{detectScreenOrientation:!0},plugins:{sortPluginsFor:[/palemoon/i],excludeIE:!1},extraComponents:[],excludes:{enumerateDevices:!0,pixelRatio:!0,doNotTrack:!0,fontsFlash:!0},NOT_AVAILABLE:"not available",ERROR:"error",EXCLUDED:"excluded"},c=function(e,t){if(Array.prototype.forEach&&e.forEach===Array.prototype.forEach)e.forEach(t);else if(e.length===+e.length)for(var n=0,a=e.length;n<a;n++)t(e[n],n,e);else for(var r in e)e.hasOwnProperty(r)&&t(e[r],r,e);},s=function(e,a){var r=[];return null==e?r:Array.prototype.map&&e.map===Array.prototype.map?e.map(a):(c(e,function(e,t,n){r.push(a(e,t,n));}),r)},a=function(e){var t=[window.screen.width,window.screen.height];return e.screen.detectScreenOrientation&&t.sort().reverse(),t},r=function(e){if(window.screen.availWidth&&window.screen.availHeight){var t=[window.screen.availHeight,window.screen.availWidth];return e.screen.detectScreenOrientation&&t.sort().reverse(),t}return e.NOT_AVAILABLE},i=function(e){if(null==navigator.plugins)return e.NOT_AVAILABLE;for(var t=[],n=0,a=navigator.plugins.length;n<a;n++)navigator.plugins[n]&&t.push(navigator.plugins[n]);return u(e)&&(t=t.sort(function(e,t){return e.name>t.name?1:e.name<t.name?-1:0})),s(t,function(e){var t=s(e,function(e){return [e.type,e.suffixes]});return [e.name,e.description,t]})},o=function(t){var e=[];if(Object.getOwnPropertyDescriptor&&Object.getOwnPropertyDescriptor(window,"ActiveXObject")||"ActiveXObject"in window){e=s(["AcroPDF.PDF","Adodb.Stream","AgControl.AgControl","DevalVRXCtrl.DevalVRXCtrl.1","MacromediaFlashPaper.MacromediaFlashPaper","Msxml2.DOMDocument","Msxml2.XMLHTTP","PDF.PdfCtrl","QuickTime.QuickTime","QuickTimeCheckObject.QuickTimeCheck.1","RealPlayer","RealPlayer.RealPlayer(tm) ActiveX Control (32-bit)","RealVideo.RealVideo(tm) ActiveX Control (32-bit)","Scripting.Dictionary","SWCtl.SWCtl","Shell.UIHelper","ShockwaveFlash.ShockwaveFlash","Skype.Detection","TDCCtl.TDCCtl","WMPlayer.OCX","rmocx.RealPlayer G2 Control","rmocx.RealPlayer G2 Control.1"],function(e){try{return new window.ActiveXObject(e),e}catch(e){return t.ERROR}});}else e.push(t.NOT_AVAILABLE);return navigator.plugins&&(e=e.concat(i(t))),e},u=function(e){for(var t=!1,n=0,a=e.plugins.sortPluginsFor.length;n<a;n++){var r=e.plugins.sortPluginsFor[n];if(navigator.userAgent.match(r)){t=!0;break}}return t},p=function(t){try{return !!window.sessionStorage}catch(e){return t.ERROR}},v=function(t){try{return !!window.localStorage}catch(e){return t.ERROR}},A=function(t){try{return !!window.indexedDB}catch(e){return t.ERROR}},C=function(e){return navigator.cpuClass||e.NOT_AVAILABLE},B=function(e){return navigator.platform?navigator.platform:e.NOT_AVAILABLE},t=function(){var t,e=0;void 0!==navigator.maxTouchPoints?e=navigator.maxTouchPoints:void 0!==navigator.msMaxTouchPoints&&(e=navigator.msMaxTouchPoints);try{document.createEvent("TouchEvent"),t=!0;}catch(e){t=!1;}return [e,t,"ontouchstart"in window]},y=function(e){var t=[],n=document.createElement("canvas");n.width=2e3,n.height=200,n.style.display="inline";var a=n.getContext("2d");return a.rect(0,0,10,10),a.rect(2,2,6,6),t.push("canvas winding:"+(!1===a.isPointInPath(5,5,"evenodd")?"yes":"no")),a.textBaseline="alphabetic",a.fillStyle="#f60",a.fillRect(125,1,62,20),a.fillStyle="#069",e.dontUseFakeFontInCanvas?a.font="11pt Arial":a.font="11pt no-real-font-123",a.fillText("Cwm fjordbank glyphs vext quiz, \ud83d\ude03",2,15),a.fillStyle="rgba(102, 204, 0, 0.2)",a.font="18pt Arial",a.fillText("Cwm fjordbank glyphs vext quiz, \ud83d\ude03",4,45),a.globalCompositeOperation="multiply",a.fillStyle="rgb(255,0,255)",a.beginPath(),a.arc(50,50,50,0,2*Math.PI,!0),a.closePath(),a.fill(),a.fillStyle="rgb(0,255,255)",a.beginPath(),a.arc(100,50,50,0,2*Math.PI,!0),a.closePath(),a.fill(),a.fillStyle="rgb(255,255,0)",a.beginPath(),a.arc(75,100,50,0,2*Math.PI,!0),a.closePath(),a.fill(),a.fillStyle="rgb(255,0,255)",a.arc(75,75,75,0,2*Math.PI,!0),a.arc(75,75,25,0,2*Math.PI,!0),a.fill("evenodd"),n.toDataURL&&t.push("canvas fp:"+n.toDataURL()),t},E=function(){var o,e=function(e){return o.clearColor(0,0,0,1),o.enable(o.DEPTH_TEST),o.depthFunc(o.LEQUAL),o.clear(o.COLOR_BUFFER_BIT|o.DEPTH_BUFFER_BIT),"["+e[0]+", "+e[1]+"]"};if(!(o=F()))return null;var l=[],t=o.createBuffer();o.bindBuffer(o.ARRAY_BUFFER,t);var n=new Float32Array([-.2,-.9,0,.4,-.26,0,0,.732134444,0]);o.bufferData(o.ARRAY_BUFFER,n,o.STATIC_DRAW),t.itemSize=3,t.numItems=3;var a=o.createProgram(),r=o.createShader(o.VERTEX_SHADER);o.shaderSource(r,"attribute vec2 attrVertex;varying vec2 varyinTexCoordinate;uniform vec2 uniformOffset;void main(){varyinTexCoordinate=attrVertex+uniformOffset;gl_Position=vec4(attrVertex,0,1);}"),o.compileShader(r);var i=o.createShader(o.FRAGMENT_SHADER);o.shaderSource(i,"precision mediump float;varying vec2 varyinTexCoordinate;void main() {gl_FragColor=vec4(varyinTexCoordinate,0,1);}"),o.compileShader(i),o.attachShader(a,r),o.attachShader(a,i),o.linkProgram(a),o.useProgram(a),a.vertexPosAttrib=o.getAttribLocation(a,"attrVertex"),a.offsetUniform=o.getUniformLocation(a,"uniformOffset"),o.enableVertexAttribArray(a.vertexPosArray),o.vertexAttribPointer(a.vertexPosAttrib,t.itemSize,o.FLOAT,!1,0,0),o.uniform2f(a.offsetUniform,1,1),o.drawArrays(o.TRIANGLE_STRIP,0,t.numItems);try{l.push(o.canvas.toDataURL());}catch(e){}l.push("extensions:"+(o.getSupportedExtensions()||[]).join(";")),l.push("webgl aliased line width range:"+e(o.getParameter(o.ALIASED_LINE_WIDTH_RANGE))),l.push("webgl aliased point size range:"+e(o.getParameter(o.ALIASED_POINT_SIZE_RANGE))),l.push("webgl alpha bits:"+o.getParameter(o.ALPHA_BITS)),l.push("webgl antialiasing:"+(o.getContextAttributes().antialias?"yes":"no")),l.push("webgl blue bits:"+o.getParameter(o.BLUE_BITS)),l.push("webgl depth bits:"+o.getParameter(o.DEPTH_BITS)),l.push("webgl green bits:"+o.getParameter(o.GREEN_BITS)),l.push("webgl max anisotropy:"+function(e){var t=e.getExtension("EXT_texture_filter_anisotropic")||e.getExtension("WEBKIT_EXT_texture_filter_anisotropic")||e.getExtension("MOZ_EXT_texture_filter_anisotropic");if(t){var n=e.getParameter(t.MAX_TEXTURE_MAX_ANISOTROPY_EXT);return 0===n&&(n=2),n}return null}(o)),l.push("webgl max combined texture image units:"+o.getParameter(o.MAX_COMBINED_TEXTURE_IMAGE_UNITS)),l.push("webgl max cube map texture size:"+o.getParameter(o.MAX_CUBE_MAP_TEXTURE_SIZE)),l.push("webgl max fragment uniform vectors:"+o.getParameter(o.MAX_FRAGMENT_UNIFORM_VECTORS)),l.push("webgl max render buffer size:"+o.getParameter(o.MAX_RENDERBUFFER_SIZE)),l.push("webgl max texture image units:"+o.getParameter(o.MAX_TEXTURE_IMAGE_UNITS)),l.push("webgl max texture size:"+o.getParameter(o.MAX_TEXTURE_SIZE)),l.push("webgl max varying vectors:"+o.getParameter(o.MAX_VARYING_VECTORS)),l.push("webgl max vertex attribs:"+o.getParameter(o.MAX_VERTEX_ATTRIBS)),l.push("webgl max vertex texture image units:"+o.getParameter(o.MAX_VERTEX_TEXTURE_IMAGE_UNITS)),l.push("webgl max vertex uniform vectors:"+o.getParameter(o.MAX_VERTEX_UNIFORM_VECTORS)),l.push("webgl max viewport dims:"+e(o.getParameter(o.MAX_VIEWPORT_DIMS))),l.push("webgl red bits:"+o.getParameter(o.RED_BITS)),l.push("webgl renderer:"+o.getParameter(o.RENDERER)),l.push("webgl shading language version:"+o.getParameter(o.SHADING_LANGUAGE_VERSION)),l.push("webgl stencil bits:"+o.getParameter(o.STENCIL_BITS)),l.push("webgl vendor:"+o.getParameter(o.VENDOR)),l.push("webgl version:"+o.getParameter(o.VERSION));try{var s=o.getExtension("WEBGL_debug_renderer_info");s&&(l.push("webgl unmasked vendor:"+o.getParameter(s.UNMASKED_VENDOR_WEBGL)),l.push("webgl unmasked renderer:"+o.getParameter(s.UNMASKED_RENDERER_WEBGL)));}catch(e){}return o.getShaderPrecisionFormat&&c(["FLOAT","INT"],function(i){c(["VERTEX","FRAGMENT"],function(r){c(["HIGH","MEDIUM","LOW"],function(a){c(["precision","rangeMin","rangeMax"],function(e){var t=o.getShaderPrecisionFormat(o[r+"_SHADER"],o[a+"_"+i])[e];"precision"!==e&&(e="precision "+e);var n=["webgl ",r.toLowerCase()," shader ",a.toLowerCase()," ",i.toLowerCase()," ",e,":",t].join("");l.push(n);});});});}),l},x=function(){var e=document.createElement("div");e.innerHTML="&nbsp;";var t=!(e.className="adsbox");try{document.body.appendChild(e),t=0===document.getElementsByClassName("adsbox")[0].offsetHeight,document.body.removeChild(e);}catch(e){t=!1;}return t},O=function(){if(void 0!==navigator.languages)try{if(navigator.languages[0].substr(0,2)!==navigator.language.substr(0,2))return !0}catch(e){return !0}return !1},P=function(){return window.screen.width<window.screen.availWidth||window.screen.height<window.screen.availHeight},b=function(){var e,t=navigator.userAgent.toLowerCase(),n=navigator.oscpu,a=navigator.platform.toLowerCase();if(e=0<=t.indexOf("windows phone")?"Windows Phone":0<=t.indexOf("win")?"Windows":0<=t.indexOf("android")?"Android":0<=t.indexOf("linux")?"Linux":0<=t.indexOf("iphone")||0<=t.indexOf("ipad")?"iOS":0<=t.indexOf("mac")?"Mac":"Other",("ontouchstart"in window||0<navigator.maxTouchPoints||0<navigator.msMaxTouchPoints)&&"Windows Phone"!==e&&"Android"!==e&&"iOS"!==e&&"Other"!==e)return !0;if(void 0!==n){if(0<=(n=n.toLowerCase()).indexOf("win")&&"Windows"!==e&&"Windows Phone"!==e)return !0;if(0<=n.indexOf("linux")&&"Linux"!==e&&"Android"!==e)return !0;if(0<=n.indexOf("mac")&&"Mac"!==e&&"iOS"!==e)return !0;if((-1===n.indexOf("win")&&-1===n.indexOf("linux")&&-1===n.indexOf("mac"))!=("Other"===e))return !0}return 0<=a.indexOf("win")&&"Windows"!==e&&"Windows Phone"!==e||((0<=a.indexOf("linux")||0<=a.indexOf("android")||0<=a.indexOf("pike"))&&"Linux"!==e&&"Android"!==e||((0<=a.indexOf("mac")||0<=a.indexOf("ipad")||0<=a.indexOf("ipod")||0<=a.indexOf("iphone"))&&"Mac"!==e&&"iOS"!==e||((-1===a.indexOf("win")&&-1===a.indexOf("linux")&&-1===a.indexOf("mac"))!=("Other"===e)||void 0===navigator.plugins&&"Windows"!==e&&"Windows Phone"!==e)))},L=function(){var e,t=navigator.userAgent.toLowerCase(),n=navigator.productSub;if(("Chrome"===(e=0<=t.indexOf("firefox")?"Firefox":0<=t.indexOf("opera")||0<=t.indexOf("opr")?"Opera":0<=t.indexOf("chrome")?"Chrome":0<=t.indexOf("safari")?"Safari":0<=t.indexOf("trident")?"Internet Explorer":"Other")||"Safari"===e||"Opera"===e)&&"20030107"!==n)return !0;var a,r=eval.toString().length;if(37===r&&"Safari"!==e&&"Firefox"!==e&&"Other"!==e)return !0;if(39===r&&"Internet Explorer"!==e&&"Other"!==e)return !0;if(33===r&&"Chrome"!==e&&"Opera"!==e&&"Other"!==e)return !0;try{throw"a"}catch(e){try{e.toSource(),a=!0;}catch(e){a=!1;}}return a&&"Firefox"!==e&&"Other"!==e},I=function(){var e=document.createElement("canvas");return !(!e.getContext||!e.getContext("2d"))},k=function(){if(!I())return !1;var e=F();return !!window.WebGLRenderingContext&&!!e},R=function(){return "Microsoft Internet Explorer"===navigator.appName||!("Netscape"!==navigator.appName||!/Trident/.test(navigator.userAgent))},F=function(){var e=document.createElement("canvas"),t=null;try{t=e.getContext("webgl")||e.getContext("experimental-webgl");}catch(e){}return t||(t=null),t},G=[false,{key:"language",getData:function(e,t){e(navigator.language||navigator.userLanguage||navigator.browserLanguage||navigator.systemLanguage||t.NOT_AVAILABLE);}},{key:"colorDepth",getData:function(e,t){e(window.screen.colorDepth||t.NOT_AVAILABLE);}},false,{key:"pixelRatio",getData:function(e,t){e(window.devicePixelRatio||t.NOT_AVAILABLE);}},false,{key:"screenResolution",getData:function(e,t){e(a(t));}},{key:"availableScreenResolution",getData:function(e,t){e(r(t));}},{key:"timezoneOffset",getData:function(e){e((new Date).getTimezoneOffset());}},false,{key:"sessionStorage",getData:function(e,t){e(p(t));}},{key:"localStorage",getData:function(e,t){e(v(t));}},{key:"indexedDb",getData:function(e,t){e(A(t));}},false,{key:"openDatabase",getData:function(e){e(!!window.openDatabase);}},{key:"cpuClass",getData:function(e,t){e(C(t));}},{key:"platform",getData:function(e,t){e(B(t));}},false,{key:"plugins",getData:function(e,t){R()?t.plugins.excludeIE?e(t.EXCLUDED):e(o(t)):e(i(t));}},{key:"canvas",getData:function(e,t){I()?e(y(t)):e(t.NOT_AVAILABLE);}},{key:"webgl",getData:function(e,t){k()?e(E()):e(t.NOT_AVAILABLE);}},false,{key:"adBlock",getData:function(e){e(x());}},{key:"hasLiedLanguages",getData:function(e){e(O());}},{key:"hasLiedResolution",getData:function(e){e(P());}},{key:"hasLiedOs",getData:function(e){e(b());}},{key:"hasLiedBrowser",getData:function(e){e(L());}},{key:"touchSupport",getData:function(e){e(t());}},{key:"fonts",getData:function(e,t){var u=["monospace","sans-serif","serif"],d=["Andale Mono","Arial","Arial Black","Arial Hebrew","Arial MT","Arial Narrow","Arial Rounded MT Bold","Arial Unicode MS","Bitstream Vera Sans Mono","Book Antiqua","Bookman Old Style","Calibri","Cambria","Cambria Math","Century","Century Gothic","Century Schoolbook","Comic Sans","Comic Sans MS","Consolas","Courier","Courier New","Geneva","Georgia","Helvetica","Helvetica Neue","Impact","Lucida Bright","Lucida Calligraphy","Lucida Console","Lucida Fax","LUCIDA GRANDE","Lucida Handwriting","Lucida Sans","Lucida Sans Typewriter","Lucida Sans Unicode","Microsoft Sans Serif","Monaco","Monotype Corsiva","MS Gothic","MS Outlook","MS PGothic","MS Reference Sans Serif","MS Sans Serif","MS Serif","MYRIAD","MYRIAD PRO","Palatino","Palatino Linotype","Segoe Print","Segoe Script","Segoe UI","Segoe UI Light","Segoe UI Semibold","Segoe UI Symbol","Tahoma","Times","Times New Roman","Times New Roman PS","Trebuchet MS","Verdana","Wingdings","Wingdings 2","Wingdings 3"];d=(d=d.concat(t.fonts.userDefinedFonts)).filter(function(e,t){return d.indexOf(e)===t});var n=document.getElementsByTagName("body")[0],r=document.createElement("div"),g=document.createElement("div"),a={},i={},f=function(){var e=document.createElement("span");return e.style.position="absolute",e.style.left="-9999px",e.style.fontSize="72px",e.style.fontStyle="normal",e.style.fontWeight="normal",e.style.letterSpacing="normal",e.style.lineHeight="normal",e.style.textTransform="none",e.style.textAlign="left",e.style.textDecoration="none",e.style.whiteSpace="normal",e.style.wordBreak="normal",e.style.wordSpacing="normal",e.innerHTML="mmmmmmmmmmlli",e},o=function(e){for(var t=!1,n=0;n<u.length;n++)if(t=e[n].offsetWidth!==a[u[n]]||e[n].offsetHeight!==i[u[n]])return t;return t},l=function(){for(var e=[],t=0,n=u.length;t<n;t++){var a=f();a.style.fontFamily=u[t],r.appendChild(a),e.push(a);}return e}();n.appendChild(r);for(var s=0,c=u.length;s<c;s++)a[u[s]]=l[s].offsetWidth,i[u[s]]=l[s].offsetHeight;var h=function(){for(var e,t,n,a={},r=0,i=d.length;r<i;r++){for(var o=[],l=0,s=u.length;l<s;l++){var c=(e=d[r],t=u[l],n=void 0,(n=f()).style.fontFamily="'"+e+"',"+t,n);g.appendChild(c),o.push(c);}a[d[r]]=o;}return a}();n.appendChild(g);for(var m=[],T=0,p=d.length;T<p;T++)o(h[d[T]])&&m.push(d[T]);n.removeChild(g),n.removeChild(r),e(m);},pauseBefore:!0},false,false,false],U=function(e){return false};return U.get=function(n,a){a?n||(n={}):(a=n,n={}),function(e,t){if(null==t)return;var n,a;for(a in t)null==(n=t[a])||Object.prototype.hasOwnProperty.call(e,a)||(e[a]=n);}(n,e),n.components=n.extraComponents.concat(G);var r={data:[],addPreprocessedComponent:function(e,t){"function"==typeof n.preprocessor&&(t=n.preprocessor(e,t)),r.data.push({key:e,value:t});}},i=-1,o=function(e){if((i+=1)>=n.components.length)a(r.data);else{var t=n.components[i];if(n.excludes[t.key])o(!1);else{if(!e&&t.pauseBefore)return i-=1,void setTimeout(function(){o(!0);},1);try{t.getData(function(e){r.addPreprocessedComponent(t.key,e),o(!1);},n);}catch(e){r.addPreprocessedComponent(t.key,String(e)),o(!1);}}}};o(!1);},U.x64hash128=l,U.VERSION="2.0.0",U});
+/// MurmurHash3 related functions
+
+//
+// Given two 64bit ints (as an array of two 32bit ints) returns the two
+// added together as a 64bit int (as an array of two 32bit ints).
+//
+  var x64Add = function (m, n) {
+    m = [m[0] >>> 16, m[0] & 0xffff, m[1] >>> 16, m[1] & 0xffff];
+    n = [n[0] >>> 16, n[0] & 0xffff, n[1] >>> 16, n[1] & 0xffff];
+    var o = [0, 0, 0, 0];
+    o[3] += m[3] + n[3];
+    o[2] += o[3] >>> 16;
+    o[3] &= 0xffff;
+    o[2] += m[2] + n[2];
+    o[1] += o[2] >>> 16;
+    o[2] &= 0xffff;
+    o[1] += m[1] + n[1];
+    o[0] += o[1] >>> 16;
+    o[1] &= 0xffff;
+    o[0] += m[0] + n[0];
+    o[0] &= 0xffff;
+    return [(o[0] << 16) | o[1], (o[2] << 16) | o[3]]
+  };
+
+//
+// Given two 64bit ints (as an array of two 32bit ints) returns the two
+// multiplied together as a 64bit int (as an array of two 32bit ints).
+//
+  var x64Multiply = function (m, n) {
+    m = [m[0] >>> 16, m[0] & 0xffff, m[1] >>> 16, m[1] & 0xffff];
+    n = [n[0] >>> 16, n[0] & 0xffff, n[1] >>> 16, n[1] & 0xffff];
+    var o = [0, 0, 0, 0];
+    o[3] += m[3] * n[3];
+    o[2] += o[3] >>> 16;
+    o[3] &= 0xffff;
+    o[2] += m[2] * n[3];
+    o[1] += o[2] >>> 16;
+    o[2] &= 0xffff;
+    o[2] += m[3] * n[2];
+    o[1] += o[2] >>> 16;
+    o[2] &= 0xffff;
+    o[1] += m[1] * n[3];
+    o[0] += o[1] >>> 16;
+    o[1] &= 0xffff;
+    o[1] += m[2] * n[2];
+    o[0] += o[1] >>> 16;
+    o[1] &= 0xffff;
+    o[1] += m[3] * n[1];
+    o[0] += o[1] >>> 16;
+    o[1] &= 0xffff;
+    o[0] += (m[0] * n[3]) + (m[1] * n[2]) + (m[2] * n[1]) + (m[3] * n[0]);
+    o[0] &= 0xffff;
+    return [(o[0] << 16) | o[1], (o[2] << 16) | o[3]]
+  };
+//
+// Given a 64bit int (as an array of two 32bit ints) and an int
+// representing a number of bit positions, returns the 64bit int (as an
+// array of two 32bit ints) rotated left by that number of positions.
+//
+  var x64Rotl = function (m, n) {
+    n %= 64;
+    if (n === 32) {
+      return [m[1], m[0]]
+    } else if (n < 32) {
+      return [(m[0] << n) | (m[1] >>> (32 - n)), (m[1] << n) | (m[0] >>> (32 - n))]
+    } else {
+      n -= 32;
+      return [(m[1] << n) | (m[0] >>> (32 - n)), (m[0] << n) | (m[1] >>> (32 - n))]
+    }
+  };
+//
+// Given a 64bit int (as an array of two 32bit ints) and an int
+// representing a number of bit positions, returns the 64bit int (as an
+// array of two 32bit ints) shifted left by that number of positions.
+//
+  var x64LeftShift = function (m, n) {
+    n %= 64;
+    if (n === 0) {
+      return m
+    } else if (n < 32) {
+      return [(m[0] << n) | (m[1] >>> (32 - n)), m[1] << n]
+    } else {
+      return [m[1] << (n - 32), 0]
+    }
+  };
+//
+// Given two 64bit ints (as an array of two 32bit ints) returns the two
+// xored together as a 64bit int (as an array of two 32bit ints).
+//
+  var x64Xor = function (m, n) {
+    return [m[0] ^ n[0], m[1] ^ n[1]]
+  };
+//
+// Given a block, returns murmurHash3's final x64 mix of that block.
+// (`[0, h[0] >>> 1]` is a 33 bit unsigned right shift. This is the
+// only place where we need to right shift 64bit ints.)
+//
+  var x64Fmix = function (h) {
+    h = x64Xor(h, [0, h[0] >>> 1]);
+    h = x64Multiply(h, [0xff51afd7, 0xed558ccd]);
+    h = x64Xor(h, [0, h[0] >>> 1]);
+    h = x64Multiply(h, [0xc4ceb9fe, 0x1a85ec53]);
+    h = x64Xor(h, [0, h[0] >>> 1]);
+    return h
+  };
+
+//
+// Given a string and an optional seed as an int, returns a 128 bit
+// hash using the x64 flavor of MurmurHash3, as an unsigned hex.
+//
+  var x64hash128 = function (key, seed) {
+    key = key || '';
+    seed = seed || 0;
+    var remainder = key.length % 16;
+    var bytes = key.length - remainder;
+    var h1 = [0, seed];
+    var h2 = [0, seed];
+    var k1 = [0, 0];
+    var k2 = [0, 0];
+    var c1 = [0x87c37b91, 0x114253d5];
+    var c2 = [0x4cf5ad43, 0x2745937f];
+    for (var i = 0; i < bytes; i = i + 16) {
+      k1 = [((key.charCodeAt(i + 4) & 0xff)) | ((key.charCodeAt(i + 5) & 0xff) << 8) | ((key.charCodeAt(i + 6) & 0xff) << 16) | ((key.charCodeAt(i + 7) & 0xff) << 24), ((key.charCodeAt(i) & 0xff)) | ((key.charCodeAt(i + 1) & 0xff) << 8) | ((key.charCodeAt(i + 2) & 0xff) << 16) | ((key.charCodeAt(i + 3) & 0xff) << 24)];
+      k2 = [((key.charCodeAt(i + 12) & 0xff)) | ((key.charCodeAt(i + 13) & 0xff) << 8) | ((key.charCodeAt(i + 14) & 0xff) << 16) | ((key.charCodeAt(i + 15) & 0xff) << 24), ((key.charCodeAt(i + 8) & 0xff)) | ((key.charCodeAt(i + 9) & 0xff) << 8) | ((key.charCodeAt(i + 10) & 0xff) << 16) | ((key.charCodeAt(i + 11) & 0xff) << 24)];
+      k1 = x64Multiply(k1, c1);
+      k1 = x64Rotl(k1, 31);
+      k1 = x64Multiply(k1, c2);
+      h1 = x64Xor(h1, k1);
+      h1 = x64Rotl(h1, 27);
+      h1 = x64Add(h1, h2);
+      h1 = x64Add(x64Multiply(h1, [0, 5]), [0, 0x52dce729]);
+      k2 = x64Multiply(k2, c2);
+      k2 = x64Rotl(k2, 33);
+      k2 = x64Multiply(k2, c1);
+      h2 = x64Xor(h2, k2);
+      h2 = x64Rotl(h2, 31);
+      h2 = x64Add(h2, h1);
+      h2 = x64Add(x64Multiply(h2, [0, 5]), [0, 0x38495ab5]);
+    }
+    k1 = [0, 0];
+    k2 = [0, 0];
+    switch (remainder) {
+      case 15:
+        k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 14)], 48));
+      // fallthrough
+      case 14:
+        k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 13)], 40));
+      // fallthrough
+      case 13:
+        k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 12)], 32));
+      // fallthrough
+      case 12:
+        k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 11)], 24));
+      // fallthrough
+      case 11:
+        k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 10)], 16));
+      // fallthrough
+      case 10:
+        k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 9)], 8));
+      // fallthrough
+      case 9:
+        k2 = x64Xor(k2, [0, key.charCodeAt(i + 8)]);
+        k2 = x64Multiply(k2, c2);
+        k2 = x64Rotl(k2, 33);
+        k2 = x64Multiply(k2, c1);
+        h2 = x64Xor(h2, k2);
+      // fallthrough
+      case 8:
+        k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 7)], 56));
+      // fallthrough
+      case 7:
+        k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 6)], 48));
+      // fallthrough
+      case 6:
+        k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 5)], 40));
+      // fallthrough
+      case 5:
+        k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 4)], 32));
+      // fallthrough
+      case 4:
+        k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 3)], 24));
+      // fallthrough
+      case 3:
+        k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 2)], 16));
+      // fallthrough
+      case 2:
+        k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 1)], 8));
+      // fallthrough
+      case 1:
+        k1 = x64Xor(k1, [0, key.charCodeAt(i)]);
+        k1 = x64Multiply(k1, c1);
+        k1 = x64Rotl(k1, 31);
+        k1 = x64Multiply(k1, c2);
+        h1 = x64Xor(h1, k1);
+      // fallthrough
+    }
+    h1 = x64Xor(h1, [0, key.length]);
+    h2 = x64Xor(h2, [0, key.length]);
+    h1 = x64Add(h1, h2);
+    h2 = x64Add(h2, h1);
+    h1 = x64Fmix(h1);
+    h2 = x64Fmix(h2);
+    h1 = x64Add(h1, h2);
+    h2 = x64Add(h2, h1);
+    return ('00000000' + (h1[0] >>> 0).toString(16)).slice(-8) + ('00000000' + (h1[1] >>> 0).toString(16)).slice(-8) + ('00000000' + (h2[0] >>> 0).toString(16)).slice(-8) + ('00000000' + (h2[1] >>> 0).toString(16)).slice(-8)
+  };
+
+  var defaultOptions = {
+    preprocessor: null,
+    audio: {
+      timeout: 1000,
+        // On iOS 11, audio context can only be used in response to user interaction.
+        // We require users to explicitly enable audio fingerprinting on iOS 11.
+        // See https://stackoverflow.com/questions/46363048/onaudioprocess-not-called-on-ios11#46534088
+      excludeIOS11: true
+    },
+    fonts: {
+      swfContainerId: 'fingerprintjs2',
+      swfPath: 'flash/compiled/FontList.swf',
+      userDefinedFonts: [],
+      extendedJsFonts: false
+    },
+    screen: {
+       // To ensure consistent fingerprints when users rotate their mobile devices
+      detectScreenOrientation: true
+    },
+    plugins: {
+      sortPluginsFor: [/palemoon/i],
+      excludeIE: false
+    },
+    extraComponents: [],
+    excludes: {
+      // Unreliable on Windows, see https://github.com/Valve/fingerprintjs2/issues/375
+      'enumerateDevices': true,
+      // devicePixelRatio depends on browser zoom, and it's impossible to detect browser zoom
+      'pixelRatio': true,
+      // DNT depends on incognito mode for some browsers (Chrome) and it's impossible to detect incognito mode
+      'doNotTrack': true,
+      // uses js fonts already
+      'fontsFlash': true
+    },
+    NOT_AVAILABLE: 'not available',
+    ERROR: 'error',
+    EXCLUDED: 'excluded'
+  };
+
+  var each = function (obj, iterator) {
+    if (Array.prototype.forEach && obj.forEach === Array.prototype.forEach) {
+      obj.forEach(iterator);
+    } else if (obj.length === +obj.length) {
+      for (var i = 0, l = obj.length; i < l; i++) {
+        iterator(obj[i], i, obj);
+      }
+    } else {
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          iterator(obj[key], key, obj);
+        }
+      }
+    }
+  };
+
+  var map = function (obj, iterator) {
+    var results = [];
+    // Not using strict equality so that this acts as a
+    // shortcut to checking for `null` and `undefined`.
+    if (obj == null) {
+      return results
+    }
+    if (Array.prototype.map && obj.map === Array.prototype.map) { return obj.map(iterator) }
+    each(obj, function (value, index, list) {
+      results.push(iterator(value, index, list));
+    });
+    return results
+  };
+
+  var extendSoft = function (target, source) {
+    if (source == null) { return target }
+    var value;
+    var key;
+    for (key in source) {
+      value = source[key];
+      if (value != null && !(Object.prototype.hasOwnProperty.call(target, key))) {
+        target[key] = value;
+      }
+    }
+    return target
+  };
+  var languageKey = function (done, options) {
+    done(navigator.language || navigator.userLanguage || navigator.browserLanguage || navigator.systemLanguage || options.NOT_AVAILABLE);
+  };
+  var colorDepthKey = function (done, options) {
+    done(window.screen.colorDepth || options.NOT_AVAILABLE);
+  };
+  var pixelRatioKey = function (done, options) {
+    done(window.devicePixelRatio || options.NOT_AVAILABLE);
+  };
+  var screenResolutionKey = function (done, options) {
+    done(getScreenResolution(options));
+  };
+  var getScreenResolution = function (options) {
+    var resolution = [window.screen.width, window.screen.height];
+    if (options.screen.detectScreenOrientation) {
+      resolution.sort().reverse();
+    }
+    return resolution
+  };
+  var availableScreenResolutionKey = function (done, options) {
+    done(getAvailableScreenResolution(options));
+  };
+  var getAvailableScreenResolution = function (options) {
+    if (window.screen.availWidth && window.screen.availHeight) {
+      var available = [window.screen.availHeight, window.screen.availWidth];
+      if (options.screen.detectScreenOrientation) {
+        available.sort().reverse();
+      }
+      return available
+    }
+    // headless browsers
+    return options.NOT_AVAILABLE
+  };
+  var timezoneOffset = function (done) {
+    done(new Date().getTimezoneOffset());
+  };
+  var sessionStorageKey = function (done, options) {
+    done(hasSessionStorage(options));
+  };
+  var localStorageKey = function (done, options) {
+    done(hasLocalStorage(options));
+  };
+  var indexedDbKey = function (done, options) {
+    done(hasIndexedDB(options));
+  };
+  var openDatabaseKey = function (done) {
+    done(!!window.openDatabase);
+  };
+  var cpuClassKey = function (done, options) {
+    done(getNavigatorCpuClass(options));
+  };
+  var platformKey = function (done, options) {
+    done(getNavigatorPlatform(options));
+  };
+  var canvasKey = function (done, options) {
+    if (isCanvasSupported()) {
+      done(getCanvasFp(options));
+      return
+    }
+    done(options.NOT_AVAILABLE);
+  };
+  var webglKey = function (done, options) {
+    if (isWebGlSupported()) {
+      done(getWebglFp());
+      return
+    }
+    done(options.NOT_AVAILABLE);
+  };
+  var adBlockKey = function (done) {
+    done(getAdBlock());
+  };
+  var hasLiedLanguagesKey = function (done) {
+    done(getHasLiedLanguages());
+  };
+  var hasLiedResolutionKey = function (done) {
+    done(getHasLiedResolution());
+  };
+  var hasLiedOsKey = function (done) {
+    done(getHasLiedOs());
+  };
+  var hasLiedBrowserKey = function (done) {
+    done(getHasLiedBrowser());
+  };
+// kudos to http://www.lalit.org/lab/javascript-css-font-detect/
+  var jsFontsKey = function (done, options) {
+      // a font will be compared against all the three default fonts.
+      // and if it doesn't match all 3 then that font is not available.
+    var baseFonts = ['monospace', 'sans-serif', 'serif'];
+
+    var fontList = [
+      'Andale Mono', 'Arial', 'Arial Black', 'Arial Hebrew', 'Arial MT', 'Arial Narrow', 'Arial Rounded MT Bold', 'Arial Unicode MS',
+      'Bitstream Vera Sans Mono', 'Book Antiqua', 'Bookman Old Style',
+      'Calibri', 'Cambria', 'Cambria Math', 'Century', 'Century Gothic', 'Century Schoolbook', 'Comic Sans', 'Comic Sans MS', 'Consolas', 'Courier', 'Courier New',
+      'Geneva', 'Georgia',
+      'Helvetica', 'Helvetica Neue',
+      'Impact',
+      'Lucida Bright', 'Lucida Calligraphy', 'Lucida Console', 'Lucida Fax', 'LUCIDA GRANDE', 'Lucida Handwriting', 'Lucida Sans', 'Lucida Sans Typewriter', 'Lucida Sans Unicode',
+      'Microsoft Sans Serif', 'Monaco', 'Monotype Corsiva', 'MS Gothic', 'MS Outlook', 'MS PGothic', 'MS Reference Sans Serif', 'MS Sans Serif', 'MS Serif', 'MYRIAD', 'MYRIAD PRO',
+      'Palatino', 'Palatino Linotype',
+      'Segoe Print', 'Segoe Script', 'Segoe UI', 'Segoe UI Light', 'Segoe UI Semibold', 'Segoe UI Symbol',
+      'Tahoma', 'Times', 'Times New Roman', 'Times New Roman PS', 'Trebuchet MS',
+      'Verdana', 'Wingdings', 'Wingdings 2', 'Wingdings 3'
+    ];
+
+    fontList = fontList.concat(options.fonts.userDefinedFonts);
+
+      // remove duplicate fonts
+    fontList = fontList.filter(function (font, position) {
+      return fontList.indexOf(font) === position
+    });
+
+      // we use m or w because these two characters take up the maximum width.
+      // And we use a LLi so that the same matching fonts can get separated
+    var testString = 'mmmmmmmmmmlli';
+
+      // we test using 72px font size, we may use any size. I guess larger the better.
+    var testSize = '72px';
+
+    var h = document.getElementsByTagName('body')[0];
+
+      // div to load spans for the base fonts
+    var baseFontsDiv = document.createElement('div');
+
+      // div to load spans for the fonts to detect
+    var fontsDiv = document.createElement('div');
+
+    var defaultWidth = {};
+    var defaultHeight = {};
+
+      // creates a span where the fonts will be loaded
+    var createSpan = function () {
+      var s = document.createElement('span');
+        /*
+         * We need this css as in some weird browser this
+         * span elements shows up for a microSec which creates a
+         * bad user experience
+         */
+      s.style.position = 'absolute';
+      s.style.left = '-9999px';
+      s.style.fontSize = testSize;
+
+        // css font reset to reset external styles
+      s.style.fontStyle = 'normal';
+      s.style.fontWeight = 'normal';
+      s.style.letterSpacing = 'normal';
+      s.style.lineBreak = 'auto';
+      s.style.lineHeight = 'normal';
+      s.style.textTransform = 'none';
+      s.style.textAlign = 'left';
+      s.style.textDecoration = 'none';
+      s.style.textShadow = 'none';
+      s.style.whiteSpace = 'normal';
+      s.style.wordBreak = 'normal';
+      s.style.wordSpacing = 'normal';
+
+      s.innerHTML = testString;
+      return s
+    };
+
+      // creates a span and load the font to detect and a base font for fallback
+    var createSpanWithFonts = function (fontToDetect, baseFont) {
+      var s = createSpan();
+      s.style.fontFamily = "'" + fontToDetect + "'," + baseFont;
+      return s
+    };
+
+      // creates spans for the base fonts and adds them to baseFontsDiv
+    var initializeBaseFontsSpans = function () {
+      var spans = [];
+      for (var index = 0, length = baseFonts.length; index < length; index++) {
+        var s = createSpan();
+        s.style.fontFamily = baseFonts[index];
+        baseFontsDiv.appendChild(s);
+        spans.push(s);
+      }
+      return spans
+    };
+
+      // creates spans for the fonts to detect and adds them to fontsDiv
+    var initializeFontsSpans = function () {
+      var spans = {};
+      for (var i = 0, l = fontList.length; i < l; i++) {
+        var fontSpans = [];
+        for (var j = 0, numDefaultFonts = baseFonts.length; j < numDefaultFonts; j++) {
+          var s = createSpanWithFonts(fontList[i], baseFonts[j]);
+          fontsDiv.appendChild(s);
+          fontSpans.push(s);
+        }
+        spans[fontList[i]] = fontSpans; // Stores {fontName : [spans for that font]}
+      }
+      return spans
+    };
+
+      // checks if a font is available
+    var isFontAvailable = function (fontSpans) {
+      var detected = false;
+      for (var i = 0; i < baseFonts.length; i++) {
+        detected = (fontSpans[i].offsetWidth !== defaultWidth[baseFonts[i]] || fontSpans[i].offsetHeight !== defaultHeight[baseFonts[i]]);
+        if (detected) {
+          return detected
+        }
+      }
+      return detected
+    };
+
+      // create spans for base fonts
+    var baseFontsSpans = initializeBaseFontsSpans();
+
+      // add the spans to the DOM
+    h.appendChild(baseFontsDiv);
+
+      // get the default width for the three base fonts
+    for (var index = 0, length = baseFonts.length; index < length; index++) {
+      defaultWidth[baseFonts[index]] = baseFontsSpans[index].offsetWidth; // width for the default font
+      defaultHeight[baseFonts[index]] = baseFontsSpans[index].offsetHeight; // height for the default font
+    }
+
+      // create spans for fonts to detect
+    var fontsSpans = initializeFontsSpans();
+
+      // add all the spans to the DOM
+    h.appendChild(fontsDiv);
+
+      // check available fonts
+    var available = [];
+    for (var i = 0, l = fontList.length; i < l; i++) {
+      if (isFontAvailable(fontsSpans[fontList[i]])) {
+        available.push(fontList[i]);
+      }
+    }
+
+      // remove spans from DOM
+    h.removeChild(fontsDiv);
+    h.removeChild(baseFontsDiv);
+    done(available);
+  };
+  var pluginsComponent = function (done, options) {
+    if (isIE()) {
+      if (!options.plugins.excludeIE) {
+        done(getIEPlugins(options));
+      } else {
+        done(options.EXCLUDED);
+      }
+    } else {
+      done(getRegularPlugins(options));
+    }
+  };
+  var getRegularPlugins = function (options) {
+    if (navigator.plugins == null) {
+      return options.NOT_AVAILABLE
+    }
+
+    var plugins = [];
+      // plugins isn't defined in Node envs.
+    for (var i = 0, l = navigator.plugins.length; i < l; i++) {
+      if (navigator.plugins[i]) { plugins.push(navigator.plugins[i]); }
+    }
+
+      // sorting plugins only for those user agents, that we know randomize the plugins
+      // every time we try to enumerate them
+    if (pluginsShouldBeSorted(options)) {
+      plugins = plugins.sort(function (a, b) {
+        if (a.name > b.name) { return 1 }
+        if (a.name < b.name) { return -1 }
+        return 0
+      });
+    }
+    return map(plugins, function (p) {
+      var mimeTypes = map(p, function (mt) {
+        return [mt.type, mt.suffixes]
+      });
+      return [p.name, p.description, mimeTypes]
+    })
+  };
+  var getIEPlugins = function (options) {
+    var result = [];
+    if ((Object.getOwnPropertyDescriptor && Object.getOwnPropertyDescriptor(window, 'ActiveXObject')) || ('ActiveXObject' in window)) {
+      var names = [
+        'AcroPDF.PDF', // Adobe PDF reader 7+
+        'Adodb.Stream',
+        'AgControl.AgControl', // Silverlight
+        'DevalVRXCtrl.DevalVRXCtrl.1',
+        'MacromediaFlashPaper.MacromediaFlashPaper',
+        'Msxml2.DOMDocument',
+        'Msxml2.XMLHTTP',
+        'PDF.PdfCtrl', // Adobe PDF reader 6 and earlier, brrr
+        'QuickTime.QuickTime', // QuickTime
+        'QuickTimeCheckObject.QuickTimeCheck.1',
+        'RealPlayer',
+        'RealPlayer.RealPlayer(tm) ActiveX Control (32-bit)',
+        'RealVideo.RealVideo(tm) ActiveX Control (32-bit)',
+        'Scripting.Dictionary',
+        'SWCtl.SWCtl', // ShockWave player
+        'Shell.UIHelper',
+        'ShockwaveFlash.ShockwaveFlash', // flash plugin
+        'Skype.Detection',
+        'TDCCtl.TDCCtl',
+        'WMPlayer.OCX', // Windows media player
+        'rmocx.RealPlayer G2 Control',
+        'rmocx.RealPlayer G2 Control.1'
+      ];
+        // starting to detect plugins in IE
+      result = map(names, function (name) {
+        try {
+            // eslint-disable-next-line no-new
+          new window.ActiveXObject(name);
+          return name
+        } catch (e) {
+          return options.ERROR
+        }
+      });
+    } else {
+      result.push(options.NOT_AVAILABLE);
+    }
+    if (navigator.plugins) {
+      result = result.concat(getRegularPlugins(options));
+    }
+    return result
+  };
+  var pluginsShouldBeSorted = function (options) {
+    var should = false;
+    for (var i = 0, l = options.plugins.sortPluginsFor.length; i < l; i++) {
+      var re = options.plugins.sortPluginsFor[i];
+      if (navigator.userAgent.match(re)) {
+        should = true;
+        break
+      }
+    }
+    return should
+  };
+  var touchSupportKey = function (done) {
+    done(getTouchSupport());
+  };
+  var hasSessionStorage = function (options) {
+    try {
+      return !!window.sessionStorage
+    } catch (e) {
+      return options.ERROR // SecurityError when referencing it means it exists
+    }
+  };
+
+// https://bugzilla.mozilla.org/show_bug.cgi?id=781447
+  var hasLocalStorage = function (options) {
+    try {
+      return !!window.localStorage
+    } catch (e) {
+      return options.ERROR // SecurityError when referencing it means it exists
+    }
+  };
+  var hasIndexedDB = function (options) {
+    try {
+      return !!window.indexedDB
+    } catch (e) {
+      return options.ERROR // SecurityError when referencing it means it exists
+    }
+  };
+  var getNavigatorCpuClass = function (options) {
+    return navigator.cpuClass || options.NOT_AVAILABLE
+  };
+  var getNavigatorPlatform = function (options) {
+    if (navigator.platform) {
+      return navigator.platform
+    } else {
+      return options.NOT_AVAILABLE
+    }
+  };
+// This is a crude and primitive touch screen detection.
+// It's not possible to currently reliably detect the  availability of a touch screen
+// with a JS, without actually subscribing to a touch event.
+// http://www.stucox.com/blog/you-cant-detect-a-touchscreen/
+// https://github.com/Modernizr/Modernizr/issues/548
+// method returns an array of 3 values:
+// maxTouchPoints, the success or failure of creating a TouchEvent,
+// and the availability of the 'ontouchstart' property
+
+  var getTouchSupport = function () {
+    var maxTouchPoints = 0;
+    var touchEvent;
+    if (typeof navigator.maxTouchPoints !== 'undefined') {
+      maxTouchPoints = navigator.maxTouchPoints;
+    } else if (typeof navigator.msMaxTouchPoints !== 'undefined') {
+      maxTouchPoints = navigator.msMaxTouchPoints;
+    }
+    try {
+      document.createEvent('TouchEvent');
+      touchEvent = true;
+    } catch (_) {
+      touchEvent = false;
+    }
+    var touchStart = 'ontouchstart' in window;
+    return [maxTouchPoints, touchEvent, touchStart]
+  };
+// https://www.browserleaks.com/canvas#how-does-it-work
+
+  var getCanvasFp = function (options) {
+    var result = [];
+      // Very simple now, need to make it more complex (geo shapes etc)
+    var canvas = document.createElement('canvas');
+    canvas.width = 2000;
+    canvas.height = 200;
+    canvas.style.display = 'inline';
+    var ctx = canvas.getContext('2d');
+      // detect browser support of canvas winding
+      // http://blogs.adobe.com/webplatform/2013/01/30/winding-rules-in-canvas/
+      // https://github.com/Modernizr/Modernizr/blob/master/feature-detects/canvas/winding.js
+    ctx.rect(0, 0, 10, 10);
+    ctx.rect(2, 2, 6, 6);
+    result.push('canvas winding:' + ((ctx.isPointInPath(5, 5, 'evenodd') === false) ? 'yes' : 'no'));
+
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#f60';
+    ctx.fillRect(125, 1, 62, 20);
+    ctx.fillStyle = '#069';
+      // https://github.com/Valve/fingerprintjs2/issues/66
+    if (options.dontUseFakeFontInCanvas) {
+      ctx.font = '11pt Arial';
+    } else {
+      ctx.font = '11pt no-real-font-123';
+    }
+    ctx.fillText('Cwm fjordbank glyphs vext quiz, \ud83d\ude03', 2, 15);
+    ctx.fillStyle = 'rgba(102, 204, 0, 0.2)';
+    ctx.font = '18pt Arial';
+    ctx.fillText('Cwm fjordbank glyphs vext quiz, \ud83d\ude03', 4, 45);
+
+      // canvas blending
+      // http://blogs.adobe.com/webplatform/2013/01/28/blending-features-in-canvas/
+      // http://jsfiddle.net/NDYV8/16/
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.fillStyle = 'rgb(255,0,255)';
+    ctx.beginPath();
+    ctx.arc(50, 50, 50, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = 'rgb(0,255,255)';
+    ctx.beginPath();
+    ctx.arc(100, 50, 50, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = 'rgb(255,255,0)';
+    ctx.beginPath();
+    ctx.arc(75, 100, 50, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = 'rgb(255,0,255)';
+      // canvas winding
+      // http://blogs.adobe.com/webplatform/2013/01/30/winding-rules-in-canvas/
+      // http://jsfiddle.net/NDYV8/19/
+    ctx.arc(75, 75, 75, 0, Math.PI * 2, true);
+    ctx.arc(75, 75, 25, 0, Math.PI * 2, true);
+    ctx.fill('evenodd');
+
+    if (canvas.toDataURL) { result.push('canvas fp:' + canvas.toDataURL()); }
+    return result
+  };
+  var getWebglFp = function () {
+    var gl;
+    var fa2s = function (fa) {
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LEQUAL);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      return '[' + fa[0] + ', ' + fa[1] + ']'
+    };
+    var maxAnisotropy = function (gl) {
+      var ext = gl.getExtension('EXT_texture_filter_anisotropic') || gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic') || gl.getExtension('MOZ_EXT_texture_filter_anisotropic');
+      if (ext) {
+        var anisotropy = gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+        if (anisotropy === 0) {
+          anisotropy = 2;
+        }
+        return anisotropy
+      } else {
+        return null
+      }
+    };
+
+    gl = getWebglCanvas();
+    if (!gl) { return null }
+      // WebGL fingerprinting is a combination of techniques, found in MaxMind antifraud script & Augur fingerprinting.
+      // First it draws a gradient object with shaders and convers the image to the Base64 string.
+      // Then it enumerates all WebGL extensions & capabilities and appends them to the Base64 string, resulting in a huge WebGL string, potentially very unique on each device
+      // Since iOS supports webgl starting from version 8.1 and 8.1 runs on several graphics chips, the results may be different across ios devices, but we need to verify it.
+    var result = [];
+    var vShaderTemplate = 'attribute vec2 attrVertex;varying vec2 varyinTexCoordinate;uniform vec2 uniformOffset;void main(){varyinTexCoordinate=attrVertex+uniformOffset;gl_Position=vec4(attrVertex,0,1);}';
+    var fShaderTemplate = 'precision mediump float;varying vec2 varyinTexCoordinate;void main() {gl_FragColor=vec4(varyinTexCoordinate,0,1);}';
+    var vertexPosBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexPosBuffer);
+    var vertices = new Float32Array([-0.2, -0.9, 0, 0.4, -0.26, 0, 0, 0.732134444, 0]);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+    vertexPosBuffer.itemSize = 3;
+    vertexPosBuffer.numItems = 3;
+    var program = gl.createProgram();
+    var vshader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vshader, vShaderTemplate);
+    gl.compileShader(vshader);
+    var fshader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fshader, fShaderTemplate);
+    gl.compileShader(fshader);
+    gl.attachShader(program, vshader);
+    gl.attachShader(program, fshader);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+    program.vertexPosAttrib = gl.getAttribLocation(program, 'attrVertex');
+    program.offsetUniform = gl.getUniformLocation(program, 'uniformOffset');
+    gl.enableVertexAttribArray(program.vertexPosArray);
+    gl.vertexAttribPointer(program.vertexPosAttrib, vertexPosBuffer.itemSize, gl.FLOAT, !1, 0, 0);
+    gl.uniform2f(program.offsetUniform, 1, 1);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexPosBuffer.numItems);
+    try {
+      result.push(gl.canvas.toDataURL());
+    } catch (e) {
+        /* .toDataURL may be absent or broken (blocked by extension) */
+    }
+    result.push('extensions:' + (gl.getSupportedExtensions() || []).join(';'));
+    result.push('webgl aliased line width range:' + fa2s(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE)));
+    result.push('webgl aliased point size range:' + fa2s(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)));
+    result.push('webgl alpha bits:' + gl.getParameter(gl.ALPHA_BITS));
+    result.push('webgl antialiasing:' + (gl.getContextAttributes().antialias ? 'yes' : 'no'));
+    result.push('webgl blue bits:' + gl.getParameter(gl.BLUE_BITS));
+    result.push('webgl depth bits:' + gl.getParameter(gl.DEPTH_BITS));
+    result.push('webgl green bits:' + gl.getParameter(gl.GREEN_BITS));
+    result.push('webgl max anisotropy:' + maxAnisotropy(gl));
+    result.push('webgl max combined texture image units:' + gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS));
+    result.push('webgl max cube map texture size:' + gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE));
+    result.push('webgl max fragment uniform vectors:' + gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS));
+    result.push('webgl max render buffer size:' + gl.getParameter(gl.MAX_RENDERBUFFER_SIZE));
+    result.push('webgl max texture image units:' + gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS));
+    result.push('webgl max texture size:' + gl.getParameter(gl.MAX_TEXTURE_SIZE));
+    result.push('webgl max varying vectors:' + gl.getParameter(gl.MAX_VARYING_VECTORS));
+    result.push('webgl max vertex attribs:' + gl.getParameter(gl.MAX_VERTEX_ATTRIBS));
+    result.push('webgl max vertex texture image units:' + gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS));
+    result.push('webgl max vertex uniform vectors:' + gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS));
+    result.push('webgl max viewport dims:' + fa2s(gl.getParameter(gl.MAX_VIEWPORT_DIMS)));
+    result.push('webgl red bits:' + gl.getParameter(gl.RED_BITS));
+    result.push('webgl renderer:' + gl.getParameter(gl.RENDERER));
+    result.push('webgl shading language version:' + gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
+    result.push('webgl stencil bits:' + gl.getParameter(gl.STENCIL_BITS));
+    result.push('webgl vendor:' + gl.getParameter(gl.VENDOR));
+    result.push('webgl version:' + gl.getParameter(gl.VERSION));
+
+    try {
+        // Add the unmasked vendor and unmasked renderer if the debug_renderer_info extension is available
+      var extensionDebugRendererInfo = gl.getExtension('WEBGL_debug_renderer_info');
+      if (extensionDebugRendererInfo) {
+        result.push('webgl unmasked vendor:' + gl.getParameter(extensionDebugRendererInfo.UNMASKED_VENDOR_WEBGL));
+        result.push('webgl unmasked renderer:' + gl.getParameter(extensionDebugRendererInfo.UNMASKED_RENDERER_WEBGL));
+      }
+    } catch (e) { /* squelch */ }
+
+    if (!gl.getShaderPrecisionFormat) {
+      return result
+    }
+
+    each(['FLOAT', 'INT'], function (numType) {
+      each(['VERTEX', 'FRAGMENT'], function (shader) {
+        each(['HIGH', 'MEDIUM', 'LOW'], function (numSize) {
+          each(['precision', 'rangeMin', 'rangeMax'], function (key) {
+            var format = gl.getShaderPrecisionFormat(gl[shader + '_SHADER'], gl[numSize + '_' + numType])[key];
+            if (key !== 'precision') {
+              key = 'precision ' + key;
+            }
+            var line = ['webgl ', shader.toLowerCase(), ' shader ', numSize.toLowerCase(), ' ', numType.toLowerCase(), ' ', key, ':', format].join('');
+            result.push(line);
+          });
+        });
+      });
+    });
+    return result
+  };
+  var getAdBlock = function () {
+    var ads = document.createElement('div');
+    ads.innerHTML = '&nbsp;';
+    ads.className = 'adsbox';
+    var result = false;
+    try {
+        // body may not exist, that's why we need try/catch
+      document.body.appendChild(ads);
+      result = document.getElementsByClassName('adsbox')[0].offsetHeight === 0;
+      document.body.removeChild(ads);
+    } catch (e) {
+      result = false;
+    }
+    return result
+  };
+  var getHasLiedLanguages = function () {
+      // We check if navigator.language is equal to the first language of navigator.languages
+    if (typeof navigator.languages !== 'undefined') {
+      try {
+        var firstLanguages = navigator.languages[0].substr(0, 2);
+        if (firstLanguages !== navigator.language.substr(0, 2)) {
+          return true
+        }
+      } catch (err) {
+        return true
+      }
+    }
+    return false
+  };
+  var getHasLiedResolution = function () {
+    return window.screen.width < window.screen.availWidth || window.screen.height < window.screen.availHeight
+  };
+  var getHasLiedOs = function () {
+    var userAgent = navigator.userAgent.toLowerCase();
+    var oscpu = navigator.oscpu;
+    var platform = navigator.platform.toLowerCase();
+    var os;
+      // We extract the OS from the user agent (respect the order of the if else if statement)
+    if (userAgent.indexOf('windows phone') >= 0) {
+      os = 'Windows Phone';
+    } else if (userAgent.indexOf('win') >= 0) {
+      os = 'Windows';
+    } else if (userAgent.indexOf('android') >= 0) {
+      os = 'Android';
+    } else if (userAgent.indexOf('linux') >= 0) {
+      os = 'Linux';
+    } else if (userAgent.indexOf('iphone') >= 0 || userAgent.indexOf('ipad') >= 0) {
+      os = 'iOS';
+    } else if (userAgent.indexOf('mac') >= 0) {
+      os = 'Mac';
+    } else {
+      os = 'Other';
+    }
+      // We detect if the person uses a mobile device
+    var mobileDevice = (('ontouchstart' in window) ||
+        (navigator.maxTouchPoints > 0) ||
+        (navigator.msMaxTouchPoints > 0));
+
+    if (mobileDevice && os !== 'Windows Phone' && os !== 'Android' && os !== 'iOS' && os !== 'Other') {
+      return true
+    }
+
+      // We compare oscpu with the OS extracted from the UA
+    if (typeof oscpu !== 'undefined') {
+      oscpu = oscpu.toLowerCase();
+      if (oscpu.indexOf('win') >= 0 && os !== 'Windows' && os !== 'Windows Phone') {
+        return true
+      } else if (oscpu.indexOf('linux') >= 0 && os !== 'Linux' && os !== 'Android') {
+        return true
+      } else if (oscpu.indexOf('mac') >= 0 && os !== 'Mac' && os !== 'iOS') {
+        return true
+      } else if ((oscpu.indexOf('win') === -1 && oscpu.indexOf('linux') === -1 && oscpu.indexOf('mac') === -1) !== (os === 'Other')) {
+        return true
+      }
+    }
+
+      // We compare platform with the OS extracted from the UA
+    if (platform.indexOf('win') >= 0 && os !== 'Windows' && os !== 'Windows Phone') {
+      return true
+    } else if ((platform.indexOf('linux') >= 0 || platform.indexOf('android') >= 0 || platform.indexOf('pike') >= 0) && os !== 'Linux' && os !== 'Android') {
+      return true
+    } else if ((platform.indexOf('mac') >= 0 || platform.indexOf('ipad') >= 0 || platform.indexOf('ipod') >= 0 || platform.indexOf('iphone') >= 0) && os !== 'Mac' && os !== 'iOS') {
+      return true
+    } else if ((platform.indexOf('win') === -1 && platform.indexOf('linux') === -1 && platform.indexOf('mac') === -1) !== (os === 'Other')) {
+      return true
+    }
+
+    return typeof navigator.plugins === 'undefined' && os !== 'Windows' && os !== 'Windows Phone'
+  };
+  var getHasLiedBrowser = function () {
+    var userAgent = navigator.userAgent.toLowerCase();
+    var productSub = navigator.productSub;
+
+      // we extract the browser from the user agent (respect the order of the tests)
+    var browser;
+    if (userAgent.indexOf('firefox') >= 0) {
+      browser = 'Firefox';
+    } else if (userAgent.indexOf('opera') >= 0 || userAgent.indexOf('opr') >= 0) {
+      browser = 'Opera';
+    } else if (userAgent.indexOf('chrome') >= 0) {
+      browser = 'Chrome';
+    } else if (userAgent.indexOf('safari') >= 0) {
+      browser = 'Safari';
+    } else if (userAgent.indexOf('trident') >= 0) {
+      browser = 'Internet Explorer';
+    } else {
+      browser = 'Other';
+    }
+
+    if ((browser === 'Chrome' || browser === 'Safari' || browser === 'Opera') && productSub !== '20030107') {
+      return true
+    }
+
+      // eslint-disable-next-line no-eval
+    var tempRes = eval.toString().length;
+    if (tempRes === 37 && browser !== 'Safari' && browser !== 'Firefox' && browser !== 'Other') {
+      return true
+    } else if (tempRes === 39 && browser !== 'Internet Explorer' && browser !== 'Other') {
+      return true
+    } else if (tempRes === 33 && browser !== 'Chrome' && browser !== 'Opera' && browser !== 'Other') {
+      return true
+    }
+
+      // We create an error to see how it is handled
+    var errFirefox;
+    try {
+        // eslint-disable-next-line no-throw-literal
+      throw 'a'
+    } catch (err) {
+      try {
+        err.toSource();
+        errFirefox = true;
+      } catch (errOfErr) {
+        errFirefox = false;
+      }
+    }
+    return errFirefox && browser !== 'Firefox' && browser !== 'Other'
+  };
+  var isCanvasSupported = function () {
+    var elem = document.createElement('canvas');
+    return !!(elem.getContext && elem.getContext('2d'))
+  };
+  var isWebGlSupported = function () {
+      // code taken from Modernizr
+    if (!isCanvasSupported()) {
+      return false
+    }
+
+    var glContext = getWebglCanvas();
+    return !!window.WebGLRenderingContext && !!glContext
+  };
+  var isIE = function () {
+    if (navigator.appName === 'Microsoft Internet Explorer') {
+      return true
+    } else if (navigator.appName === 'Netscape' && /Trident/.test(navigator.userAgent)) { // IE 11
+      return true
+    }
+    return false
+  };
+  var getWebglCanvas = function () {
+    var canvas = document.createElement('canvas');
+    var gl = null;
+    try {
+      gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    } catch (e) { /* squelch */ }
+    if (!gl) { gl = null; }
+    return gl
+  };
+
+  var components = [
+    false,
+    {key: 'language', getData: languageKey},
+    {key: 'colorDepth', getData: colorDepthKey},
+    false,
+    {key: 'pixelRatio', getData: pixelRatioKey},
+    false,
+    {key: 'screenResolution', getData: screenResolutionKey},
+    {key: 'availableScreenResolution', getData: availableScreenResolutionKey},
+    {key: 'timezoneOffset', getData: timezoneOffset},
+    false,
+    {key: 'sessionStorage', getData: sessionStorageKey},
+    {key: 'localStorage', getData: localStorageKey},
+    {key: 'indexedDb', getData: indexedDbKey},
+    false,
+    {key: 'openDatabase', getData: openDatabaseKey},
+    {key: 'cpuClass', getData: cpuClassKey},
+    {key: 'platform', getData: platformKey},
+    false,
+    {key: 'plugins', getData: pluginsComponent},
+    {key: 'canvas', getData: canvasKey},
+    {key: 'webgl', getData: webglKey},
+    false,
+    {key: 'adBlock', getData: adBlockKey},
+    {key: 'hasLiedLanguages', getData: hasLiedLanguagesKey},
+    {key: 'hasLiedResolution', getData: hasLiedResolutionKey},
+    {key: 'hasLiedOs', getData: hasLiedOsKey},
+    {key: 'hasLiedBrowser', getData: hasLiedBrowserKey},
+    {key: 'touchSupport', getData: touchSupportKey},
+    {key: 'fonts', getData: jsFontsKey, pauseBefore: true},
+    false,
+    false,
+    false
+  ];
+
+  var Fingerprint2 = function (options) {
+    return false
+  };
+
+  Fingerprint2.get = function (options, callback) {
+    if (!callback) {
+      callback = options;
+      options = {};
+    } else if (!options) {
+      options = {};
+    }
+    extendSoft(options, defaultOptions);
+    options.components = options.extraComponents.concat(components);
+
+    var keys = {
+      data: [],
+      addPreprocessedComponent: function (key, value) {
+        if (typeof options.preprocessor === 'function') {
+          value = options.preprocessor(key, value);
+        }
+        keys.data.push({key: key, value: value});
+      }
+    };
+
+    var i = -1;
+    var chainComponents = function (alreadyWaited) {
+      i += 1;
+      if (i >= options.components.length) { // on finish
+        callback(keys.data);
+        return
+      }
+      var component = options.components[i];
+
+      if (options.excludes[component.key]) {
+        chainComponents(false); // skip
+        return
+      }
+
+      if (!alreadyWaited && component.pauseBefore) {
+        i -= 1;
+        setTimeout(function () {
+          chainComponents(true);
+        }, 1);
+        return
+      }
+
+      try {
+        component.getData(function (value) {
+          keys.addPreprocessedComponent(component.key, value);
+          chainComponents(false);
+        }, options);
+      } catch (error) {
+        // main body error
+        keys.addPreprocessedComponent(component.key, String(error));
+        chainComponents(false);
+      }
+    };
+
+    chainComponents(false);
+  };
+
+  Fingerprint2.x64hash128 = x64hash128;
+  Fingerprint2.VERSION = '2.0.0';
+  return Fingerprint2
+});
 });
 
 var Browser = (function () {
@@ -833,10 +1999,10 @@ var Browser = (function () {
                 pixelRatio: false
             }
         };
-        fingerprint2_min.get(options, function (components) {
+        fingerprint2.get(options, function (components) {
             var values = components.filter(function (component) { return component.key; })
                 .map(function (component) { return component.value; });
-            var browserHash = fingerprint2_min.x64hash128(values.join(''), 31);
+            var browserHash = fingerprint2.x64hash128(values.join(''), 31);
             browserComponents = {
                 browserHash: browserHash
             };
@@ -1071,10 +2237,11 @@ function getRawTag(value) {
 
   try {
     value[symToStringTag] = undefined;
+    var unmasked = true;
   } catch (e) {}
 
   var result = nativeObjectToString.call(value);
-  {
+  if (unmasked) {
     if (isOwn) {
       value[symToStringTag] = tag;
     } else {
