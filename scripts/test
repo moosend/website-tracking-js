@@ -1,2 +1,0 @@
-#!/bin/sh
-tsc --outDir compiled/ -t es5 --module commonjs test/*.ts && npm test

@@ -1,17 +1,16 @@
-import Utils from "../common/utils";
-import CookieNames from "../cookies/CookieNames";
-import Tracker from "./Tracker";
+import { isValidUUID } from "../common/utils";
+import CookieNames from "../cookies";
+import { ICookieNames, IStorage, ITrackerStorage } from "../types";
 
 enum CookieKeys {
     CAMPAIGN_ID = "cmid",
 }
 
-export default class TrackerStorage extends CookieNames
-    implements ITrackerStorage {
+export default class TrackerStorage extends CookieNames implements ITrackerStorage {
     private static Keys = CookieKeys;
+    public cookieNames: CookieNames;
 
     private storage: IStorage;
-    private cookieNames: CookieNames;
 
     constructor(storage: IStorage) {
         super();
@@ -25,7 +24,7 @@ export default class TrackerStorage extends CookieNames
                     const propertyValue = this.storage.getItem(
                         cookieNames[property],
                     );
-                    if (!propertyValue || !Utils.isValidUUID(propertyValue)) {
+                    if (!propertyValue || !isValidUUID(propertyValue)) {
                         throw new Error(
                             `Property ${property} is empty or has invalid UUID.`,
                         );
@@ -43,7 +42,7 @@ export default class TrackerStorage extends CookieNames
         return this.storage.getItem(this.userIdName);
     }
 
-    public setUserId(userId: string, options?: any): void {
+    public setUserId(userId: string | string[], options?: any): void {
         this.storage.setItem(this.userIdName, userId, options);
     }
 
@@ -51,7 +50,7 @@ export default class TrackerStorage extends CookieNames
         return this.storage.getItem(TrackerStorage.Keys.CAMPAIGN_ID);
     }
 
-    public setCampaignId(campaignId: string): void {
+    public setCampaignId(campaignId: string | string[]): void {
         this.storage.setItem(TrackerStorage.Keys.CAMPAIGN_ID, campaignId);
     }
 

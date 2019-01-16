@@ -4516,4 +4516,4 @@ if (typeof trackerStub.q === "object" && trackerStub.q.length) {
     });
 }
 
-module.exports = tracker;
+export default tracker;

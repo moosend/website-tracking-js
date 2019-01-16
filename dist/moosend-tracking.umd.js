@@ -1,3 +1,8 @@
+(function (global, factory) {
+typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+typeof define === 'function' && define.amd ? define(factory) :
+(global = global || self, global.mootrack = factory());
+}(this, function () {
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
@@ -4516,4 +4521,6 @@ if (typeof trackerStub.q === "object" && trackerStub.q.length) {
     });
 }
 
-module.exports = tracker;
+return tracker;
+
+}));
