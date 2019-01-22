@@ -51,6 +51,7 @@ interface PayloadAPI {
 interface ITrackPayload {
     ContactEmailAddress?: string;
     CampaignId?: string;
+    MemberId?: string;
     ContactId: string;
     siteId: string;
     actionType: string;
@@ -131,6 +132,9 @@ interface ITrackerStorage {
     getCampaignId(): string;
     setCampaignId(value: string): void;
 
+    getMemberId(): string;
+    setMemberId(value: string): void;
+
     getEmail(): string;
     setEmail(value: string): void;
 
@@ -157,6 +161,8 @@ interface ICookieProperties {
     sessionIdName: string;
     emailName: string;
     exitIntentFlagName: string;
+    campaignIdName: string;
+    memberIdName: string;
 }
 
 interface ICookieNames extends ICookieProperties {
@@ -166,6 +172,10 @@ interface ICookieNames extends ICookieProperties {
     setSessionIdName(sessionIdName: string): void;
     getExitIntentFlagName(): string;
     setExitIntentFlagName(exitIntentFlagName: string): void;
+    getCampaignIdName(): string;
+    setCampaignIdName(campaignIdName: string): void;
+    getMemberIdName(): string;
+    setMemberIdName(memberIdName: string): void;
 }
 
 interface Window { XDomainRequest: any; XMLHttpRequest: any;

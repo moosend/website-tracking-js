@@ -9,6 +9,8 @@ export default class TrackerStorage extends CookieNames implements ITrackerStora
     setUserId(userId: string, options?: any): void;
     getCampaignId(): string;
     setCampaignId(campaignId: string): void;
+    setMemberId(memberId: string): void;
+    getMemberId(): string;
     getEmail(): string;
     setEmail(email: string): void;
     getSessionId(): string;

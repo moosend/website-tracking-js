@@ -45,7 +45,6 @@ test("CookieNames update default values", (t: test.Test) => {
         "email",
         "email is not default value 'email'",
     );
-    
 
     t.equal(
         cookieNames.getUserIdName(),

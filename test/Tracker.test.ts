@@ -31,7 +31,7 @@ test("Tracker Initialisation", (t: test.Test) => {
         },
         setExitIntentFlag() {
             t.pass("ITrackerStorage.setExitIntentFlag was called during initialisation");
-        }
+        },
     });
 
     tBrowser = mock.createBrowser(t, {
@@ -471,7 +471,7 @@ test("Tracker trackExitIntent API", (t: test.Test) => {
         getUserId: () => {
             t.pass("ITrackerStorage.getUserId was called");
             return ContactId;
-        }
+        },
     });
 
     tAgent = mock.createAgent(t, {
@@ -484,7 +484,7 @@ test("Tracker trackExitIntent API", (t: test.Test) => {
                 Url: url,
                 actionType: TrackerActions.EXIT_INTENT,
                 sessionId,
-                siteId
+                siteId,
             };
 
             t.deepEqual(payload, expectedPayload, "ITrackerAgent.sendTrack was not called with expected payload");
@@ -996,7 +996,9 @@ test("Tracker should be initialized with custom userId cookie name", (t: test.Te
     const userIdName = "userIdExample";
     const sessionIdName = "sessionIdExample";
     const emailName = "emailNameExample";
-    const exitIntentFlagName = "exitIntentFlag";
+    const exitIntentFlagName = "exitIntentFlagExample";
+    const campaignIdName = "campaignIdExample";
+    const memberIdName = "memberIdExample";
 
     tStorage = mock.createStorage(t, {
         userIdName,
@@ -1013,10 +1015,9 @@ test("Tracker should be initialized with custom userId cookie name", (t: test.Te
 
     const tracker = new Tracker(tAgent, tStorage, tBrowser);
 
-    tracker.setCookieNames({ userIdName, sessionIdName, emailName, exitIntentFlagName });
+    tracker.setCookieNames({ userIdName, sessionIdName, emailName, exitIntentFlagName, campaignIdName, memberIdName});
     tracker.init(siteId, false);
 
     t.plan(2);
     t.end();
-
 });

@@ -55,6 +55,14 @@ export default class TrackerStorage extends CookieNames
         this.storage.setItem(TrackerStorage.Keys.CAMPAIGN_ID, campaignId);
     }
 
+    public setMemberId(memberId: string): void {
+        this.storage.setItem(this.memberIdName, memberId);
+    }
+
+    public getMemberId(): string {
+        return this.storage.getItem(this.memberIdName);
+    }
+
     public getEmail(): string {
         return this.storage.getItem(this.emailName);
     }
