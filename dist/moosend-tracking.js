@@ -238,6 +238,63 @@ module.exports = isArrayLike;
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var Utils = (function () {
+    function Utils() {
+    }
+    Utils.isValidUUID = function (uuidString) {
+        var validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        return (validUUIDRegex.test(uuidString) ||
+            validUUIDRegex.test(uuidString.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi, "$1-$2-$3-$4-$5")));
+    };
+    return Utils;
+}());
+exports["default"] = Utils;
+exports.tostr = function (value) {
+    return Object.prototype.toString.call(value);
+};
+exports.isString = function (value) {
+    return Object.prototype.toString.call(value) === "[object String]";
+};
+exports.isNumber = function (value) {
+    return Object.prototype.toString.call(value) === "[object Number]" || !isNaN(parseFloat(value));
+};
+exports.isObject = function (value) {
+    return Object.prototype.toString.call(value) === "[object Object]";
+};
+exports.isUrl = function (url) {
+    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    return regexp.test(url);
+};
+exports.isValidUUID = function (uuidString) {
+    var validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return (validUUIDRegex.test(uuidString) ||
+        validUUIDRegex.test(uuidString.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi, "$1-$2-$3-$4-$5")));
+};
+exports.getParameterByName = function (name) {
+    var url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"), results = regex.exec(url);
+    if (!results) {
+        return null;
+    }
+    if (!results[2]) {
+        return "";
+    }
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+exports.validateEmail = function (email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+};
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -261,7 +318,7 @@ module.exports = isPrototype;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 /**
@@ -298,7 +355,7 @@ module.exports = isObject;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 /**
@@ -330,7 +387,7 @@ module.exports = isArray;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -358,7 +415,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -384,53 +441,6 @@ exports["default"] = CookieStorage;
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var helpers = {
-    tostr: function (value) {
-        return Object.prototype.toString.call(value);
-    },
-    isString: function (value) {
-        return Object.prototype.toString.call(value) === "[object String]";
-    },
-    isNumber: function (value) {
-        return Object.prototype.toString.call(value) === "[object Number]" || !isNaN(parseFloat(value));
-    },
-    isObject: function (value) {
-        return Object.prototype.toString.call(value) === "[object Object]";
-    },
-    isUrl: function (url) {
-        var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-        return regexp.test(url);
-    },
-    isValidUUID: function (uuidString) {
-        var validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-        return (validUUIDRegex.test(uuidString) ||
-            validUUIDRegex.test(uuidString.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi, "$1-$2-$3-$4-$5")));
-    },
-    getParameterByName: function (name) {
-        var url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'), results = regex.exec(url);
-        if (!results)
-            return null;
-        if (!results[2])
-            return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    },
-    validateEmail: function (email) {
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    }
-};
-exports["default"] = helpers;
-
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -450,7 +460,7 @@ exports["default"] = {
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isPrototype = __webpack_require__(6),
+var isPrototype = __webpack_require__(7),
     nativeKeys = __webpack_require__(41);
 
 /** Used for built-in method references. */
@@ -508,7 +518,7 @@ module.exports = overArg;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(2),
-    isObject = __webpack_require__(7);
+    isObject = __webpack_require__(8);
 
 /** `Object#toString` result references. */
 var asyncTag = '[object AsyncFunction]',
@@ -727,7 +737,7 @@ var isBuffer = nativeIsBuffer || stubFalse;
 
 module.exports = isBuffer;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)(module)))
 
 /***/ }),
 /* 22 */
@@ -959,8 +969,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var utils_1 = __webpack_require__(78);
-var CookieNames_1 = __webpack_require__(79);
+var utils_1 = __webpack_require__(6);
+var CookieNames_1 = __webpack_require__(78);
 var CookieKeys;
 (function (CookieKeys) {
     CookieKeys["CAMPAIGN_ID"] = "cmid";
@@ -1041,11 +1051,11 @@ exports["default"] = TrackerStorage;
 /* WEBPACK VAR INJECTION */(function(global) {
 exports.__esModule = true;
 __webpack_require__(31);
-var CookieStorage_1 = __webpack_require__(10);
-var Helpers_1 = __webpack_require__(11);
+var utils_1 = __webpack_require__(6);
+var CookieStorage_1 = __webpack_require__(11);
 var TrackerFactory_1 = __webpack_require__(33);
 var TrackerStorage_1 = __webpack_require__(29);
-var queryString = __webpack_require__(80);
+var queryString = __webpack_require__(79);
 var trackerStorage = new TrackerStorage_1["default"](new CookieStorage_1["default"]());
 var tracker = TrackerFactory_1["default"].CreateWithCookieStorage();
 if (typeof location === "object" && location.search) {
@@ -1062,17 +1072,17 @@ var API_KEY = "mootrack";
 var trackerStub = typeof (window) !== "undefined" ? window[API_KEY] : [];
 global[API_KEY] = callTrackerMethod.bind(this);
 var timeEntered = performance.now();
-var email = Helpers_1["default"].getParameterByName("email");
-var cmid = Helpers_1["default"].getParameterByName("cmid");
-var mid = Helpers_1["default"].getParameterByName("mid");
-if (Helpers_1["default"].validateEmail(email)) {
+var email = utils_1.getParameterByName("email");
+var cmid = utils_1.getParameterByName("cmid");
+var mid = utils_1.getParameterByName("mid");
+if (utils_1.validateEmail(email)) {
     trackerStorage.setEmail(email);
     tracker.track("identify", email);
 }
-if (cmid != null && Helpers_1["default"].isValidUUID(cmid)) {
+if (cmid != null && utils_1.isValidUUID(cmid)) {
     trackerStorage.setCampaignId(cmid);
 }
-if (mid != null && Helpers_1["default"].isValidUUID(mid)) {
+if (mid != null && utils_1.isValidUUID(mid)) {
     trackerStorage.setMemberId(mid);
 }
 var lastExited = new Date(window.localStorage.getItem("lastExited"));
@@ -1085,6 +1095,8 @@ if (trackerStorage.getExitIntentFlag() && shouldFireExitIntent) {
 function callExitIntentEvent() {
     var timeExited = performance.now();
     var timeElapsed = (timeExited - timeEntered) / 1000;
+    var now = new Date();
+    window.localStorage.setItem("lastExited", now.toString());
     tracker.trackExitIntent(Math.round(timeElapsed));
     document.documentElement.removeEventListener("mouseleave", callExitIntentEvent);
 }
@@ -3369,7 +3381,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 exports.__esModule = true;
 var config_1 = __webpack_require__(12);
-var CookieStorage_1 = __webpack_require__(10);
+var CookieStorage_1 = __webpack_require__(11);
 var Browser_1 = __webpack_require__(34);
 var Tracker_1 = __webpack_require__(36);
 var TrackerAgent_1 = __webpack_require__(75);
@@ -3509,8 +3521,8 @@ var uuidV4 = __webpack_require__(37);
 var isEmpty = __webpack_require__(40);
 var isPlainObject = __webpack_require__(59);
 var assign = __webpack_require__(61);
-var isArray = __webpack_require__(8);
-var Helpers_1 = __webpack_require__(11);
+var isArray = __webpack_require__(9);
+var Utilities = __webpack_require__(6);
 var TrackerActions;
 (function (TrackerActions) {
     TrackerActions["ADDED_TO_ORDER"] = "ADDED_TO_ORDER";
@@ -3531,7 +3543,7 @@ var Tracker = (function () {
             return;
         }
         var payload;
-        if (!(email && Helpers_1["default"].isString(email))) {
+        if (!(email && Utilities.isString(email))) {
             throw new Error("email cannot be undefined or empty");
         }
         if (this.storage.getEmail() === email) {
@@ -3549,7 +3561,7 @@ var Tracker = (function () {
             sessionId: sessionId,
             siteId: siteId
         };
-        if (name && Helpers_1["default"].isString(name)) {
+        if (name && Utilities.isString(name)) {
             payload.ContactName = name;
         }
         if (campaignId) {
@@ -3564,7 +3576,7 @@ var Tracker = (function () {
         if (!this._isInitialized()) {
             return;
         }
-        if (!(action && Helpers_1["default"].isString(action))) {
+        if (!(action && Utilities.isString(action))) {
             return;
         }
         if (isArray(props)) {
@@ -3601,8 +3613,6 @@ var Tracker = (function () {
         if (!this._isInitialized()) {
             return;
         }
-        var now = new Date();
-        window.localStorage.setItem("lastExited", now.toString());
         var payload = {
             ContactId: this.storage.getUserId(),
             SecondsOnPage: secondsOnPage,
@@ -3678,23 +3688,23 @@ var Tracker = (function () {
         if (!itemCode) {
             throw new Error("itemCode cannot be empty");
         }
-        if (!Helpers_1["default"].isNumber(itemPrice) || !itemPrice) {
+        if (!Utilities.isNumber(itemPrice) || !itemPrice) {
             itemPrice = 0;
             console.warn("itemPrice is missing, defaults to 0");
         }
-        if (!itemUrl || !Helpers_1["default"].isUrl(itemUrl)) {
+        if (!itemUrl || !Utilities.isUrl(itemUrl)) {
             itemUrl = this.storage.getCurrentPageUrl();
             console.warn("itemUrl is missing or invalid, defaults to current url");
         }
-        if (!Helpers_1["default"].isNumber(itemQuantity) || !itemQuantity) {
+        if (!Utilities.isNumber(itemQuantity) || !itemQuantity) {
             itemQuantity = 1;
             console.warn("itemQuantity is missing, defaults to 1");
         }
-        if (!Helpers_1["default"].isNumber(itemTotalPrice) || !itemTotalPrice) {
+        if (!Utilities.isNumber(itemTotalPrice) || !itemTotalPrice) {
             itemTotalPrice = 0;
             console.warn("itemTotalPrice is missing, defaults to 0");
         }
-        if (itemImage !== undefined && !Helpers_1["default"].isUrl(itemImage)) {
+        if (itemImage !== undefined && !Utilities.isUrl(itemImage)) {
             throw new Error("itemImage should be a valid url");
         }
         if (props !== undefined && !isPlainObject(props)) {
@@ -3740,7 +3750,7 @@ var Tracker = (function () {
         if (!siteId) {
             throw new Error("siteId cannot be undefined or empty");
         }
-        if (!Helpers_1["default"].isValidUUID(siteId)) {
+        if (!Utilities.isValidUUID(siteId)) {
             throw new Error("siteId should be a valid uuid");
         }
         if (exitIntentEventFlag != null && typeof exitIntentEventFlag !== "boolean") {
@@ -3799,26 +3809,26 @@ var Tracker = (function () {
         if (!product.itemCode) {
             throw new Error("itemCode cannot be empty : " + productJson);
         }
-        if (!Helpers_1["default"].isNumber(product.itemPrice) || !product.itemPrice) {
+        if (!Utilities.isNumber(product.itemPrice) || !product.itemPrice) {
             product.itemPrice = 0;
             console.warn("itemPrice is missing, defaults to 0");
         }
-        if (!product.itemUrl || !Helpers_1["default"].isUrl(product.itemUrl)) {
+        if (!product.itemUrl || !Utilities.isUrl(product.itemUrl)) {
             product.itemUrl = this.storage.getCurrentPageUrl();
             console.warn("itemUrl is missing or invalid, defaults to current url");
         }
-        if (!Helpers_1["default"].isNumber(product.itemQuantity) || !product.itemQuantity) {
+        if (!Utilities.isNumber(product.itemQuantity) || !product.itemQuantity) {
             product.itemQuantity = 1;
             console.warn("itemQuantity is missing, defaults to 1");
         }
-        if (!Helpers_1["default"].isNumber(product.itemTotalPrice) || !product.itemTotalPrice) {
+        if (!Utilities.isNumber(product.itemTotalPrice) || !product.itemTotalPrice) {
             product.itemTotalPrice = 0;
             console.warn("itemTotalPrice is missing, defaults to 0");
         }
-        if (product.itemName !== undefined && !Helpers_1["default"].isString(product.itemName)) {
+        if (product.itemName !== undefined && !Utilities.isString(product.itemName)) {
             throw new Error("itemName type should be a string : " + productJson);
         }
-        if (product.itemImage !== undefined && !Helpers_1["default"].isUrl(product.itemImage)) {
+        if (product.itemImage !== undefined && !Utilities.isUrl(product.itemImage)) {
             throw new Error("itemImage should be a valid URL : " + productJson);
         }
         return product;
@@ -3946,10 +3956,10 @@ module.exports = bytesToUuid;
 var baseKeys = __webpack_require__(13),
     getTag = __webpack_require__(42),
     isArguments = __webpack_require__(19),
-    isArray = __webpack_require__(8),
+    isArray = __webpack_require__(9),
     isArrayLike = __webpack_require__(5),
     isBuffer = __webpack_require__(21),
-    isPrototype = __webpack_require__(6),
+    isPrototype = __webpack_require__(7),
     isTypedArray = __webpack_require__(22);
 
 /** `Object#toString` result references. */
@@ -4117,7 +4127,7 @@ module.exports = DataView;
 
 var isFunction = __webpack_require__(15),
     isMasked = __webpack_require__(47),
-    isObject = __webpack_require__(7),
+    isObject = __webpack_require__(8),
     toSource = __webpack_require__(18);
 
 /**
@@ -4514,7 +4524,7 @@ var nodeUtil = (function() {
 
 module.exports = nodeUtil;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)(module)))
 
 /***/ }),
 /* 59 */
@@ -4604,7 +4614,7 @@ var assignValue = __webpack_require__(23),
     copyObject = __webpack_require__(62),
     createAssigner = __webpack_require__(63),
     isArrayLike = __webpack_require__(5),
-    isPrototype = __webpack_require__(6),
+    isPrototype = __webpack_require__(7),
     keys = __webpack_require__(72);
 
 /** Used for built-in method references. */
@@ -4971,7 +4981,7 @@ module.exports = shortOut;
 var eq = __webpack_require__(26),
     isArrayLike = __webpack_require__(5),
     isIndex = __webpack_require__(28),
-    isObject = __webpack_require__(7);
+    isObject = __webpack_require__(8);
 
 /**
  * Checks if the given arguments are from an iteratee call.
@@ -5049,7 +5059,7 @@ module.exports = keys;
 
 var baseTimes = __webpack_require__(74),
     isArguments = __webpack_require__(19),
-    isArray = __webpack_require__(8),
+    isArray = __webpack_require__(9),
     isBuffer = __webpack_require__(21),
     isIndex = __webpack_require__(28),
     isTypedArray = __webpack_require__(22);
@@ -6088,7 +6098,7 @@ function post(url, data, callBack) {
   }
 }).call(this);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)(module), __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)(module), __webpack_require__(3)))
 
 /***/ }),
 /* 77 */
@@ -6101,26 +6111,6 @@ module.exports = __webpack_amd_options__;
 
 /***/ }),
 /* 78 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var Utils = (function () {
-    function Utils() {
-    }
-    Utils.isValidUUID = function (uuidString) {
-        var validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-        return (validUUIDRegex.test(uuidString) ||
-            validUUIDRegex.test(uuidString.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/gi, "$1-$2-$3-$4-$5")));
-    };
-    return Utils;
-}());
-exports["default"] = Utils;
-
-
-/***/ }),
-/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6183,18 +6173,18 @@ exports["default"] = CookieNames;
 
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(81);
-exports.encode = exports.stringify = __webpack_require__(82);
+exports.decode = exports.parse = __webpack_require__(80);
+exports.encode = exports.stringify = __webpack_require__(81);
 
 
 /***/ }),
-/* 81 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6285,7 +6275,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 82 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

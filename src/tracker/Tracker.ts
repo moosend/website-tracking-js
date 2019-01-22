@@ -4,8 +4,8 @@ const isPlainObject = require("lodash/isPlainObject");
 const assign = require("lodash/assign");
 const isArray = require("lodash/isArray");
 
+import * as Utilities from "../common/utils";
 import CookieNames from "../cookies/CookieNames";
-import Helpers from "./Helpers";
 
 export enum TrackerActions {
     ADDED_TO_ORDER = "ADDED_TO_ORDER", // || Basically Add to Cart
@@ -42,7 +42,7 @@ export default class Tracker
         let payload: ITrackIdentifyPayload;
 
         // IF email is falsy or is not string THEN abort
-        if (!(email && Helpers.isString(email))) {
+        if (!(email && Utilities.isString(email))) {
             throw new Error("email cannot be undefined or empty");
         }
 
@@ -67,7 +67,7 @@ export default class Tracker
         };
 
         // IF name is string THEN add it to payload
-        if (name && Helpers.isString(name)) {
+        if (name && Utilities.isString(name)) {
             payload.ContactName = name;
         }
 
@@ -94,7 +94,7 @@ export default class Tracker
         }
 
         // IF action is falsy or not a string THEN abort
-        if (!(action && Helpers.isString(action))) {
+        if (!(action && Utilities.isString(action))) {
             return;
         }
 
@@ -141,9 +141,6 @@ export default class Tracker
         if (!this._isInitialized()) {
             return;
         }
-
-        const now = new Date();
-        window.localStorage.setItem("lastExited", now.toString());
 
         const payload: ITrackExitIntentPayload = {
             ContactId: this.storage.getUserId(),
@@ -251,29 +248,29 @@ export default class Tracker
             throw new Error("itemCode cannot be empty");
         }
 
-        if (!Helpers.isNumber(itemPrice) || !itemPrice) {
+        if (!Utilities.isNumber(itemPrice) || !itemPrice) {
             itemPrice = 0;
             console.warn("itemPrice is missing, defaults to 0");
         }
 
-        if (!itemUrl || !Helpers.isUrl(itemUrl)) {
+        if (!itemUrl || !Utilities.isUrl(itemUrl)) {
             itemUrl = this.storage.getCurrentPageUrl();
             console.warn(
                 "itemUrl is missing or invalid, defaults to current url",
             );
         }
 
-        if (!Helpers.isNumber(itemQuantity) || !itemQuantity) {
+        if (!Utilities.isNumber(itemQuantity) || !itemQuantity) {
             itemQuantity = 1;
             console.warn("itemQuantity is missing, defaults to 1");
         }
 
-        if (!Helpers.isNumber(itemTotalPrice) || !itemTotalPrice) {
+        if (!Utilities.isNumber(itemTotalPrice) || !itemTotalPrice) {
             itemTotalPrice = 0;
             console.warn("itemTotalPrice is missing, defaults to 0");
         }
 
-        if (itemImage !== undefined && !Helpers.isUrl(itemImage)) {
+        if (itemImage !== undefined && !Utilities.isUrl(itemImage)) {
             throw new Error("itemImage should be a valid url");
         }
 
@@ -340,7 +337,7 @@ export default class Tracker
             throw new Error("siteId cannot be undefined or empty");
         }
 
-        if (!Helpers.isValidUUID(siteId)) {
+        if (!Utilities.isValidUUID(siteId)) {
             throw new Error("siteId should be a valid uuid");
         }
 
@@ -420,35 +417,35 @@ export default class Tracker
             throw new Error("itemCode cannot be empty : " + productJson);
         }
 
-        if (!Helpers.isNumber(product.itemPrice) || !product.itemPrice) {
+        if (!Utilities.isNumber(product.itemPrice) || !product.itemPrice) {
             product.itemPrice = 0;
             console.warn("itemPrice is missing, defaults to 0");
         }
 
-        if (!product.itemUrl || !Helpers.isUrl(product.itemUrl)) {
+        if (!product.itemUrl || !Utilities.isUrl(product.itemUrl)) {
             product.itemUrl = this.storage.getCurrentPageUrl();
             console.warn(
                 "itemUrl is missing or invalid, defaults to current url",
             );
         }
 
-        if (!Helpers.isNumber(product.itemQuantity) || !product.itemQuantity) {
+        if (!Utilities.isNumber(product.itemQuantity) || !product.itemQuantity) {
             product.itemQuantity = 1;
             console.warn("itemQuantity is missing, defaults to 1");
         }
 
-        if (!Helpers.isNumber(product.itemTotalPrice) || !product.itemTotalPrice) {
+        if (!Utilities.isNumber(product.itemTotalPrice) || !product.itemTotalPrice) {
             product.itemTotalPrice = 0;
             console.warn("itemTotalPrice is missing, defaults to 0");
         }
 
-        if (product.itemName !== undefined && !Helpers.isString(product.itemName)) {
+        if (product.itemName !== undefined && !Utilities.isString(product.itemName)) {
             throw new Error(
                 "itemName type should be a string : " + productJson,
             );
         }
 
-        if (product.itemImage !== undefined && !Helpers.isUrl(product.itemImage)) {
+        if (product.itemImage !== undefined && !Utilities.isUrl(product.itemImage)) {
             throw new Error("itemImage should be a valid URL : " + productJson);
         }
 

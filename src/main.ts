@@ -2,8 +2,8 @@
  * Entry file for demo bundle
  */
 require("es5-shim");
+import { getParameterByName, isValidUUID, validateEmail} from "./common/utils";
 import CookieStorage from "./storage/CookieStorage";
-import Helpers from "./tracker/Helpers";
 import { TrackerActions } from "./tracker/Tracker";
 import TrackerFactory from "./tracker/TrackerFactory";
 import TrackerStorage from "./tracker/TrackerStorage";
@@ -46,20 +46,20 @@ global[API_KEY] = callTrackerMethod.bind(this);
 
 const timeEntered = performance.now();
 
-const email = Helpers.getParameterByName("email");
-const cmid = Helpers.getParameterByName("cmid");
-const mid = Helpers.getParameterByName("mid");
+const email = getParameterByName("email");
+const cmid = getParameterByName("cmid");
+const mid = getParameterByName("mid");
 
-if (Helpers.validateEmail(email)) {
+if (validateEmail(email)) {
     trackerStorage.setEmail(email);
     tracker.track("identify", email);
 }
 
-if (cmid != null && Helpers.isValidUUID(cmid)) {
+if (cmid != null && isValidUUID(cmid)) {
     trackerStorage.setCampaignId(cmid);
 }
 
-if (mid != null && Helpers.isValidUUID(mid)) {
+if (mid != null && isValidUUID(mid)) {
     trackerStorage.setMemberId(mid);
 }
 
@@ -76,6 +76,8 @@ if (trackerStorage.getExitIntentFlag() && shouldFireExitIntent) {
 function callExitIntentEvent() {
     const timeExited = performance.now();
     const timeElapsed = (timeExited - timeEntered) / 1000;
+    const now = new Date();
+    window.localStorage.setItem("lastExited", now.toString());
     tracker.trackExitIntent(Math.round(timeElapsed));
     document.documentElement.removeEventListener("mouseleave", callExitIntentEvent);
 }
