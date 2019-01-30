@@ -164,80 +164,6 @@ module.exports = g;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-function isObjectLike(value) {
-  return value != null && typeof value == 'object';
-}
-
-module.exports = isObjectLike;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isFunction = __webpack_require__(15),
-    isLength = __webpack_require__(20);
-
-/**
- * Checks if `value` is array-like. A value is considered array-like if it's
- * not a function and has a `value.length` that's an integer greater than or
- * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
- * @example
- *
- * _.isArrayLike([1, 2, 3]);
- * // => true
- *
- * _.isArrayLike(document.body.children);
- * // => true
- *
- * _.isArrayLike('abc');
- * // => true
- *
- * _.isArrayLike(_.noop);
- * // => false
- */
-function isArrayLike(value) {
-  return value != null && isLength(value.length) && !isFunction(value);
-}
-
-module.exports = isArrayLike;
-
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -291,6 +217,80 @@ exports.validateEmail = function (email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 };
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return value != null && typeof value == 'object';
+}
+
+module.exports = isObjectLike;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isFunction = __webpack_require__(15),
+    isLength = __webpack_require__(20);
+
+/**
+ * Checks if `value` is array-like. A value is considered array-like if it's
+ * not a function and has a `value.length` that's an integer greater than or
+ * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ * @example
+ *
+ * _.isArrayLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isArrayLike(document.body.children);
+ * // => true
+ *
+ * _.isArrayLike('abc');
+ * // => true
+ *
+ * _.isArrayLike(_.noop);
+ * // => false
+ */
+function isArrayLike(value) {
+  return value != null && isLength(value.length) && !isFunction(value);
+}
+
+module.exports = isArrayLike;
 
 
 /***/ }),
@@ -616,7 +616,7 @@ module.exports = toSource;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseIsArguments = __webpack_require__(54),
-    isObjectLike = __webpack_require__(4);
+    isObjectLike = __webpack_require__(5);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -969,7 +969,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var utils_1 = __webpack_require__(6);
+var utils_1 = __webpack_require__(4);
 var CookieNames_1 = __webpack_require__(78);
 var CookieKeys;
 (function (CookieKeys) {
@@ -1051,7 +1051,7 @@ exports["default"] = TrackerStorage;
 /* WEBPACK VAR INJECTION */(function(global) {
 exports.__esModule = true;
 __webpack_require__(31);
-var utils_1 = __webpack_require__(6);
+var utils_1 = __webpack_require__(4);
 var CookieStorage_1 = __webpack_require__(11);
 var TrackerFactory_1 = __webpack_require__(33);
 var TrackerStorage_1 = __webpack_require__(29);
@@ -1072,13 +1072,8 @@ var API_KEY = "mootrack";
 var trackerStub = typeof (window) !== "undefined" ? window[API_KEY] : [];
 global[API_KEY] = callTrackerMethod.bind(this);
 var timeEntered = performance.now();
-var email = utils_1.getParameterByName("email");
 var cmid = utils_1.getParameterByName("cmid");
 var mid = utils_1.getParameterByName("mid");
-if (utils_1.validateEmail(email)) {
-    trackerStorage.setEmail(email);
-    tracker.track("identify", email);
-}
 if (cmid != null && utils_1.isValidUUID(cmid)) {
     trackerStorage.setCampaignId(cmid);
 }
@@ -3522,7 +3517,8 @@ var isEmpty = __webpack_require__(40);
 var isPlainObject = __webpack_require__(59);
 var assign = __webpack_require__(61);
 var isArray = __webpack_require__(9);
-var Utilities = __webpack_require__(6);
+var Utilities = __webpack_require__(4);
+var utils_1 = __webpack_require__(4);
 var TrackerActions;
 (function (TrackerActions) {
     TrackerActions["ADDED_TO_ORDER"] = "ADDED_TO_ORDER";
@@ -3543,7 +3539,7 @@ var Tracker = (function () {
             return;
         }
         var payload;
-        if (!(email && Utilities.isString(email))) {
+        if (!(email && Utilities.validateEmail(email))) {
             throw new Error("email cannot be undefined or empty");
         }
         if (this.storage.getEmail() === email) {
@@ -3760,6 +3756,7 @@ var Tracker = (function () {
             this.storage.setExitIntentFlag(exitIntentEventFlag);
         }
         this.siteId = siteId;
+        var email = utils_1.getParameterByName("email");
         var userId = this.storage.getUserId();
         var sessionId = this.storage.getSessionId();
         this.browser.fingerPrint(function (browserFingerprint) {
@@ -3774,6 +3771,9 @@ var Tracker = (function () {
             var generatedSessionId = uuidV4();
             generatedSessionId = generatedSessionId.replace(/-/g, "");
             this.storage.setSessionId(generatedSessionId, { expires: 1 });
+        }
+        if (email) {
+            this.identify(email);
         }
         if (exitIntentEventFlag == null) {
             this.storage.setExitIntentFlag(true);
@@ -3957,7 +3957,7 @@ var baseKeys = __webpack_require__(13),
     getTag = __webpack_require__(42),
     isArguments = __webpack_require__(19),
     isArray = __webpack_require__(9),
-    isArrayLike = __webpack_require__(5),
+    isArrayLike = __webpack_require__(6),
     isBuffer = __webpack_require__(21),
     isPrototype = __webpack_require__(7),
     isTypedArray = __webpack_require__(22);
@@ -4368,7 +4368,7 @@ module.exports = WeakMap;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(2),
-    isObjectLike = __webpack_require__(4);
+    isObjectLike = __webpack_require__(5);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]';
@@ -4417,7 +4417,7 @@ module.exports = stubFalse;
 
 var baseGetTag = __webpack_require__(2),
     isLength = __webpack_require__(20),
-    isObjectLike = __webpack_require__(4);
+    isObjectLike = __webpack_require__(5);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
@@ -4532,7 +4532,7 @@ module.exports = nodeUtil;
 
 var baseGetTag = __webpack_require__(2),
     getPrototype = __webpack_require__(60),
-    isObjectLike = __webpack_require__(4);
+    isObjectLike = __webpack_require__(5);
 
 /** `Object#toString` result references. */
 var objectTag = '[object Object]';
@@ -4613,7 +4613,7 @@ module.exports = getPrototype;
 var assignValue = __webpack_require__(23),
     copyObject = __webpack_require__(62),
     createAssigner = __webpack_require__(63),
-    isArrayLike = __webpack_require__(5),
+    isArrayLike = __webpack_require__(6),
     isPrototype = __webpack_require__(7),
     keys = __webpack_require__(72);
 
@@ -4979,7 +4979,7 @@ module.exports = shortOut;
 /***/ (function(module, exports, __webpack_require__) {
 
 var eq = __webpack_require__(26),
-    isArrayLike = __webpack_require__(5),
+    isArrayLike = __webpack_require__(6),
     isIndex = __webpack_require__(28),
     isObject = __webpack_require__(8);
 
@@ -5016,7 +5016,7 @@ module.exports = isIterateeCall;
 
 var arrayLikeKeys = __webpack_require__(73),
     baseKeys = __webpack_require__(13),
-    isArrayLike = __webpack_require__(5);
+    isArrayLike = __webpack_require__(6);
 
 /**
  * Creates an array of the own enumerable property names of `object`.

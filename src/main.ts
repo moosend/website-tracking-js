@@ -46,14 +46,8 @@ global[API_KEY] = callTrackerMethod.bind(this);
 
 const timeEntered = performance.now();
 
-const email = getParameterByName("email");
 const cmid = getParameterByName("cmid");
 const mid = getParameterByName("mid");
-
-if (validateEmail(email)) {
-    trackerStorage.setEmail(email);
-    tracker.track("identify", email);
-}
 
 if (cmid != null && isValidUUID(cmid)) {
     trackerStorage.setCampaignId(cmid);
