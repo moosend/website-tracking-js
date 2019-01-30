@@ -5,6 +5,7 @@ const assign = require("lodash/assign");
 const isArray = require("lodash/isArray");
 
 import * as Utilities from "../common/utils";
+import { getParameterByName } from "../common/utils";
 import CookieNames from "../cookies/CookieNames";
 
 export enum TrackerActions {
@@ -42,7 +43,7 @@ export default class Tracker
         let payload: ITrackIdentifyPayload;
 
         // IF email is falsy or is not string THEN abort
-        if (!(email && Utilities.isString(email))) {
+        if (!(email && Utilities.validateEmail(email))) {
             throw new Error("email cannot be undefined or empty");
         }
 
@@ -349,6 +350,7 @@ export default class Tracker
 
         this.siteId = siteId;
 
+        const email = getParameterByName("email");
         const userId = this.storage.getUserId();
         const sessionId = this.storage.getSessionId();
 
@@ -367,6 +369,10 @@ export default class Tracker
             generatedSessionId = generatedSessionId.replace(/-/g, "");
 
             this.storage.setSessionId(generatedSessionId, { expires: 1 });
+        }
+
+        if (email) {
+            this.identify(email);
         }
 
         if (exitIntentEventFlag == null) {
