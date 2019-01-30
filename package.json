@@ -1,6 +1,6 @@
 {
   "name": "mootracker",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Tracking API",
   "main": "lib/main.js",
   "scripts": {
