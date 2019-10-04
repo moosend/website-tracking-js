@@ -38,8 +38,6 @@ export default class Browser implements IBrowser {
                     case "cpu_class": browserComponents.cpuClass = component.value; break;
                     case "navigator_platform": browserComponents.navigatorPlatform = component.value; break;
                     case "regular_plugins": browserComponents.plugins = component.value; break;
-                    case "canvas": browserComponents.canvas = component.value; break;
-                    case "webgl": browserComponents.webGl = component.value; break;
                     case "adblock": browserComponents.adBlock = component.value; break;
                     case "has_lied_languages": browserComponents.triedToHideLanguage = component.value; break;
                     case "has_lied_resolution": browserComponents.triedToHideResolution = component.value; break;

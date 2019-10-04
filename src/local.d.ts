@@ -105,8 +105,6 @@ interface IBrowserComponents {
     cpuClass?: string;
     navigatorPlatform?: string;
     plugins?: string[];
-    canvas?: string;
-    webGl?: string;
     adBlock?: boolean;
     triedToHideLanguage?: boolean;
     triedToHideResolution?: boolean;
