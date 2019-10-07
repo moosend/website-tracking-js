@@ -1,4 +1,4 @@
-/// <reference path="../src/local.d.ts" />
+/// <reference path="../local.d.ts" />
 
 import tape = require("tape");
 
