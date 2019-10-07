@@ -1,3 +1,5 @@
+///<reference path="../local.d.ts" />
+
 /**
  * Entry file for demo bundle
  */
@@ -28,8 +30,8 @@ if (typeof location === "object" && location.search) {
 
 export default tracker;
 
-export { default as TrackerActions };
-export { default as TrackerFactory };
+export { TrackerActions };
+export { TrackerFactory };
 
 /**
  * Expose tracker instance globally

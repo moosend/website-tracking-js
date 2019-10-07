@@ -1,9 +1,11 @@
 {
   "name": "mootracker",
-  "version": "0.13.1",
+  "version": "0.13.5",
   "description": "Tracking API",
-  "main": "lib/main.js",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
   "scripts": {
+    "prepare": "webpack --config webpack.config.lib.js -p",
     "start": "webpack-dev-server --inline",
     "test": "ts-node node_modules/tape/bin/tape test/*.test.ts | tap-spec",
     "coverage": "nyc ts-node node_modules/tape/bin/tape test/*.test.ts | tap-spec",

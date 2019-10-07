@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
+    "outDir": "dist",
     "noImplicitAny": true,
     "removeComments": true,
     "suppressImplicitAnyIndexErrors": true,
@@ -8,7 +8,6 @@
     "module": "commonjs",
     "declaration": true,
     "pretty": true,
-    "declarationDir": "lib",
     "types": [
       "tape",
       "node",
@@ -21,7 +20,8 @@
     "src/main.ts"
   ],
   "include": [
-    "src/**/*"
+    "src/**/*", 
+    "local.d.ts"
   ],
   "exclude": [
     "node_modules",

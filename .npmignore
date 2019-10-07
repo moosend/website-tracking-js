@@ -1,0 +1,17 @@
+.*rc
+.*.yml
+.*.log
+.idea
+.vscode
+webpack.config.*
+coverage/
+node_modules/
+scripts/
+docs/
+demo/
+test/
+tsconfig.json
+tslint.json
+docs
+src
+.DS_Store
