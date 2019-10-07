@@ -2,11 +2,11 @@ const webpack = require('webpack');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const path = require('path');
 
-const GLOBALS = {
-    'process.env.NODE_ENV': JSON.stringify('production'),
-    __DEV__: false,
-    'process.env.API_URL' : JSON.stringify('https://t.stat-track.com')
-};
+// const GLOBALS = {
+//     'process.env.NODE_ENV': JSON.stringify('production'),
+//     __DEV__: false,
+//     'process.env.API_URL' : JSON.stringify('https://t.stat-track.com')
+// };
 
 module.exports = {
 
@@ -39,7 +39,7 @@ module.exports = {
 
     plugins: [
         new WebpackMd5Hash(),
-        new webpack.DefinePlugin(GLOBALS),
+        // new webpack.DefinePlugin(GLOBALS),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.optimize.UglifyJsPlugin({
             comments: false
