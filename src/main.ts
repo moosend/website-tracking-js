@@ -9,6 +9,8 @@ import CookieStorage from "./storage/CookieStorage";
 import { TrackerActions } from "./tracker/Tracker";
 import TrackerFactory from "./tracker/TrackerFactory";
 import TrackerStorage from "./tracker/TrackerStorage";
+import SubFormsInitiator from "./subscription-forms/main";
+
 const queryString = require("querystring");
 
 const trackerStorage = new TrackerStorage(new CookieStorage());
@@ -110,3 +112,6 @@ if (typeof trackerStub === "function" && typeof trackerStub.q === "object" && tr
         callTrackerMethod.apply(tracker, queueCall);
     });
 }
+
+// Initiate and call subforms
+let submock = new SubFormsInitiator();
