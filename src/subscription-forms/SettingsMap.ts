@@ -1,12 +1,11 @@
-export const settingsCategoryIds = [
-    {
+export const settingsCategoryIds = {
+    140: {
+        
         action: 'renderWithDelay',
-        id: 140,
         label: 'Popup_Delay'
     },
-    {
+    150: {
         action: 'renderOnExit',
-        id: 150,
         label: 'Exit_Intent'
     }
-];
+};

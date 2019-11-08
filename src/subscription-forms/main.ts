@@ -1,5 +1,6 @@
 const APIObject = require('./api-mock.json');
 import formTypesMap from './FormTypes';
+import FormRequest from './APIRequest';
 
 export default class SubFormsInitiator {
 
@@ -9,9 +10,18 @@ export default class SubFormsInitiator {
 
   constructor() {
 
-    this.subType = APIObject[0].Entity.subtype;
-    this.htmlToAppend = APIObject[0].Blueprint.blueprintContent;
-    this.settings = APIObject[0].Settings;
+    let formRequest:any = new FormRequest();
+    formRequest.getApiObject(APIObject).then((value: any) => {
+
+      this.subType = value[0].Entity.subtype;
+      this.htmlToAppend = value[0].Blueprint.blueprintContent;
+      this.settings = value[0].Settings;
+
+      new formTypesMap[this.subType](this.settings, this.htmlToAppend);
+      
+    }).catch((error: any) => {
+      console.log(error);
+    });
 
     // Get settings from URL queries. This is a temporary solution for preview
     const queryParams = this.getAllUrlParams(window.location.href);
@@ -19,8 +29,7 @@ export default class SubFormsInitiator {
     if (window.location.hostname === 'ecommerce.services.moostaging.com') {
       this.initiateFromQueryParams(queryParams);
     }
-
-    new formTypesMap[this.subType](this.settings, this.htmlToAppend);
+    
   }
 
   getAllUrlParams(url: string) {
