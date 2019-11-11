@@ -9,6 +9,11 @@ import CookieStorage from "./storage/CookieStorage";
 import { TrackerActions } from "./tracker/Tracker";
 import TrackerFactory from "./tracker/TrackerFactory";
 import TrackerStorage from "./tracker/TrackerStorage";
+
+// Subscription Forms Modules
+import { ISubForms } from "./subscription-forms/model";
+import { apiUrl } from "./subscription-forms/api";
+import APIRequest from './subscription-forms/APIRequest';
 import SubFormsInitiator from "./subscription-forms/main";
 
 const queryString = require("querystring");
@@ -114,4 +119,10 @@ if (typeof trackerStub === "function" && typeof trackerStub.q === "object" && tr
 }
 
 // Initiate and call subforms
-let submock = new SubFormsInitiator();
+let formRequest: any = new APIRequest();
+
+formRequest.makeRequest(apiUrl.prod, (response: string) => { 
+    
+    let responseObj: ISubForms = JSON.parse(response);
+    new SubFormsInitiator(responseObj.Entity.subtype, responseObj.Settings, responseObj.Blueprint.blueprintContent);
+ });

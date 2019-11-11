@@ -1,22 +1,29 @@
 export default class APIRequest {
 
-    sum: number;
+    makeRequest = (url: string, cb: Function) => {
 
-    getApiObject = (objFromApi: object) => {
-        return new Promise((resolve, reject) => {
+        let apiRequest: XMLHttpRequest = new XMLHttpRequest();
 
-            resolve(objFromApi);
-        });
-    }
+        if (window.XDomainRequest) {
+            apiRequest = new XDomainRequest();
+            apiRequest.onload = () => {
+                cb(apiRequest.responseText);
+            };
+        } else if (window.XMLHttpRequest) {
+            apiRequest = new XMLHttpRequest();
+        } else {
+            apiRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        }
 
-    fetchRequest = (url: string) => {
+        apiRequest.onreadystatechange = () => {
+            if (apiRequest.readyState === 4 && apiRequest.status === 200) {
+                cb(apiRequest.responseText);
+            }
+        };
 
-        let apiRequest = new XMLHttpRequest();
-        apiRequest.open("GET", url);
+        apiRequest.open("GET", url, true);
         apiRequest.setRequestHeader("Accept", "application/json");
         apiRequest.setRequestHeader("Content-Type", "application/json");
         apiRequest.send();
-
-        return apiRequest;
     }
 }
