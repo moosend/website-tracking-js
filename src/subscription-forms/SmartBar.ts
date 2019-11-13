@@ -21,6 +21,7 @@ export default class SmartBar extends Form {
         document.body.appendChild(formEl);
 
         this.attachStyle(formEl);
+        this.attachScripts(formEl);
     }
 
     attachStyle(formEl: HTMLElement): void {

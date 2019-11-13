@@ -22,11 +22,12 @@ export default class ScrollBox extends Form {
 
         this.attachStyle(formEl, settings[0]);
         this.attachCloseButton(formEl);
+        this.attachScripts(formEl);
     }
 
     attachStyle(formEl: HTMLElement, position: string = "right"): void {
 
-        this.styleToAttach = "#mooforms { width: 100%; max-width: 500px; position: fixed;" + position + ": 30px; bottom: 30px; z-index: 100000; box-shadow: 0px 9px 30px 0px rgba(0,0,0,0.75); }";
+        this.styleToAttach = "#mooforms { width: 100%; max-width: 500px; position: fixed;" + position + ": 30px; bottom: 30px; z-index: 100000; box-shadow: 0px 9px 30px 0px rgba(0,0,0,0.75); z-index: 100000; }";
 
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = this.styleToAttach + this.buttonCloseStyle;

@@ -19,3 +19,7 @@ export interface IFormBlueprintGet {
     blueprintType: string,
     blueprintContent: string
 }
+
+export interface ICookiesProps {
+    alreadySubmitted: boolean
+}

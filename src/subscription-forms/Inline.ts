@@ -20,6 +20,7 @@ export default class Inline extends Form {
         document.querySelector(selector).appendChild(formEl);
 
         this.attachStyle(formEl);
+        this.attachScripts(formEl);
     }
 
     attachStyle(formEl: HTMLElement): void {

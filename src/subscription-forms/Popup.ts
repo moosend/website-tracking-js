@@ -2,7 +2,7 @@ import Form from './Form';
 
 export default class Popup extends Form {
 
-    styleToAttach = "#mooforms { width: 100%; max-width: 500px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0px 9px 30px 0px rgba(0,0,0,0.75); } ";
+    styleToAttach = "#mooforms { width: 100%; max-width: 500px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0px 9px 30px 0px rgba(0,0,0,0.75); z-index: 100000; } ";
     buttonCloseStyle: string = "#close-moo { position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
 
     constructor(settings: Array<any> , blueprintHtml: string) {
@@ -15,11 +15,15 @@ export default class Popup extends Form {
     renderForm = (): void => {
 
         let formEl = this.createWrapper();
+
         formEl.innerHTML = this.blueprintHtml;
+
         document.body.appendChild(formEl);
 
         this.attachStyle(formEl);
         this.attachCloseButton(formEl);
+
+        this.attachScripts(formEl);
     }
 
     attachStyle(formEl: HTMLElement): void {
