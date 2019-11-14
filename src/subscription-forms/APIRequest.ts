@@ -1,6 +1,9 @@
+const JSON3 = require("json3");
+import { ISubFormsPost, ICookiesPost } from './model';
+
 export default class APIRequest {
 
-    makeRequest = (url: string, cb: Function) => {
+    makeRequest = (url: string, data: ISubFormsPost, cb: Function) => {
 
         let apiRequest: XMLHttpRequest = new XMLHttpRequest();
 
@@ -21,9 +24,22 @@ export default class APIRequest {
             }
         };
 
-        apiRequest.open("GET", url, true);
+        apiRequest.open("POST", url, true);
         apiRequest.setRequestHeader("Accept", "application/json");
         apiRequest.setRequestHeader("Content-Type", "application/json");
-        apiRequest.send();
+        apiRequest.send(JSON3.stringify(data));
+    }
+
+    preparePayload = (siteId: string, contactId: string, email: string, cookies: ICookiesPost, currentUrl: string): ISubFormsPost => {
+
+        return { 
+            WebsiteId: siteId,
+            Context: {
+                ContactId: contactId,
+                MemberEmail: email,
+                Cookies: cookies,
+                CurrentUrlPath: currentUrl
+            }
+         }
     }
 }

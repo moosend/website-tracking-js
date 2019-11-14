@@ -1,12 +1,7 @@
-export interface ISubForms {
-    Entity: IFormEntityGet,
-    Settings: IFormEntityGet[],
-    Blueprint: IFormBlueprintGet
-}
-
-export interface IFormEntityGet {
-    type: number,
-    subtype: number;
+export interface ISubFormsGet {
+    Subtype: number,
+    EntityHtml: string,
+    Settings: IFormSettingsGet[]
 }
 
 export interface IFormSettingsGet {
@@ -14,10 +9,20 @@ export interface IFormSettingsGet {
     Property: string | number;
 }
 
-export interface IFormBlueprintGet {
-    blueprintId: string,
-    blueprintType: string,
-    blueprintContent: string
+export interface ISubFormsPost {
+    WebsiteId: string,
+    Context: IContext
+}
+
+export interface IContext {
+    ContactId: string,
+    MemberEmail: string,
+    Cookies: ICookiesPost,
+    CurrentUrlPath: string
+}
+
+export interface ICookiesPost {
+    [key: string]: string
 }
 
 export interface ICookiesProps {

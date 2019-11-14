@@ -8,6 +8,12 @@ import * as Utilities from "../common/utils";
 import { getParameterByName } from "../common/utils";
 import CookieNames from "../cookies/CookieNames";
 
+// Subscription Forms Modules
+import { ISubFormsGet } from "../subscription-forms/model";
+import { apiUrl } from "../subscription-forms/api";
+import APIRequest from '../subscription-forms/APIRequest';
+import SubFormsInitiator from "../subscription-forms/main";
+
 export enum TrackerActions {
     ADDED_TO_ORDER = "ADDED_TO_ORDER", // || Basically Add to Cart
     IDENTIFY = "IDENTIFY",
@@ -374,6 +380,15 @@ export default class Tracker
         if (email) {
             this.identify(email);
         }
+
+        // Initiate and call subforms
+        let formRequest: any = new APIRequest();
+
+        formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, email, {}, ''), (response: string) => {
+
+            let responseObj: ISubFormsGet = JSON.parse(response);
+            new SubFormsInitiator(1, responseObj[0].Settings, responseObj[0].EntityHtml);
+        });
 
         if (exitIntentEventFlag == null) {
             this.storage.setExitIntentFlag(true);
