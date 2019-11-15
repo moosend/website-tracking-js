@@ -7,14 +7,16 @@ export default class SubFormsInitiator {
   subType: number;
   htmlToAppend: string;
   settings: Array < object > ;
+  entityId: number;
 
-  constructor(subtype: number, settings: Array < object > , blueprintHTML: string) {
+  constructor(entityId: number, subtype: number, settings: Array < object > , blueprintHTML: string) {
 
     this.subType = subtype;
     this.htmlToAppend = blueprintHTML;
     this.settings = settings;
+    this.entityId = entityId;
 
-    new formTypesMap[this.subType](this.settings, this.htmlToAppend);
+    new formTypesMap[this.subType](this.entityId, this.settings, this.htmlToAppend);
 
     // Get settings from URL queries. This is a temporary solution for preview
     const queryParams = this.getAllUrlParams(window.location.href);

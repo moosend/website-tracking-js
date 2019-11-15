@@ -2,11 +2,11 @@ import Form from './Form';
 
 export default class Inline extends Form {
 
-    styleToAttach = "#mooforms { width: 100%; max-width: 500px; }";
+    styleToAttach = "{ width: 100%; max-width: 500px; }";
 
-    constructor(settings: Array<string>, blueprintHtml: string) {
+    constructor(entityId: number, settings: Array<string>, blueprintHtml: string) {
 
-        super(settings, blueprintHtml);
+        super(entityId, settings, blueprintHtml);
 
         this.renderForm('body');
 
@@ -26,7 +26,7 @@ export default class Inline extends Form {
     attachStyle(formEl: HTMLElement): void {
 
         let styleGlobal = document.createElement("style");
-        styleGlobal.innerHTML = this.styleToAttach;
+        styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach}` ;
 
         let elementWrapper = document.querySelector(".main-form-wrapper");
         formEl.insertBefore(styleGlobal, elementWrapper);

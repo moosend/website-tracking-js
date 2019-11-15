@@ -1,5 +1,5 @@
 export interface ISubFormsGet {
-    Subtype: number,
+    Entity: IEntityGet,
     EntityHtml: string,
     Settings: IFormSettingsGet[]
 }
@@ -7,6 +7,10 @@ export interface ISubFormsGet {
 export interface IFormSettingsGet {
     Value: string;
     Property: string | number;
+}
+
+export interface IEntityGet {
+    Subtype: number;
 }
 
 export interface ISubFormsPost {

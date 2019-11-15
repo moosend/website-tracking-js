@@ -2,17 +2,19 @@ export default class Form {
 
     settings: Array < any > ;
     blueprintHtml: string;
+    entityId: number;
 
-    constructor(settings: Array < any > , blueprintHtml: string) {
+    constructor(entityId: number, settings: Array < any > , blueprintHtml: string) {
 
         this.settings = settings;
         this.blueprintHtml = blueprintHtml;
+        this.entityId = entityId;
     }
 
     protected createWrapper(): HTMLElement {
 
         let formEl = document.createElement("div");
-        formEl.id = "mooforms";
+        formEl.id = `mooform${this.entityId}`;
 
         return formEl;
     }
@@ -21,7 +23,6 @@ export default class Form {
 
         let parser = new DOMParser();
         let doc = parser.parseFromString(this.blueprintHtml, 'text/html');
-        console.log();
 
         let s = document.createElement('script');
         let scriptsCollection: any = doc.getElementsByTagName('script');
@@ -34,6 +35,7 @@ export default class Form {
         }
 
         try {
+            console.log(element);
             s.appendChild(document.createTextNode(code));
             element.appendChild(s);
         } catch (e) {

@@ -383,11 +383,19 @@ export default class Tracker
 
         // Initiate and call subforms
         let formRequest: any = new APIRequest();
+        
+        // Temporary solution with counter
+        let counter = 0;
 
         formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, email, {}, ''), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
-            new SubFormsInitiator(1, responseObj[0].Settings, responseObj[0].EntityHtml);
+            
+            for(let key in responseObj) {
+                
+                counter++;
+                new SubFormsInitiator(counter, responseObj[key].Entity.Subtype, responseObj[key].Settings, responseObj[key].EntityHtml);
+            }
         });
 
         if (exitIntentEventFlag == null) {
