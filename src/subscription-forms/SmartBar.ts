@@ -6,7 +6,7 @@ export default class SmartBar extends Form {
 
     styleToAttach = "{ width: 100%; position: fixed; top: 0; left: 0; right: 0; z-index: 100000; }";
 
-    constructor(entityId: number, settings: Array<string>, blueprintHtml: string) {
+    constructor(entityId: number, settings: any, blueprintHtml: string) {
 
         super(entityId, settings, blueprintHtml);
 

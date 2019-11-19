@@ -6,7 +6,7 @@ export default class ScrollBox extends Form {
 
     styleToAttach: string;
 
-    constructor(entityId: number, settings: Array<string>, blueprintHtml: string) {
+    constructor(entityId: number, settings: any, blueprintHtml: string) {
 
         super(entityId, settings, blueprintHtml);
 

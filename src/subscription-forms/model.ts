@@ -5,8 +5,12 @@ export interface ISubFormsGet {
 }
 
 export interface IFormSettingsGet {
-    Value: string;
-    Property: string | number;
+    Avoid_Submission_OnOff: string,
+    Popup_Trigger: string,
+    Exit_Show_After: string,
+    Exit_Show_Type: string,
+    Timed_Show_After: string,
+    Timed_Show_Type: string
 }
 
 export interface IEntityGet {

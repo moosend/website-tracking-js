@@ -1,14 +1,18 @@
+import { IFormSettingsGet } from './model';
+
 export default class Form {
 
-    settings: Array < any > ;
+    settings: IFormSettingsGet;
     blueprintHtml: string;
     entityId: number;
 
-    constructor(entityId: number, settings: Array < any > , blueprintHtml: string) {
+    constructor(entityId: number, settings: IFormSettingsGet, blueprintHtml: string) {
 
         this.settings = settings;
         this.blueprintHtml = blueprintHtml;
         this.entityId = entityId;
+
+        
     }
 
     protected createWrapper(): HTMLElement {
