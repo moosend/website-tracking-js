@@ -6,13 +6,20 @@ export default class Form {
     blueprintHtml: string;
     entityId: number;
 
+    timedValues = {
+        "seconds": () => 1000,
+        "minutes": () => 60 * 1000,
+        "hours": () => 60 * 60 * 1000,
+        "days": () => 24 * 60 * 60 * 1000,
+        "weeks": () => 7 * 24 * 60 * 60 * 1000,
+        "months": () => 4 * 7 * 24 * 60 * 60 * 1000
+    };
+
     constructor(entityId: number, settings: IFormSettingsGet, blueprintHtml: string) {
 
         this.settings = settings;
         this.blueprintHtml = blueprintHtml;
         this.entityId = entityId;
-
-        
     }
 
     protected createWrapper(): HTMLElement {

@@ -1,8 +1,9 @@
+const cookie = require("js-cookie");
 import Form from './Form';
 
 export default class ScrollBox extends Form {
 
-    buttonCloseStyle: string = "#close-moo { position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
+    buttonCloseStyle: string = "{ position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
 
     styleToAttach: string;
 
@@ -20,7 +21,16 @@ export default class ScrollBox extends Form {
         formEl.innerHTML = this.blueprintHtml;
         document.body.appendChild(formEl);
 
-        this.attachStyle(formEl, settings[0]);
+        let formElementId: string = formEl.querySelector('form').id;
+
+        if(this.settings.Avoid_Submission_OnOff == "true") {
+            document.addEventListener(`success-form-submit-${formElementId}`, () => {
+
+                cookie.set(`already_submitted_${formElementId}`, true, { expires: 120 });
+            });
+        }
+
+        this.attachStyle(formEl, this.settings.Form_Position);
         this.attachCloseButton(formEl);
         this.attachScripts(formEl);
     }
@@ -30,7 +40,7 @@ export default class ScrollBox extends Form {
         this.styleToAttach = "{ width: 100%; max-width: 500px; position: fixed;" + position + ": 30px; bottom: 30px; z-index: 100000; box-shadow: 0px 9px 30px 0px rgba(0,0,0,0.75); z-index: 100000; }";
 
         let styleGlobal = document.createElement("style");
-        styleGlobal.innerHTML = `#mooform-${this.entityId} ${this.styleToAttach} #mooform-${this.entityId} .close-moo ${this.buttonCloseStyle}` ;
+        styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach} #mooform${this.entityId} .close-moo ${this.buttonCloseStyle}` ;
 
         let elementWrapper = document.querySelector(`#mooform${this.entityId} .main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
@@ -42,7 +52,7 @@ export default class ScrollBox extends Form {
         closeButton.className = "close-moo";
         closeButton.innerHTML = "EXIT";
 
-        let elementWrapper = document.querySelector(".main-form-wrapper");
+        let elementWrapper = document.querySelector(`#mooform${this.entityId} .main-form-wrapper`);
         formEl.insertBefore(closeButton, elementWrapper);
 
         closeButton.addEventListener('click', function() {

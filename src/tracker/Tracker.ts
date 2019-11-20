@@ -13,6 +13,7 @@ import { ISubFormsGet } from "../subscription-forms/model";
 import { apiUrl } from "../subscription-forms/api";
 import APIRequest from '../subscription-forms/APIRequest';
 import SubFormsInitiator from "../subscription-forms/main";
+const cookie = require('js-cookie');
 
 export enum TrackerActions {
     ADDED_TO_ORDER = "ADDED_TO_ORDER", // || Basically Add to Cart
@@ -383,18 +384,25 @@ export default class Tracker
 
         // Initiate and call subforms
         let formRequest: any = new APIRequest();
-        
+
         // Temporary solution with counter
         let counter = 0;
+        let parser = new DOMParser();
 
         formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, email, {}, ''), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
-            
-            for(let key in responseObj) {
-                
-                counter++;
-                new SubFormsInitiator(counter, responseObj[key].Entity.Subtype, responseObj[key].Settings, responseObj[key].EntityHtml);
+
+            for (let key in responseObj) {
+
+                let doc = parser.parseFromString(responseObj[key].EntityHtml, 'text/html');
+                let formId = doc.querySelector('form').id;
+
+                if (cookie.get(`msf_already_shown_${formId}`) === undefined && cookie.get(`already_submitted_${formId}`) === undefined) {
+                    
+                    counter++;
+                    new SubFormsInitiator(counter, responseObj[key].Entity.Subtype, responseObj[key].Settings, responseObj[key].EntityHtml);
+                }
             }
         });
 

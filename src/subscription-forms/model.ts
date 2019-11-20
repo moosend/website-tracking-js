@@ -10,7 +10,8 @@ export interface IFormSettingsGet {
     Exit_Show_After: string,
     Exit_Show_Type: string,
     Timed_Show_After: string,
-    Timed_Show_Type: string
+    Timed_Show_Type: string,
+    Form_Position: string
 }
 
 export interface IEntityGet {

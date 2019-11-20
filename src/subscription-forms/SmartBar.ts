@@ -1,10 +1,11 @@
+const cookie = require("js-cookie");
 import Form from './Form';
 
 export default class SmartBar extends Form {
 
     private elementWrapper: HTMLElement;
 
-    styleToAttach = "{ width: 100%; position: fixed; top: 0; left: 0; right: 0; z-index: 100000; }";
+    styleToAttach: string;
 
     constructor(entityId: number, settings: any, blueprintHtml: string) {
 
@@ -19,12 +20,23 @@ export default class SmartBar extends Form {
         let formEl = this.createWrapper();
         formEl.innerHTML = this.blueprintHtml;
         document.body.appendChild(formEl);
+
+        let formElementId: string = formEl.querySelector('form').id;
+
+        if(this.settings.Avoid_Submission_OnOff == "true") {
+            document.addEventListener(`success-form-submit-${formElementId}`, () => {
+
+                cookie.set(`already_submitted_${formElementId}`, true, { expires: 120 });
+            });
+        }
         
-        this.attachStyle(formEl);
+        this.attachStyle(formEl, this.settings.Form_Position);
         this.attachScripts(formEl);
     }
 
-    attachStyle(formEl: HTMLElement): void {
+    attachStyle(formEl: HTMLElement, position: string = "top"): void {
+
+        this.styleToAttach = `{ width: 100%; position: fixed; ${position}: 0; left: 0; right: 0; z-index: 100000; }`;
 
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach}` ;
