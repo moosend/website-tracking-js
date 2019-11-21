@@ -11,7 +11,9 @@ export interface IFormSettingsGet {
     Exit_Show_Type: string,
     Timed_Show_After: string,
     Timed_Show_Type: string,
-    Form_Position: string
+    Form_Position: string,
+    Condition_Filters: string,
+    "161": string;
 }
 
 export interface IEntityGet {

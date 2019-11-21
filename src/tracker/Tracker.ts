@@ -389,7 +389,9 @@ export default class Tracker
         let counter = 0;
         let parser = new DOMParser();
 
-        formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, email, {}, ''), (response: string) => {
+        let currentUrl = window.location.href;
+
+        formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, email, {}, currentUrl), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
 

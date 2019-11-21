@@ -40,6 +40,14 @@ export default class Popup extends Form {
             });
         }
 
+        this.settings.Exit_Show_After = this.settings.Exit_Show_After ? this.settings.Exit_Show_After : '0';
+
+        // Temporary solution
+        if(this.settings.Popup_Trigger == "exit") {
+            this.settings.Exit_Show_After = this.settings.Condition_Filters ? this.settings.Condition_Filters : '0';
+            this.settings.Exit_Show_Type = this.settings['161'];
+        }
+
         this.setIntervalToShowCookie(formElementId, parseInt(this.settings.Exit_Show_After), this.settings.Exit_Show_Type);
         
         this.attachStyle(formEl);
