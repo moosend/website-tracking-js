@@ -2,6 +2,8 @@
 
 import tape = require("tape");
 
+(global as any).DOMParser = (window as any).DOMParser;
+
 interface IMockAPI {
   createStorage(t: tape.Test, props?: any): ITrackerStorage;
   createAgent(t: tape.Test, overrides?: any): ITrackerAgent;
@@ -67,3 +69,5 @@ export default {
  */
 // tslint:disable-next-line:no-empty
 function _noop(p: any): void {}
+
+  //(global as any).DOMParser = ({ new() {}, prototype: { parseFromString() {} } });
