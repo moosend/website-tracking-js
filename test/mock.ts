@@ -1,6 +1,7 @@
 /// <reference path="../local.d.ts" />
 
 import tape = require("tape");
+require('jsdom-global')();
 
 (global as any).DOMParser = (window as any).DOMParser;
 

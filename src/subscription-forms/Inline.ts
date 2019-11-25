@@ -4,12 +4,11 @@ export default class Inline extends Form {
 
     styleToAttach = "{ width: 100%; max-width: 500px; }";
 
-    constructor(entityId: number, settings: any, blueprintHtml: string) {
+    constructor(entityId: string, settings: any, blueprintHtml: string) {
 
         super(entityId, settings, blueprintHtml);
 
         this.renderForm('body');
-
     }
 
     renderForm = (selector: string): void => {

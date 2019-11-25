@@ -6,7 +6,7 @@ export default class ClickTrigger extends Form {
 
     styleToAttach = "#mooforms { width: 100%; max-width: 500px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0px 9px 30px 0px rgba(0,0,0,0.75); z-index: 100000; } #close-moo { position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
 
-    constructor(entityId: number, settings: any, blueprintHtml: string) {
+    constructor(entityId: string, settings: any, blueprintHtml: string) {
 
         super(entityId, settings, blueprintHtml);
 

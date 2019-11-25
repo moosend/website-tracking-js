@@ -4,7 +4,7 @@ export default class Form {
 
     settings: IFormSettingsGet;
     blueprintHtml: string;
-    entityId: number;
+    entityId: string;
 
     timedValues = {
         "seconds": () => 1000,
@@ -15,7 +15,7 @@ export default class Form {
         "months": () => 4 * 7 * 24 * 60 * 60 * 1000
     };
 
-    constructor(entityId: number, settings: IFormSettingsGet, blueprintHtml: string) {
+    constructor(entityId: string, settings: IFormSettingsGet, blueprintHtml: string) {
 
         this.settings = settings;
         this.blueprintHtml = blueprintHtml;

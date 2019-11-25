@@ -7,18 +7,25 @@ export default class Popup extends Form {
     styleToAttach = "{ width: 100%; max-width: 500px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0px 9px 30px 0px rgba(0,0,0,0.75); z-index: 100000; } ";
     buttonCloseStyle: string = "{ position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
 
-    constructor(entityId: number, settings: any, blueprintHtml: string) {
+    constructor(entityId: string, settings: any, blueprintHtml: string) {
 
         super(entityId, settings, blueprintHtml);
 
-        if(this.settings.Popup_Trigger == "visit") {
+        if (this.settings.Popup_Trigger == "visit") {
 
             this.renderWithDelay(parseInt(this.settings.Timed_Show_After), this.settings.Timed_Show_Type);
 
-        } else if(this.settings.Popup_Trigger == "exit") {
+        } else if (this.settings.Popup_Trigger == "exit") {
 
             this.renderOnExit();
 
+        } else if (this.settings.Popup_Trigger == "click") {
+
+            let clickElement: HTMLElement = document.querySelector(`#click-trigger[data-mooform-id="${this.entityId}"]`);
+
+            if (clickElement !== null) {
+                clickElement.addEventListener('click', this.renderIfNotActive);
+            }
         } else {
 
             this.renderForm();
@@ -33,7 +40,7 @@ export default class Popup extends Form {
 
         let formElementId: string = formEl.querySelector('form').id;
 
-        if(this.settings.Avoid_Submission_OnOff == "true") {
+        if (this.settings.Avoid_Submission_OnOff == "true") {
             document.addEventListener(`success-form-submit-${formElementId}`, () => {
 
                 cookie.set(`already_submitted_${formElementId}`, true, { expires: 120 });
@@ -43,13 +50,13 @@ export default class Popup extends Form {
         this.settings.Exit_Show_After = this.settings.Exit_Show_After ? this.settings.Exit_Show_After : '0';
 
         // Temporary solution
-        if(this.settings.Popup_Trigger == "exit") {
+        if (this.settings.Popup_Trigger == "exit") {
             this.settings.Exit_Show_After = this.settings.Condition_Filters ? this.settings.Condition_Filters : '0';
             this.settings.Exit_Show_Type = this.settings['161'];
         }
 
         this.setIntervalToShowCookie(formElementId, parseInt(this.settings.Exit_Show_After), this.settings.Exit_Show_Type);
-        
+
         this.attachStyle(formEl);
         this.attachCloseButton(formEl);
 
@@ -59,7 +66,7 @@ export default class Popup extends Form {
     attachStyle(formEl: HTMLElement): void {
 
         let styleGlobal = document.createElement("style");
-        styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach} #mooform${this.entityId} .close-moo ${this.buttonCloseStyle}` ;
+        styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach} #mooform${this.entityId} .close-moo ${this.buttonCloseStyle}`;
 
         let elementWrapper = document.querySelector(`#mooform${this.entityId} .main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
@@ -80,7 +87,7 @@ export default class Popup extends Form {
     }
 
     renderWithDelay(after: number = 0, type: string = "seconds"): void {
-        
+
         setTimeout(this.renderForm, after * this.timedValues[type]());
     }
 
@@ -99,12 +106,30 @@ export default class Popup extends Form {
     setIntervalToShowCookie = (formId: string, after: number, type: string) => {
 
         let typeValue = this.getTypeValue(after, type);
-        
+
         cookie.set(`msf_already_shown_${formId}`, true, { expires: typeValue });
     }
 
     getTypeValue = (after: number, type: string): Date => {
-        
+
         return new Date(new Date().getTime() + after * this.timedValues[type]());
+    }
+
+    isPopupActive = (formId: string) => {
+
+        if (document.querySelector(`#mooform${formId}`) !== null) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    renderIfNotActive = () => {
+
+        if (!this.isPopupActive(this.entityId)) {
+            
+            this.renderForm();
+        }
     }
 }

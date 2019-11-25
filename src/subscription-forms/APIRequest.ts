@@ -42,4 +42,19 @@ export default class APIRequest {
             }
          }
     }
+
+    mockApiReq = (url: string, cb: Function) => {
+        let apiRequest: XMLHttpRequest = new XMLHttpRequest();
+
+        apiRequest.onreadystatechange = () => {
+            if (apiRequest.readyState === 4 && apiRequest.status === 200) {
+                cb(apiRequest.responseText);
+            }
+        };
+
+        apiRequest.open("GET", url, true);
+        apiRequest.setRequestHeader("Accept", "application/json");
+        apiRequest.setRequestHeader("Content-Type", "application/json");
+        apiRequest.send();
+    }
 }

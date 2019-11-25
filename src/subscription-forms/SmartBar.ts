@@ -7,7 +7,7 @@ export default class SmartBar extends Form {
 
     styleToAttach: string;
 
-    constructor(entityId: number, settings: any, blueprintHtml: string) {
+    constructor(entityId: string, settings: any, blueprintHtml: string) {
 
         super(entityId, settings, blueprintHtml);
 

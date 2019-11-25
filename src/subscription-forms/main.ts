@@ -6,10 +6,10 @@ export default class SubFormsInitiator {
 
   subType: number;
   htmlToAppend: string;
-  settings: Array < object > ;
-  entityId: number;
+  settings: Array <object> ;
+  entityId: string;
 
-  constructor(entityId: number, subtype: number, settings: Array < object > , blueprintHTML: string) {
+  constructor(entityId: string, subtype: number, settings: Array <object> , blueprintHTML: string) {
 
     this.subType = subtype;
     this.htmlToAppend = blueprintHTML;
