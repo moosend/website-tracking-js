@@ -391,6 +391,9 @@ export default class Tracker
 
         let currentUrl = window.location.href;
 
+        // first param: apiUrl.staging + this.siteId
+        // second param: formRequest.preparePayload(this.siteId, userId, email, {}, currentUrl)
+
         formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, email, {}, currentUrl), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
@@ -403,7 +406,7 @@ export default class Tracker
                 if (cookie.get(`msf_already_shown_${formId}`) === undefined && cookie.get(`already_submitted_${formId}`) === undefined) {
                     
                     counter++;
-                    new SubFormsInitiator(counter, responseObj[key].Entity.Subtype, responseObj[key].Settings, responseObj[key].EntityHtml);
+                    new SubFormsInitiator(formId, responseObj[key].Entity.Subtype, responseObj[key].Settings, responseObj[key].EntityHtml);
                 }
             }
         });

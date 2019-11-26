@@ -19,7 +19,17 @@ export default class SmartBar extends Form {
 
         let formEl = this.createWrapper();
         formEl.innerHTML = this.blueprintHtml;
-        document.body.appendChild(formEl);
+
+        let positionVal = 'static';
+
+        if(this.settings.Form_Position == 'bottom') {
+
+            positionVal = 'fixed';
+            document.body.appendChild(formEl);
+        } else {
+
+            document.body.insertBefore(formEl, document.body.firstChild);
+        }
 
         let formElementId: string = formEl.querySelector('form').id;
 
@@ -30,13 +40,13 @@ export default class SmartBar extends Form {
             });
         }
         
-        this.attachStyle(formEl, this.settings.Form_Position);
+        this.attachStyle(formEl, positionVal, this.settings.Form_Position);
         this.attachScripts(formEl);
     }
 
-    attachStyle(formEl: HTMLElement, position: string = "top"): void {
+    attachStyle(formEl: HTMLElement, position: string = "static", verticalPosition: string = "top"): void {
 
-        this.styleToAttach = `{ width: 100%; position: fixed; ${position}: 0; left: 0; right: 0; z-index: 100000; }`;
+        this.styleToAttach = `{ width: 100%; position: ${position}; ${verticalPosition}: 0; left: 0; right: 0; z-index: 100000; }`;
 
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach}` ;
