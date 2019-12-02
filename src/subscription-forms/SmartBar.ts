@@ -36,7 +36,7 @@ export default class SmartBar extends Form {
         if(this.settings.Avoid_Submission_OnOff == "true") {
             document.addEventListener(`success-form-submit-${formElementId}`, () => {
 
-                cookie.set(`already_submitted_${formElementId}`, true, { expires: 120 });
+                cookie.set(`msf_already_submitted_${formElementId}`, true, { expires: 120 });
             });
         }
         
