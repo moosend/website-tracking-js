@@ -4,7 +4,7 @@ import { IFormSettingsGet } from './model';
 
 export default class Popup extends Form {
 
-    styleToAttach = "{ width: 100%; max-width: 500px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0px 9px 30px 0px rgba(0,0,0,0.75); z-index: 100000; } ";
+    styleToAttach = "{ position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999 } ";
     buttonCloseStyle: string = "{ position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
 
     constructor(entityId: string, settings: any, blueprintHtml: string) {
@@ -59,6 +59,7 @@ export default class Popup extends Form {
 
         this.attachStyle(formEl);
         this.attachCloseButton(formEl);
+        this.addListenerToOverlay(formEl);
 
         this.attachScripts(formEl);
     }
@@ -83,6 +84,15 @@ export default class Popup extends Form {
 
         closeButton.addEventListener('click', function () {
             this.parentElement.remove();
+        });
+    }
+
+    addListenerToOverlay(formEl: HTMLElement): void {
+
+        let overlay = document.querySelector(`#mooform${this.entityId} .main-form-wrapper .moosend-popup-form-overlay`);
+
+        overlay && overlay.addEventListener('click', function () {
+            this.parentElement.parentElement.remove();
         });
     }
 
