@@ -70,5 +70,3 @@ export default {
  */
 // tslint:disable-next-line:no-empty
 function _noop(p: any): void {}
-
-  //(global as any).DOMParser = ({ new() {}, prototype: { parseFromString() {} } });

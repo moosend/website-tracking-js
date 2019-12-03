@@ -188,7 +188,7 @@ test("Tracker Track getPayload", (t: test.Test) => {
     tracker.track(TrackerActions.PAGE_VIEWED, [{ status: "completed" }]);
 
     t.ok(getUserId.calledTwice, "ITrackerStorage.getUserId should be called twice");
-    t.ok(getEmail.calledOnce, "ITrackerStorage.getEmail should be called once");
+    t.ok(getEmail.calledTwice, "ITrackerStorage.getEmail should be called once");
     t.ok(sendTrack.calledOnce, "ITrackerAgent.sendTrack should be called once");
     t.ok(getPayload.calledOnce, "getPayload should be called once");
 
@@ -222,7 +222,7 @@ test("Tracker Track with Different ActionType", (t: test.Test) => {
     tracker.track("DIFFERENT_ACTION_TYPE", [{ status: "completed" }]);
 
     t.ok(getUserId.calledTwice, "ITrackerStorage.getUserId should be called twice");
-    t.ok(getEmail.calledOnce, "ITrackerStorage.getEmail should be called once");
+    t.ok(getEmail.calledTwice, "ITrackerStorage.getEmail should be called once");
     t.ok(getPayload.calledOnce, "getPayload should be called once");
 
     t.end();
@@ -258,7 +258,7 @@ test("Tracker Track API", (t: test.Test) => {
     tracker.track(TrackerActions.PAGE_VIEWED, [{ status: "completed" }]);
 
     t.ok(getUserId.calledTwice, "ITrackerStorage.getUserId should be called twice");
-    t.ok(getEmail.calledOnce, "ITrackerStorage.getEmail should be called once");
+    t.ok(getEmail.calledTwice, "ITrackerStorage.getEmail should be called once");
     t.ok(sendTrack.calledOnce, "ITrackerAgent.sendTrack should be called once");
 
     t.end();
