@@ -83,7 +83,7 @@ export default class Popup extends Form {
         });
     }
 
-    addListenerToText(formEl: HTMLDivElement): void {
+    addListenerToText(formEl: HTMLElement): void {
 
         const text = formEl.querySelector('.main-form-wrapper .content form .moosend-form-close-text');
 
