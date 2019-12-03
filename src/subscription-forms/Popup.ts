@@ -92,7 +92,7 @@ export default class Popup extends Form {
         let overlay = document.querySelector(`#mooform${this.entityId} .main-form-wrapper .moosend-popup-form-overlay`);
 
         overlay.addEventListener('click', function () {
-            this.parentElement.remove();
+            this.parentElement.parentElement.remove();
         });
     }
 
