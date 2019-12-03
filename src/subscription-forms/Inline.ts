@@ -27,7 +27,7 @@ export default class Inline extends Form {
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach}` ;
 
-        let elementWrapper = document.querySelector(".main-form-wrapper");
+        let elementWrapper = document.querySelector(".moosend-main-form-wrapper");
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 }
