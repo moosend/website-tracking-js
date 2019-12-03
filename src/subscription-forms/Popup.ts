@@ -70,13 +70,13 @@ export default class Popup extends Form {
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach} #mooform${this.entityId} .close-moo ${this.buttonCloseStyle}`;
 
-        let elementWrapper = document.querySelector(`#mooform${this.entityId} .main-form-wrapper`);
+        let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 
     addListenerToButton(formEl: HTMLElement): void {
 
-        const icon = formEl.querySelector(`.main-form-wrapper .content .moosend-form-close-icon`);
+        const icon = formEl.querySelector(`.moosend-main-form-wrapper .content .moosend-form-close-icon`);
 
         icon && icon.addEventListener('click', function () {
             formEl.remove();
@@ -85,7 +85,7 @@ export default class Popup extends Form {
 
     addListenerToText(formEl: HTMLElement): void {
 
-        const text = formEl.querySelector('.main-form-wrapper .content form .moosend-form-close-text');
+        const text = formEl.querySelector('.moosend-main-form-wrapper .content form .moosend-form-close-text');
 
         text && text.addEventListener('click', function () {
             formEl.remove();
@@ -94,7 +94,7 @@ export default class Popup extends Form {
 
     addListenerToOverlay(formEl: HTMLElement): void {
 
-        const overlay = formEl.querySelector(`.main-form-wrapper .moosend-form-close-overlay`);
+        const overlay = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-overlay`);
 
         overlay && overlay.addEventListener('click', function () {
             formEl.remove();

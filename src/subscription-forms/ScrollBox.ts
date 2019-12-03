@@ -42,7 +42,7 @@ export default class ScrollBox extends Form {
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach} #mooform${this.entityId} .close-moo ${this.buttonCloseStyle}` ;
 
-        let elementWrapper = document.querySelector(`#mooform${this.entityId} .main-form-wrapper`);
+        let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 
@@ -52,7 +52,7 @@ export default class ScrollBox extends Form {
         closeButton.className = "close-moo";
         closeButton.innerHTML = "EXIT";
 
-        let elementWrapper = document.querySelector(`#mooform${this.entityId} .main-form-wrapper`);
+        let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(closeButton, elementWrapper);
 
         closeButton.addEventListener('click', function() {

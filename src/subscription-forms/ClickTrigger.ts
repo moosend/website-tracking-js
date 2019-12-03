@@ -38,7 +38,7 @@ export default class ClickTrigger extends Form {
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = this.styleToAttach;
 
-        let elementWrapper = document.querySelector(".main-form-wrapper");
+        let elementWrapper = document.querySelector(".moosend-main-form-wrapper");
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 
@@ -48,7 +48,7 @@ export default class ClickTrigger extends Form {
         closeButton.id = "close-moo";
         closeButton.innerHTML = "EXIT";
 
-        let elementWrapper = document.querySelector(".main-form-wrapper");
+        let elementWrapper = document.querySelector(".moosend-main-form-wrapper");
         formEl.insertBefore(closeButton, elementWrapper);
 
         closeButton.addEventListener('click', function() {

@@ -51,7 +51,7 @@ export default class SmartBar extends Form {
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach}` ;
 
-        let elementWrapper = document.querySelector(`#mooform${this.entityId} .main-form-wrapper`);
+        let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 }
