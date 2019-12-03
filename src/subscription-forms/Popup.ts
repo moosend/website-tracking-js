@@ -78,10 +78,7 @@ export default class Popup extends Form {
 
         const icon = formEl.querySelector(`.main-form-wrapper .content .moosend-form-close-icon`);
 
-        console.log(icon);
-
         icon && icon.addEventListener('click', function () {
-            console.log('icon called');
             formEl.remove();
         });
     }
@@ -89,8 +86,6 @@ export default class Popup extends Form {
     addListenerToText(formEl: HTMLElement): void {
 
         const text = formEl.querySelector('.main-form-wrapper .content form .moosend-form-close-text');
-
-        console.log(text);
 
         text && text.addEventListener('click', function () {
             formEl.remove();
@@ -100,8 +95,6 @@ export default class Popup extends Form {
     addListenerToOverlay(formEl: HTMLElement): void {
 
         const overlay = formEl.querySelector(`.main-form-wrapper .moosend-form-close-overlay`);
-
-        console.log(overlay);
 
         overlay && overlay.addEventListener('click', function () {
             formEl.remove();
