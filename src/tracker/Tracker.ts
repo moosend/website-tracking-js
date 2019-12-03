@@ -388,11 +388,12 @@ export default class Tracker
         let parser = new DOMParser();
 
         let currentUrlPath = window.location.pathname;
+        let userEmail = this.storage.getEmail();
 
         // first param: apiUrl.staging + this.siteId
         // second param: formRequest.preparePayload(this.siteId, userId, email, {}, currentUrl)
 
-        formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, email, {}, currentUrlPath), (response: string) => {
+        formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, {}, currentUrlPath), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
 
