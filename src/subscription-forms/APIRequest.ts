@@ -30,7 +30,7 @@ export default class APIRequest {
         apiRequest.send(JSON3.stringify(data));
     }
 
-    preparePayload = (siteId: string, contactId: string, email: string, cookies: ICookiesPost, currentUrl: string): ISubFormsPost => {
+    preparePayload = (siteId: string, contactId: string, email: string, cookies: ICookiesPost, currentUrlPath: string): ISubFormsPost => {
 
         return { 
             WebsiteId: siteId,
@@ -38,7 +38,7 @@ export default class APIRequest {
                 ContactId: contactId,
                 MemberEmail: email,
                 Cookies: cookies,
-                CurrentUrlPath: currentUrl
+                CurrentUrlPath: currentUrlPath
             }
          }
     }
