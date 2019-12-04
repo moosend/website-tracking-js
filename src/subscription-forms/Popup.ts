@@ -6,6 +6,7 @@ export default class Popup extends Form {
 
     styleToAttach = "{ position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999 } ";
     buttonCloseStyle: string = "{ position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
+    classForWrapper = "msf-popup";
 
     constructor(entityId: string, settings: any, blueprintHtml: string) {
 
@@ -36,6 +37,11 @@ export default class Popup extends Form {
 
         let formEl = this.createWrapper();
         formEl.innerHTML = this.blueprintHtml;
+        formEl.className = this.classForWrapper;
+
+        // Remove all the previous Popups if active
+        this.removePreviousIfActive();
+
         document.body.appendChild(formEl);
 
         let formElementId: string = formEl.querySelector('form').id;
@@ -48,7 +54,7 @@ export default class Popup extends Form {
         }
 
         this.settings.Exit_Show_After = this.settings.Exit_Show_After ? this.settings.Exit_Show_After : '0';
-        
+
         if (this.settings.Popup_Trigger == "exit") {
             this.settings.Timed_Last_Appearance_After = this.settings.Exit_Show_After ? this.settings.Exit_Show_After : '0';
             this.settings.Timed_Last_Appearance_Type = this.settings.Exit_Show_Type;
@@ -144,6 +150,15 @@ export default class Popup extends Form {
         if (!this.isPopupActive(this.entityId)) {
             
             this.renderForm();
+        }
+    }
+
+    removePreviousIfActive = (): void => {
+
+        let previousForms = document.querySelectorAll(`.${this.classForWrapper}`);
+        
+        for(let i = 0; i < previousForms.length; i++) {
+            previousForms[i].remove();
         }
     }
 }
