@@ -12,8 +12,8 @@ export interface IFormSettingsGet {
     Timed_Show_After: string,
     Timed_Show_Type: string,
     Form_Position: string,
-    Condition_Filters: string,
-    "161": string;
+    Timed_Last_Appearance_After: string,
+    Timed_Last_Appearance_Type: string,
 }
 
 export interface IEntityGet {

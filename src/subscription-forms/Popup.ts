@@ -48,14 +48,13 @@ export default class Popup extends Form {
         }
 
         this.settings.Exit_Show_After = this.settings.Exit_Show_After ? this.settings.Exit_Show_After : '0';
-
-        // Temporary solution
+        
         if (this.settings.Popup_Trigger == "exit") {
-            this.settings.Exit_Show_After = this.settings.Condition_Filters ? this.settings.Condition_Filters : '0';
-            this.settings.Exit_Show_Type = this.settings['161'];
+            this.settings.Timed_Last_Appearance_After = this.settings.Exit_Show_After ? this.settings.Exit_Show_After : '0';
+            this.settings.Timed_Last_Appearance_Type = this.settings.Exit_Show_Type;
         }
 
-        this.setIntervalToShowCookie(formElementId, parseInt(this.settings.Exit_Show_After), this.settings.Exit_Show_Type);
+        this.setIntervalToShowCookie(formElementId, parseInt(this.settings.Timed_Last_Appearance_After), this.settings.Timed_Last_Appearance_Type);
 
         this.attachStyle(formEl);
         this.addListenerToButton(formEl);
