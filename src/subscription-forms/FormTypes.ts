@@ -2,7 +2,7 @@ import Popup from "./Popup";
 import SmartBar from "./SmartBar";
 import ScrollBox from "./ScrollBox";
 import Inline from "./Inline";
-import ClickTrigger from "./ClickTrigger";
+import FullPage from "./FullPage";
 
 const formTypesMap = {
     // Popup
@@ -13,8 +13,8 @@ const formTypesMap = {
     3: SmartBar,
     // ScrollBox
     4: ScrollBox,
-    // Clicktrigger
-    5: ClickTrigger,
+    // Fullpage
+    5: FullPage,
 }
 
 export default formTypesMap;
