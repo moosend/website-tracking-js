@@ -111,7 +111,7 @@ export default class Popup extends Form {
         cookie.set(`msf_already_shown_${formId}`, true, { expires: typeValue });
     }
 
-    getTypeValue = (after: number, type: string): Date => {
+    getTypeValue = (after: number = 0, type: string = "seconds"): Date => {
 
         return new Date(new Date().getTime() + after * this.timedValues[type]());
     }

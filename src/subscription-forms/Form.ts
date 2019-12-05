@@ -46,7 +46,6 @@ export default class Form {
         }
 
         try {
-            console.log(element);
             s.appendChild(document.createTextNode(code));
             element.appendChild(s);
         } catch (e) {
