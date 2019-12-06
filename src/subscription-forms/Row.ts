@@ -59,7 +59,8 @@ export default class Row extends Form {
 
     addListenerToButton(formEl: HTMLElement): void {
 
-        const icon = formEl.querySelector(`.moosend-main-form-wrapper .content .moosend-form-close-icon`);
+        const icon = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-icon`);
+        debugger;
 
         icon && icon.addEventListener('click', function () {
             formEl.remove();
