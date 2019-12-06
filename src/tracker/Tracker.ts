@@ -393,7 +393,7 @@ export default class Tracker
         // first param: apiUrl.staging + this.siteId
         // second param: formRequest.preparePayload(this.siteId, userId, email, {}, currentUrl)
 
-        formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, {}, currentUrlPath), (response: string) => {
+        formRequest.mockApiReq(apiUrl.mock, (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
 

@@ -123,14 +123,14 @@ export default class Popup extends Form {
         this.renderForm();
     }
 
-    setIntervalToShowCookie = (formId: string, after: number, type: string) => {
+    setIntervalToShowCookie = (formId: string, after: number = 0, type: string = "seconds") => {
 
         let typeValue = this.getTypeValue(after, type);
 
         cookie.set(`msf_already_shown_${formId}`, true, { expires: typeValue });
     }
 
-    getTypeValue = (after: number, type: string): Date => {
+    getTypeValue = (after: number = 0, type: string = "seconds"): Date => {
 
         return new Date(new Date().getTime() + after * this.timedValues[type]());
     }

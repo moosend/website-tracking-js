@@ -37,7 +37,7 @@ export default class ScrollBox extends Form {
 
     attachStyle(formEl: HTMLElement, position: string = "right"): void {
 
-        this.styleToAttach = "{ width: 100%; max-width: 500px; position: fixed; " + position + ": 30px; bottom: 30px; z-index: 100000; box-shadow: 0px 9px 30px 0px rgba(0,0,0,0.75); z-index: 100000; }";
+        this.styleToAttach = "{ width: 100%; max-width: 500px; position: fixed; " + position + ": 0; bottom: 0; z-index: 100000; }";
 
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach} #mooform${this.entityId} .close-moo ${this.buttonCloseStyle}` ;

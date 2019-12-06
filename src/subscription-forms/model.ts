@@ -43,7 +43,7 @@ export interface ICookiesProps {
 export const FormTypesClasses = {
     1: "msf-popup",
     2: "msf-inline",
-    3: "msf-smartbar",
+    3: "msf-row",
     4: "msf-scrollbox",
     5: "msf-fullpage"
 }

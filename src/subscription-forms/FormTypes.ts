@@ -1,5 +1,5 @@
 import Popup from "./Popup";
-import SmartBar from "./SmartBar";
+import Row from "./Row";
 import ScrollBox from "./ScrollBox";
 import Inline from "./Inline";
 import FullPage from "./FullPage";
@@ -9,8 +9,8 @@ const formTypesMap = {
     1: Popup,
     // Inline
     2: Inline,
-    // SmartBar
-    3: SmartBar,
+    // Row
+    3: Row,
     // ScrollBox
     4: ScrollBox,
     // Fullpage

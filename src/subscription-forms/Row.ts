@@ -1,7 +1,7 @@
 const cookie = require("js-cookie");
 import Form from './Form';
 
-export default class SmartBar extends Form {
+export default class Row extends Form {
 
     private elementWrapper: HTMLElement;
 
