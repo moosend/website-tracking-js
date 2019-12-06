@@ -41,6 +41,8 @@ export default class Row extends Form {
         }
         
         this.attachStyle(formEl, positionVal, this.settings.Form_Position);
+        this.addListenerToButton(formEl);
+        this.addListenerToText(formEl);
         this.attachScripts(formEl);
     }
 
@@ -53,5 +55,23 @@ export default class Row extends Form {
 
         let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
+    }
+
+    addListenerToButton(formEl: HTMLElement): void {
+
+        const icon = formEl.querySelector(`.moosend-main-form-wrapper .content .moosend-form-close-icon`);
+
+        icon && icon.addEventListener('click', function () {
+            formEl.remove();
+        });
+    }
+
+    addListenerToText(formEl: HTMLElement): void {
+
+        const text = formEl.querySelector('.moosend-main-form-wrapper .content form .moosend-form-close-text');
+
+        text && text.addEventListener('click', function () {
+            formEl.remove();
+        });
     }
 }
