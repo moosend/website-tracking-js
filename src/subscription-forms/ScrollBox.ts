@@ -31,7 +31,8 @@ export default class ScrollBox extends Form {
         }
 
         this.attachStyle(formEl, this.settings.Form_Position);
-        this.attachCloseButton(formEl);
+        this.addListenerToButton(formEl);
+        this.addListenerToText(formEl);
         this.attachScripts(formEl);
     }
 
@@ -46,17 +47,21 @@ export default class ScrollBox extends Form {
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 
-    attachCloseButton(formEl: HTMLElement): void {
+    addListenerToButton(formEl: HTMLElement): void {
 
-        let closeButton = document.createElement("div");
-        closeButton.className = "close-moo";
-        closeButton.innerHTML = "EXIT";
+        const icon = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-icon`);
 
-        let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
-        formEl.insertBefore(closeButton, elementWrapper);
+        icon && icon.addEventListener('click', function () {
+            formEl.remove();
+        });
+    }
 
-        closeButton.addEventListener('click', function() {
-            this.parentElement.remove();
+    addListenerToText(formEl: HTMLElement): void {
+
+        const text = formEl.querySelector('.moosend-main-form-wrapper .content form .moosend-form-close-text');
+
+        text && text.addEventListener('click', function () {
+            formEl.remove();
         });
     }
 }
