@@ -23,19 +23,20 @@ export default class Row extends Form {
 
         if(this.settings.Form_Position == 'bottom') {
 
-            positionVal = 'fixed';
+            this.styleToAttach = `{ width: 100%; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100000; }`;
             document.body.appendChild(formEl);
             formEl.innerHTML = this.blueprintHtml;
             formEl.className = this.classForWrapper;
         } else {
             
+            this.styleToAttach = `{ width: auto; z-index: 100000; }`;
             let formWrapper = formEl;
             formEl = this.createWrappersForFixed();
             formWrapper.appendChild(formEl);
             document.body.insertBefore(formWrapper, document.body.firstChild);
             formEl.innerHTML = this.blueprintHtml;
             formWrapper.className = this.classForWrapper;
-            this.addBlueprintHeight(formWrapper, formEl);
+            this.addBlueprintHeight(formEl);
         }
 
         let formElementId: string = formEl.querySelector('form').id;
@@ -47,18 +48,16 @@ export default class Row extends Form {
             });
         }
         
-        this.attachStyle(formEl, positionVal, this.settings.Form_Position);
+        this.attachStyle(formEl, this.styleToAttach);
         this.addListenerToButton(formEl);
         this.addListenerToText(formEl);
         this.attachScripts(formEl);
     }
 
-    attachStyle(formEl: HTMLElement, position: string = "static", verticalPosition: string = "top"): void {
-
-        this.styleToAttach = `{ width: 100%; position: ${position}; ${verticalPosition}: 0; left: 0; right: 0; z-index: 100000; }`;
+    attachStyle(formEl: HTMLElement, styleToAttach: string): void {
 
         let styleGlobal = document.createElement("style");
-        styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach}` ;
+        styleGlobal.innerHTML = `#mooform${this.entityId} ${styleToAttach}` ;
 
         let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
@@ -91,8 +90,8 @@ export default class Row extends Form {
         return fixedWrapper;
     }
 
-    addBlueprintHeight = (parentWrapper: HTMLElement, blueprintHtml: HTMLElement) => {
+    addBlueprintHeight = (blueprintHtml: HTMLElement) => {
 
-        parentWrapper.style.height = (blueprintHtml.offsetHeight).toString() + "px";
+        document.body.style.marginTop = (blueprintHtml.offsetHeight).toString() + "px";
     }
 }
