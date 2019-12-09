@@ -40,7 +40,7 @@ export default class Popup extends Form {
         formEl.className = this.classForWrapper;
 
         // Remove all the previous Popups if active
-        this.removePreviousIfActive();
+        this.removePreviousIfActive(this.classForWrapper);
 
         document.body.appendChild(formEl);
 
@@ -150,15 +150,6 @@ export default class Popup extends Form {
         if (!this.isPopupActive(this.entityId)) {
             
             this.renderForm();
-        }
-    }
-
-    removePreviousIfActive = (): void => {
-
-        let previousForms = document.querySelectorAll(`.${this.classForWrapper}`);
-        
-        for(let i = 0; i < previousForms.length; i++) {
-            previousForms[i].remove();
         }
     }
 }

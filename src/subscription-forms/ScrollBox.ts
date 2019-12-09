@@ -6,6 +6,7 @@ export default class ScrollBox extends Form {
     buttonCloseStyle: string = "{ position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
 
     styleToAttach: string;
+    classForWrapper: string = 'msf-sticky';
 
     constructor(entityId: string, settings: any, blueprintHtml: string) {
 
@@ -19,6 +20,10 @@ export default class ScrollBox extends Form {
 
         let formEl = this.createWrapper();
         formEl.innerHTML = this.blueprintHtml;
+        formEl.className = `${this.classForWrapper}-${this.settings.Form_Position}`;
+
+        this.removePreviousIfActive(`${this.classForWrapper}-${this.settings.Form_Position}`);
+
         document.body.appendChild(formEl);
 
         let formElementId: string = formEl.querySelector('form').id;
