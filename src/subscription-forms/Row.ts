@@ -3,7 +3,7 @@ import Form from './Form';
 
 export default class Row extends Form {
 
-    private elementWrapper: HTMLElement;
+    classForWrapper = "msf-row";
 
     styleToAttach: string;
 
@@ -18,7 +18,6 @@ export default class Row extends Form {
     renderForm(): void {
 
         let formEl = this.createWrapper();
-        formEl.innerHTML = this.blueprintHtml;
 
         let positionVal = 'static';
 
@@ -26,9 +25,17 @@ export default class Row extends Form {
 
             positionVal = 'fixed';
             document.body.appendChild(formEl);
+            formEl.innerHTML = this.blueprintHtml;
+            formEl.className = this.classForWrapper;
         } else {
-
-            document.body.insertBefore(formEl, document.body.firstChild);
+            
+            let formWrapper = formEl;
+            formEl = this.createWrappersForFixed();
+            formWrapper.appendChild(formEl);
+            document.body.insertBefore(formWrapper, document.body.firstChild);
+            formEl.innerHTML = this.blueprintHtml;
+            formWrapper.className = this.classForWrapper;
+            this.addBlueprintHeight(formWrapper, formEl);
         }
 
         let formElementId: string = formEl.querySelector('form').id;
@@ -60,7 +67,6 @@ export default class Row extends Form {
     addListenerToButton(formEl: HTMLElement): void {
 
         const icon = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-icon`);
-        debugger;
 
         icon && icon.addEventListener('click', function () {
             formEl.remove();
@@ -74,5 +80,19 @@ export default class Row extends Form {
         text && text.addEventListener('click', function () {
             formEl.remove();
         });
+    }
+
+    createWrappersForFixed(): HTMLElement {
+
+        let fixedWrapper = document.createElement("div");
+        fixedWrapper.className = "msf-row-fixed";
+        fixedWrapper.style.cssText = "position: fixed; width: 100%; top: 0; left: 0; z-index: 9999;";
+
+        return fixedWrapper;
+    }
+
+    addBlueprintHeight = (parentWrapper: HTMLElement, blueprintHtml: HTMLElement) => {
+
+        parentWrapper.style.height = (blueprintHtml.offsetHeight).toString() + "px";
     }
 }

@@ -28,7 +28,6 @@ export interface ISubFormsPost {
 export interface IContext {
     ContactId: string,
     MemberEmail: string,
-    Cookies: ICookiesPost,
     CurrentUrlPath: string
 }
 
