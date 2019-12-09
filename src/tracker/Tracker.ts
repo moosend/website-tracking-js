@@ -387,7 +387,8 @@ export default class Tracker
 
         let parser = new DOMParser();
 
-        let currentUrlPath = window.location.pathname;
+        let currentUrlPath = `${window.location.pathname}${window.location.hash}`.split('?')[0];
+        
         let userEmail = this.storage.getEmail();
 
         // first param: apiUrl.staging + this.siteId
