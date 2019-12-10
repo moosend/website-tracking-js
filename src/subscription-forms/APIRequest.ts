@@ -34,7 +34,7 @@ export default class APIRequest {
 
         return { 
             WebsiteId: siteId,
-            Context: {
+            RemoteWebContext: {
                 ContactId: contactId,
                 MemberEmail: email,
                 CurrentUrlPath: currentUrlPath

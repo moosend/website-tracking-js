@@ -17,12 +17,13 @@ export interface IFormSettingsGet {
 }
 
 export interface IEntityGet {
+    Id: string,
     Subtype: number;
 }
 
 export interface ISubFormsPost {
     WebsiteId: string,
-    Context: IContext
+    RemoteWebContext: IContext
 }
 
 export interface IContext {
