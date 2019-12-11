@@ -64,13 +64,4 @@ export default class ScrollBox extends Form {
             formEl.remove();
         });
     }
-
-    addListenerForSubmissionCookies = (entityId: string): void => {
-        
-        document.addEventListener(`success-form-submit-${entityId}`, () => {
-
-            cookie.set(`msf_submitted_${entityId}`, true, { expires: 3650 });
-            
-        });
-    }
 }

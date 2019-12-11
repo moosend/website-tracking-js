@@ -145,12 +145,4 @@ export default class Popup extends Form {
             this.renderForm();
         }
     }
-
-    addListenerForSubmissionCookies = (entityId: string): void => {
-        
-        document.addEventListener(`success-form-submit-${entityId}`, () => {
-
-            cookie.set(`msf_submitted_${entityId}`, true, { expires: 3650 });
-        });
-    }
 }
