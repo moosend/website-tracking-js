@@ -4,7 +4,6 @@ import Form from './Form';
 export default class Popup extends Form {
 
     styleToAttach = "{ position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999 } ";
-    buttonCloseStyle: string = "{ position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
     classForWrapper = "msf-popup msf-fullpage";
 
     constructor(entityId: string, settings: any, blueprintHtml: string) {
@@ -25,27 +24,14 @@ export default class Popup extends Form {
 
         document.body.appendChild(formEl);
 
-        let formElementId: string = formEl.querySelector('form').id;
-
         if (this.settings.Avoid_Submission_OnOff == "true") {
-            document.addEventListener(`success-form-submit-${formElementId}`, () => {
-
-                cookie.set(`msf_already_submitted_${formElementId}`, true, { expires: 120 });
-            });
+            
+            this.addListenerForSubmissionCookies(this.entityId);
         }
-
-        this.settings.Exit_Show_After = this.settings.Exit_Show_After ? this.settings.Exit_Show_After : '0';
-
-        if (this.settings.Popup_Trigger == "exit") {
-            this.settings.Timed_Last_Appearance_After = this.settings.Exit_Show_After ? this.settings.Exit_Show_After : '0';
-            this.settings.Timed_Last_Appearance_Type = this.settings.Exit_Show_Type;
-        }
-
-        this.setIntervalToShowCookie(formElementId, parseInt(this.settings.Timed_Last_Appearance_After), this.settings.Timed_Last_Appearance_Type);
 
         this.attachStyle(formEl);
         this.addListenerToButton(formEl);
-        this.addListenerToOverlay(formEl);
+        //this.addListenerToOverlay(formEl);
         this.addListenerToText(formEl);
 
         this.attachScripts(formEl);
@@ -54,9 +40,9 @@ export default class Popup extends Form {
     attachStyle(formEl: HTMLElement): void {
 
         let styleGlobal = document.createElement("style");
-        styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach} #mooform${this.entityId} .close-moo ${this.buttonCloseStyle}`;
+        styleGlobal.innerHTML = `${this.parentSelectorForStyle}${this.entityId} ${this.styleToAttach}`;
 
-        let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
+        let elementWrapper = document.querySelector(`${this.parentSelectorForStyle}${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 
@@ -78,60 +64,23 @@ export default class Popup extends Form {
         });
     }
 
-    addListenerToOverlay(formEl: HTMLElement): void {
+    // addListenerToOverlay(formEl: HTMLElement): void {
 
-        const overlay = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-overlay`);
+    //     const overlay = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-overlay`);
 
-        overlay && overlay.addEventListener('click', function () {
-            formEl.remove();
-        });
-    }
-
-    renderWithDelay(after: number = 0, type: string = "seconds"): void {
-
-        setTimeout(this.renderForm, after * this.timedValues[type]());
-    }
-
-    renderOnExit(): void {
-
-        document.documentElement.addEventListener("mouseleave", this.onMouseOut);
-    }
-
-    onMouseOut = (e: any, after: number = 0, type: string = "seconds") => {
-        // Remove this event listener
-        document.documentElement.removeEventListener("mouseleave", this.onMouseOut);
-
-        this.renderForm();
-    }
-
-    setIntervalToShowCookie = (formId: string, after: number, type: string) => {
-
-        let typeValue = this.getTypeValue(after, type);
-
-        cookie.set(`msf_already_shown_${formId}`, true, { expires: typeValue });
-    }
-
-    getTypeValue = (after: number = 0, type: string = "seconds"): Date => {
-
-        return new Date(new Date().getTime() + after * this.timedValues[type]());
-    }
+    //     overlay && overlay.addEventListener('click', function () {
+    //         formEl.remove();
+    //     });
+    // }
 
     isPopupActive = (formId: string) => {
 
-        if (document.querySelector(`#mooform${formId}`) !== null) {
+        if (document.querySelector(`${this.parentSelectorForStyle}${formId}`) !== null) {
 
             return true;
         }
 
         return false;
-    }
-
-    renderIfNotActive = () => {
-
-        if (!this.isPopupActive(this.entityId)) {
-            
-            this.renderForm();
-        }
     }
 
     removePreviousIfActive = (): void => {

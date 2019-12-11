@@ -1,4 +1,3 @@
-const cookie = require("js-cookie");
 import Form from './Form';
 
 export default class Row extends Form {
@@ -18,8 +17,6 @@ export default class Row extends Form {
     renderForm(): void {
 
         let formEl = this.createWrapper();
-
-        let positionVal = 'static';
 
         if (this.settings.Form_Position == 'bottom') {
 
@@ -43,13 +40,9 @@ export default class Row extends Form {
             this.addBlueprintHeight(formEl);
         }
 
-        let formElementId: string = formEl.querySelector('form').id;
-
         if (this.settings.Avoid_Submission_OnOff == "true") {
-            document.addEventListener(`success-form-submit-${formElementId}`, () => {
-
-                cookie.set(`msf_already_submitted_${formElementId}`, true, { expires: 120 });
-            });
+            
+            this.addListenerForSubmissionCookies(this.entityId);
         }
 
         this.attachStyle(formEl, this.styleToAttach);
@@ -61,9 +54,9 @@ export default class Row extends Form {
     attachStyle(formEl: HTMLElement, styleToAttach: string): void {
 
         let styleGlobal = document.createElement("style");
-        styleGlobal.innerHTML = `#mooform${this.entityId} ${styleToAttach}`;
+        styleGlobal.innerHTML = `${this.parentSelectorForStyle}${this.entityId} ${styleToAttach}`;
 
-        let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
+        let elementWrapper = document.querySelector(`${this.parentSelectorForStyle}${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 

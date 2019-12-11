@@ -3,8 +3,6 @@ import Form from './Form';
 
 export default class ScrollBox extends Form {
 
-    buttonCloseStyle: string = "{ position: absolute; top: 0; right: 0; background-color: white; z-index: 999; }";
-
     styleToAttach: string;
     classForWrapper: string = 'msf-sticky';
 
@@ -26,13 +24,10 @@ export default class ScrollBox extends Form {
 
         document.body.appendChild(formEl);
 
-        let formElementId: string = formEl.querySelector('form').id;
-
         if(this.settings.Avoid_Submission_OnOff == "true") {
-            document.addEventListener(`success-form-submit-${formElementId}`, () => {
-
-                cookie.set(`msf_already_submitted_${formElementId}`, true, { expires: 120 });
-            });
+            
+            this.addListenerForSubmissionCookies(this.entityId);
+            
         }
 
         this.attachStyle(formEl, this.settings.Form_Position);
@@ -46,9 +41,9 @@ export default class ScrollBox extends Form {
         this.styleToAttach = "{ width: 100%; max-width: 500px; position: fixed; " + position + ": 0; bottom: 0; z-index: 100000; }";
 
         let styleGlobal = document.createElement("style");
-        styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach} #mooform${this.entityId} .close-moo ${this.buttonCloseStyle}` ;
+        styleGlobal.innerHTML = `${this.parentSelectorForStyle}${this.entityId} ${this.styleToAttach}` ;
 
-        let elementWrapper = document.querySelector(`#mooform${this.entityId} .moosend-main-form-wrapper`);
+        let elementWrapper = document.querySelector(`${this.parentSelectorForStyle}${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 
@@ -67,6 +62,15 @@ export default class ScrollBox extends Form {
 
         text && text.addEventListener('click', function () {
             formEl.remove();
+        });
+    }
+
+    addListenerForSubmissionCookies = (entityId: string): void => {
+        
+        document.addEventListener(`success-form-submit-${entityId}`, () => {
+
+            cookie.set(`msf_submitted_${entityId}`, true, { expires: 3650 });
+            
         });
     }
 }

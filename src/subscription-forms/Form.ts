@@ -1,10 +1,13 @@
 import { IFormSettingsGet } from './model';
+const cookie = require("js-cookie");
 
 export default class Form {
 
     settings: IFormSettingsGet;
     blueprintHtml: string;
     entityId: string;
+
+    parentSelectorForStyle: string = '#msf_';
 
     timedValues = {
         "seconds": () => 1000,
@@ -25,7 +28,7 @@ export default class Form {
     protected createWrapper(): HTMLElement {
 
         let formEl = document.createElement("div");
-        formEl.id = `mooform${this.entityId}`;
+        formEl.id = `msf_${this.entityId}`;
 
         return formEl;
     }
@@ -61,5 +64,13 @@ export default class Form {
         for(let i = 0; i < previousForms.length; i++) {
             previousForms[i].remove();
         }
+    }
+
+    addListenerForSubmissionCookies = (entityId: string): void => {
+        
+        document.addEventListener(`success-form-submit-${entityId}`, () => {
+
+            cookie.set(`msf_submitted_${entityId}`, true, { expires: 3650 });
+        });
     }
 }
