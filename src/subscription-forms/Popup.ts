@@ -38,7 +38,7 @@ export default class Popup extends Form {
         formEl.className = this.classForWrapper;
 
         // Remove all the previous Popups if active
-        this.removePreviousIfActive(this.classForWrapper);
+        this.removePreviousIfActive(`.${this.classForWrapper}`);
 
         document.body.appendChild(formEl);
 

@@ -20,7 +20,7 @@ export default class ScrollBox extends Form {
         formEl.innerHTML = this.blueprintHtml;
         formEl.className = `${this.classForWrapper}-${this.settings.Form_Position}`;
 
-        this.removePreviousIfActive(`${this.classForWrapper}-${this.settings.Form_Position}`);
+        this.removePreviousIfActive(`.${this.classForWrapper}-${this.settings.Form_Position}`);
 
         document.body.appendChild(formEl);
 

@@ -20,7 +20,8 @@ export default class Popup extends Form {
         formEl.className = this.classForWrapper;
 
         // Remove all the previous Popups if active
-        this.removePreviousIfActive();
+        let wrapperClasses = (this.classForWrapper).split(" ");
+        this.removePreviousIfActive(`.${wrapperClasses[0]}.${wrapperClasses[1]}`);
 
         document.body.appendChild(formEl);
 
@@ -31,7 +32,6 @@ export default class Popup extends Form {
 
         this.attachStyle(formEl);
         this.addListenerToButton(formEl);
-        //this.addListenerToOverlay(formEl);
         this.addListenerToText(formEl);
 
         this.attachScripts(formEl);
@@ -48,7 +48,7 @@ export default class Popup extends Form {
 
     addListenerToButton(formEl: HTMLElement): void {
 
-        const icon = formEl.querySelector(`.moosend-main-form-wrapper .content .moosend-form-close-icon`);
+        const icon = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-icon`);
 
         icon && icon.addEventListener('click', function () {
             formEl.remove();
@@ -64,15 +64,6 @@ export default class Popup extends Form {
         });
     }
 
-    // addListenerToOverlay(formEl: HTMLElement): void {
-
-    //     const overlay = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-overlay`);
-
-    //     overlay && overlay.addEventListener('click', function () {
-    //         formEl.remove();
-    //     });
-    // }
-
     isPopupActive = (formId: string) => {
 
         if (document.querySelector(`${this.parentSelectorForStyle}${formId}`) !== null) {
@@ -81,14 +72,5 @@ export default class Popup extends Form {
         }
 
         return false;
-    }
-
-    removePreviousIfActive = (): void => {
-
-        let previousForms = document.querySelectorAll(`.${this.classForWrapper}`);
-        
-        for(let i = 0; i < previousForms.length; i++) {
-            previousForms[i].remove();
-        }
     }
 }

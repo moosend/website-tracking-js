@@ -59,7 +59,7 @@ export default class Form {
 
     removePreviousIfActive = (selectorToDelete: string): void => {
 
-        let previousForms = document.querySelectorAll(`.${selectorToDelete}`);
+        let previousForms = document.querySelectorAll(`${selectorToDelete}`);
         
         for(let i = 0; i < previousForms.length; i++) {
             previousForms[i].remove();

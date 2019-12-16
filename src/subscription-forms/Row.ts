@@ -21,7 +21,7 @@ export default class Row extends Form {
         if (this.settings.Form_Position == 'bottom') {
 
             this.classForWrapper = "msf-row-bottom";
-            this.removePreviousIfActive(this.classForWrapper);
+            this.removePreviousIfActive(`.${this.classForWrapper}`);
             this.styleToAttach = `{ width: 100%; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100000; }`;
             document.body.appendChild(formEl);
             formEl.innerHTML = this.blueprintHtml;
@@ -29,7 +29,7 @@ export default class Row extends Form {
         } else {
 
             this.classForWrapper = "msf-row-top";
-            this.removePreviousIfActive(this.classForWrapper);
+            this.removePreviousIfActive(`.${this.classForWrapper}`);
             this.styleToAttach = `{ width: auto; z-index: 100000; }`;
             let formWrapper = formEl;
             formEl = this.createWrappersForFixed();
