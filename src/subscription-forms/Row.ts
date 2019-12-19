@@ -45,6 +45,9 @@ export default class Row extends Form {
             this.addListenerForSubmissionCookies(this.entityId);
         }
 
+        // Add user_email cookie for PHP plugins
+        this.addListenerForSubmissionIdentifyCookies(this.entityId);
+
         this.attachStyle(formEl, this.styleToAttach);
         this.addListenerToButton(formEl, this.settings.Form_Position);
         this.addListenerToText(formEl, this.settings.Form_Position);

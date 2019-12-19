@@ -47,6 +47,9 @@ export default class Popup extends Form {
             this.addListenerForSubmissionCookies(this.entityId);
         }
 
+        // Add user_email cookie for PHP plugins
+        this.addListenerForSubmissionIdentifyCookies(this.entityId);
+
         this.settings.Exit_Show_After = this.settings.Exit_Show_After ? this.settings.Exit_Show_After : '0';
 
         if (this.settings.Popup_Trigger == "exit") {

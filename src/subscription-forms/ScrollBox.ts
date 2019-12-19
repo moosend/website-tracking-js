@@ -27,8 +27,10 @@ export default class ScrollBox extends Form {
         if(this.settings.Avoid_Submission_OnOff == "true") {
             
             this.addListenerForSubmissionCookies(this.entityId);
-            
         }
+
+        // Add user_email cookie for PHP plugins
+        this.addListenerForSubmissionIdentifyCookies(this.entityId);
 
         this.attachStyle(formEl, this.settings.Form_Position);
         this.addListenerToButton(formEl);

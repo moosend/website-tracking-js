@@ -68,9 +68,17 @@ export default class Form {
 
     addListenerForSubmissionCookies = (entityId: string): void => {
         
-        document.addEventListener(`success-form-submit-${entityId}`, () => {
-
+        document.addEventListener(`success-form-submit-${entityId}`, (e) => {
+            
             cookie.set(`msf_submitted_${entityId}`, true, { expires: 3650 });
+        });
+    }
+
+    addListenerForSubmissionIdentifyCookies = (entityId: string): void => {
+        
+        document.addEventListener(`success-form-submit-${entityId}`, (e) => {
+            
+            cookie.set('USER_EMAIL', (<CustomEvent>event).detail.email, { expires: 3650 });
         });
     }
 }

@@ -30,6 +30,9 @@ export default class Popup extends Form {
             this.addListenerForSubmissionCookies(this.entityId);
         }
 
+        // Add user_email cookie for PHP plugins
+        this.addListenerForSubmissionIdentifyCookies(this.entityId);
+
         this.attachStyle(formEl);
         this.addListenerToButton(formEl);
         this.addListenerToText(formEl);
