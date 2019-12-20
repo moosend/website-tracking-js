@@ -40,10 +40,7 @@ export default class Row extends Form {
             this.addBlueprintHeight(formEl);
         }
 
-        if (this.settings.Avoid_Submission_OnOff == "true") {
-            
-            this.addListenerForSubmissionCookies(this.entityId);
-        }
+        this.addListenerForSubmissionCookies(this.entityId);
 
         // Add user_email cookie for PHP plugins
         this.addListenerForSubmissionIdentifyCookies(this.entityId);

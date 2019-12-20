@@ -386,7 +386,7 @@ export default class Tracker
         let formRequest: any = new APIRequest();
 
         let currentUrlPath = `${window.location.pathname}${window.location.hash}`.split('?')[0];
-        
+
         let userEmail = email ? email : this.storage.getEmail();
 
         formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, currentUrlPath), (response: string) => {
@@ -397,10 +397,14 @@ export default class Tracker
 
                 let formId = responseObj[key].Entity.Id;
 
-                if (cookie.get(`msf_shown_${formId}`) === undefined && cookie.get(`msf_submitted_${formId}`) === undefined) {
+                if (cookie.get(`msf_shown_${formId}`) === undefined) {
                     
+                    if (responseObj[key].Settings.Avoid_Submission_OnOff && responseObj[key].Settings.Avoid_Submission_OnOff === "true" && cookie.get(`msf_submitted_${formId}`) === "true") {
+                        
+                        continue;
+                    }
+
                     new formTypesMap[responseObj[key].Entity.Subtype](formId, responseObj[key].Settings, responseObj[key].EntityHtml);
-                    
                 }
             }
         });

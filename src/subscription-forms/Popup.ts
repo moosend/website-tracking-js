@@ -9,7 +9,7 @@ export default class Popup extends Form {
     constructor(entityId: string, settings: any, blueprintHtml: string) {
 
         super(entityId, settings, blueprintHtml);
-        
+
         if (this.settings.Popup_Trigger == "visit") {
 
             this.renderWithDelay(parseInt(this.settings.Timed_Show_After), this.settings.Timed_Show_Type);
@@ -42,10 +42,7 @@ export default class Popup extends Form {
 
         document.body.appendChild(formEl);
 
-        if (this.settings.Avoid_Submission_OnOff == "true") {
-            
-            this.addListenerForSubmissionCookies(this.entityId);
-        }
+        this.addListenerForSubmissionCookies(this.entityId);
 
         // Add user_email cookie for PHP plugins
         this.addListenerForSubmissionIdentifyCookies(this.entityId);
@@ -144,7 +141,7 @@ export default class Popup extends Form {
     renderIfNotActive = () => {
 
         if (!this.isPopupActive(this.entityId)) {
-            
+
             this.renderForm();
         }
     }

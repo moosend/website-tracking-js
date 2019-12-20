@@ -23,11 +23,8 @@ export default class ScrollBox extends Form {
         this.removePreviousIfActive(`.${this.classForWrapper}-${this.settings.Form_Position}`);
 
         document.body.appendChild(formEl);
-
-        if(this.settings.Avoid_Submission_OnOff == "true") {
             
-            this.addListenerForSubmissionCookies(this.entityId);
-        }
+        this.addListenerForSubmissionCookies(this.entityId);
 
         // Add user_email cookie for PHP plugins
         this.addListenerForSubmissionIdentifyCookies(this.entityId);
