@@ -1,5 +1,6 @@
 const JSON3 = require("json3");
-import { ISubFormsPost, ICookiesPost } from './model';
+import { ISubFormsPost } from './model';
+const cookie = require('js-cookie');
 
 export default class APIRequest {
 
@@ -30,16 +31,22 @@ export default class APIRequest {
         apiRequest.send(JSON3.stringify(data));
     }
 
-    preparePayload = (siteId: string, contactId: string, email: string, currentUrlPath: string): ISubFormsPost => {
+    preparePayload = (siteId: string, contactId: string, email: string, cookies: any, currentUrlPath: string): ISubFormsPost => {
 
         return { 
             WebsiteId: siteId,
             RemoteWebContext: {
                 ContactId: contactId,
                 MemberEmail: email,
+                Cookies: cookies,
                 CurrentUrlPath: currentUrlPath
             }
          }
+    }
+
+    getAllCookies = () => {
+
+        return cookie.get();
     }
 
     mockApiReq = (url: string, cb: Function) => {

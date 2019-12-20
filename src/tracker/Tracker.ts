@@ -386,10 +386,10 @@ export default class Tracker
         let formRequest: any = new APIRequest();
 
         let currentUrlPath = `${window.location.pathname}${window.location.hash}`.split('?')[0];
-
         let userEmail = email ? email : this.storage.getEmail();
+        let cookiesToSend = formRequest.getAllCookies();
 
-        formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, currentUrlPath), (response: string) => {
+        formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
 
