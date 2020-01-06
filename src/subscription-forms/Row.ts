@@ -46,8 +46,7 @@ export default class Row extends Form {
         this.addListenerForSubmissionIdentifyCookies(this.entityId);
 
         this.attachStyle(formEl, this.styleToAttach);
-        this.addListenerToButton(formEl, this.settings.Form_Position);
-        this.addListenerToText(formEl, this.settings.Form_Position);
+        this.addCloseEventListener(formEl, this.entityId, this.settings.Form_Position);
         this.attachScripts(formEl);
     }
 
@@ -60,24 +59,8 @@ export default class Row extends Form {
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 
-    addListenerToButton(formEl: HTMLElement, position: string): void {
-
-        const icon = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-icon`);
-
-        icon && icon.addEventListener('click', function () {
-            formEl.remove();
-
-            if (position == "top") {
-                document.body.style.marginTop = "";
-            }
-        });
-    }
-
-    addListenerToText(formEl: HTMLElement, position: string): void {
-
-        const text = formEl.querySelector('.moosend-main-form-wrapper .content form .moosend-form-close-text');
-
-        text && text.addEventListener('click', function () {
+    addCloseEventListener(formEl: HTMLElement, entityId: string, position: string): void {
+        formEl && formEl.addEventListener(`moosend-form-close-event-${entityId}`, function () {
             formEl.remove();
 
             if (position == "top") {

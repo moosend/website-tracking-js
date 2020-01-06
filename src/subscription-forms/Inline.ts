@@ -19,6 +19,7 @@ export default class Inline extends Form {
         document.querySelector(selector).appendChild(formEl);
 
         this.attachStyle(formEl);
+        this.addCloseEventListener(formEl, this.entityId);
         this.attachScripts(formEl);
     }
 
@@ -29,5 +30,11 @@ export default class Inline extends Form {
 
         let elementWrapper = document.querySelector(".moosend-main-form-wrapper");
         formEl.insertBefore(styleGlobal, elementWrapper);
+    }
+
+    addCloseEventListener(formEl: HTMLElement, entityId: string): void {
+        formEl && formEl.addEventListener(`moosend-form-close-event-${entityId}`, function () {
+            formEl.remove();
+        });
     }
 }

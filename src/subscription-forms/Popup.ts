@@ -57,8 +57,7 @@ export default class Popup extends Form {
         this.setIntervalToShowCookie(this.entityId, parseInt(this.settings.Timed_Last_Appearance_After), this.settings.Timed_Last_Appearance_Type);
 
         this.attachStyle(formEl);
-        this.addListenerToButton(formEl);
-        this.addListenerToText(formEl);
+        this.addCloseEventListener(formEl, this.entityId);
 
         this.attachScripts(formEl);
     }
@@ -72,32 +71,11 @@ export default class Popup extends Form {
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
 
-    addListenerToButton(formEl: HTMLElement): void {
-
-        const icon = formEl.querySelector(`.moosend-main-form-wrapper .content .moosend-form-close-icon`);
-
-        icon && icon.addEventListener('click', function () {
+    addCloseEventListener(formEl: HTMLElement, entityId: string): void {
+        formEl && formEl.addEventListener(`moosend-form-close-event-${entityId}`, function () {
             formEl.remove();
         });
     }
-
-    addListenerToText(formEl: HTMLElement): void {
-
-        const text = formEl.querySelector('.moosend-main-form-wrapper .content form .moosend-form-close-text');
-
-        text && text.addEventListener('click', function () {
-            formEl.remove();
-        });
-    }
-
-    // addListenerToOverlay(formEl: HTMLElement): void {
-
-    //     const overlay = formEl.querySelector(`.moosend-main-form-wrapper .moosend-form-close-overlay`);
-
-    //     overlay && overlay.addEventListener('click', function () {
-    //         formEl.remove();
-    //     });
-    // }
 
     renderWithDelay(after: number = 0, type: string = "seconds"): void {
 
