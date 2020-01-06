@@ -72,7 +72,8 @@ export default class Popup extends Form {
     }
 
     addCloseEventListener(formEl: HTMLElement, entityId: string): void {
-        formEl && formEl.addEventListener(`moosend-form-close-event-${entityId}`, function () {
+        console.log(formEl);
+        document && document.addEventListener(`moosend-form-close-event-${entityId}`, function () {
             formEl.remove();
         });
     }

@@ -60,7 +60,7 @@ export default class Row extends Form {
     }
 
     addCloseEventListener(formEl: HTMLElement, entityId: string, position: string): void {
-        formEl && formEl.addEventListener(`moosend-form-close-event-${entityId}`, function () {
+        document && document.addEventListener(`moosend-form-close-event-${entityId}`, function () {
             formEl.remove();
 
             if (position == "top") {

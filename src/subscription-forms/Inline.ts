@@ -33,7 +33,7 @@ export default class Inline extends Form {
     }
 
     addCloseEventListener(formEl: HTMLElement, entityId: string): void {
-        formEl && formEl.addEventListener(`moosend-form-close-event-${entityId}`, function () {
+        document && document.addEventListener(`moosend-form-close-event-${entityId}`, function () {
             formEl.remove();
         });
     }
