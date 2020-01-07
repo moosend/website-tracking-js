@@ -35,8 +35,7 @@ export default class Form {
 
     attachScripts = (element: HTMLElement): void => {
 
-        let parser = new DOMParser();
-        let doc = parser.parseFromString(this.blueprintHtml, 'text/html');
+        let doc = this.getParsedHtmlToDom(this.blueprintHtml);
 
         let s = document.createElement('script');
         let scriptsCollection: any = doc.getElementsByTagName('script');
@@ -81,4 +80,10 @@ export default class Form {
             cookie.set('USER_EMAIL', (<CustomEvent>event).detail.email, { expires: 3650 });
         });
     }
+
+    getParsedHtmlToDom = (htmlString: string): Document => {
+
+        let parser = new DOMParser();
+        return parser.parseFromString(htmlString, 'text/html');
+    } 
 }

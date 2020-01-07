@@ -36,7 +36,11 @@ export default class ScrollBox extends Form {
 
     attachStyle(formEl: HTMLElement, position: string = "right"): void {
 
-        this.styleToAttach = "{ width: 100%; max-width: 500px; position: fixed; " + position + ": 0; bottom: 0; z-index: 100000; }";
+        let doc = this.getParsedHtmlToDom(this.blueprintHtml);
+        let formHtml = <HTMLElement>doc.querySelector('.moosend-main-form-wrapper');
+        let widthOfBlueprint = formHtml && formHtml.style.maxWidth;
+        
+        this.styleToAttach = "{ width: " + widthOfBlueprint + "; position: fixed; " + position + ": 0; bottom: 0; z-index: 100000; }";
 
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = `${this.parentSelectorForStyle}${this.entityId} ${this.styleToAttach}` ;
