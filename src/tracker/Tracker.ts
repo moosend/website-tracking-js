@@ -10,7 +10,6 @@ import CookieNames from "../cookies/CookieNames";
 
 // Subscription Forms Modules
 import { ISubFormsGet } from "../subscription-forms/model";
-import { apiUrl } from "../subscription-forms/api";
 import APIRequest from '../subscription-forms/APIRequest';
 import formTypesMap from '../subscription-forms/FormTypes';
 const cookie = require('js-cookie');
@@ -389,7 +388,7 @@ export default class Tracker
         let userEmail = email ? email : this.storage.getEmail();
         let cookiesToSend = formRequest.getAllCookies();
 
-        formRequest.makeRequest(apiUrl.staging + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), (response: string) => {
+        formRequest.makeRequest(process.env.FORMS_API + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
 

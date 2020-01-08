@@ -3,8 +3,9 @@ const webpack = require('webpack');
 
 const definePlugin = new webpack.DefinePlugin({
     _ENV_: JSON.stringify(process.env.NODE_ENV),
-    'process.env.API_URL': JSON.stringify('https://t.stat-track-staging.com')
+    'process.env.API_URL': JSON.stringify('https://t.stat-track-staging.com'),
     //'process.env.API_URL' : JSON.stringify('http://trackerjs.getsandbox.com'),
+    'process.env.FORMS_API': JSON.stringify('https://forms.moooo.co/api/forms/')
 });
 
 module.exports = {
