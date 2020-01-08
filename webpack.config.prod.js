@@ -6,7 +6,7 @@ const GLOBALS = {
     'process.env.NODE_ENV': JSON.stringify('production'),
     __DEV__: false,
     'process.env.API_URL' : JSON.stringify('https://t.stat-track.com'),
-    'process.env.FORMS_API': JSON.stringify('https://forms.m.pages.com/api/forms/')
+    'process.env.FORMS_API': JSON.stringify('https://forms.m-pages.com/api/forms/')
 };
 
 module.exports = {
