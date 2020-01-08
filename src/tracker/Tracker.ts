@@ -388,7 +388,7 @@ export default class Tracker
         let userEmail = email ? email : this.storage.getEmail();
         let cookiesToSend = formRequest.getAllCookies();
 
-        formRequest.makeRequest(process.env.FORMS_API + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), (response: string) => {
+        process && process.env && process.env.FORMS_API && formRequest.makeRequest(process.env.FORMS_API + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
 
