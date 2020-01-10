@@ -42,10 +42,11 @@ export default class Tracker
     }
 
     public identify(email: string, name?: string, props?: any | any[]): void {
+        
         if (!this._isInitialized()) {
             return;
         }
-
+        
         let payload: ITrackIdentifyPayload;
 
         // IF email is falsy or is not string THEN abort
@@ -55,6 +56,7 @@ export default class Tracker
 
         // IF email is already in storage and has the same value THEN abort
         if (this.storage.getEmail() === email) {
+            
             return;
         }
 
@@ -85,7 +87,7 @@ export default class Tracker
         if (props && !isEmpty(props)) {
             payload.properties = props;
         }
-
+        
         /**
          * the JSON is enhanced from the library with the id captured for the user and the number of sessions.
          */

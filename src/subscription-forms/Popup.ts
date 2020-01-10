@@ -20,7 +20,7 @@ export default class Popup extends Form {
 
         } else if (this.settings.Popup_Trigger == "click") {
 
-            let clickElement: HTMLElement = document.querySelector(`#click-trigger[data-mooform-id="${this.entityId}"]`);
+            let clickElement: HTMLElement = document.querySelector(`[data-mooform-id="${this.entityId}"]`);
 
             if (clickElement !== null) {
                 clickElement.addEventListener('click', this.renderIfNotActive);
@@ -54,7 +54,10 @@ export default class Popup extends Form {
             this.settings.Timed_Last_Appearance_Type = this.settings.Exit_Show_Type;
         }
 
-        this.setIntervalToShowCookie(this.entityId, parseInt(this.settings.Timed_Last_Appearance_After), this.settings.Timed_Last_Appearance_Type);
+        if (this.settings.Popup_Trigger != "click") {
+
+            this.setIntervalToShowCookie(this.entityId, parseInt(this.settings.Timed_Last_Appearance_After), this.settings.Timed_Last_Appearance_Type);
+        }
 
         this.attachStyle(formEl);
         this.addCloseEventListener(formEl, this.entityId);
@@ -116,11 +119,19 @@ export default class Popup extends Form {
         return false;
     }
 
-    renderIfNotActive = () => {
+    renderIfNotActive = (e: any) => {
+
+        e.preventDefault();
+
+        if (this.settings.Avoid_Submission_OnOff && this.settings.Avoid_Submission_OnOff === "true" && cookie.get(`msf_submitted_${this.entityId}`) === "true") {
+
+            return;
+        }
 
         if (!this.isPopupActive(this.entityId)) {
 
             this.renderForm();
         }
+
     }
 }
