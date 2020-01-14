@@ -90,14 +90,14 @@ export default class Popup extends Form {
         document.documentElement.addEventListener("mouseleave", this.onMouseOut);
     }
 
-    onMouseOut = (e: any, after: number = 0, type: string = "seconds") => {
+    onMouseOut = (e: any, after: number = 0, type: string = "seconds"): void => {
         // Remove this event listener
         document.documentElement.removeEventListener("mouseleave", this.onMouseOut);
 
         this.renderForm();
     }
 
-    setIntervalToShowCookie = (formId: string, after: number = 0, type: string = "seconds") => {
+    setIntervalToShowCookie = (formId: string, after: number = 0, type: string = "seconds"): void => {
 
         let typeValue = this.getTypeValue(after, type);
 
@@ -109,7 +109,7 @@ export default class Popup extends Form {
         return new Date(new Date().getTime() + after * this.timedValues[type]());
     }
 
-    isPopupActive = (formId: string) => {
+    isPopupActive = (formId: string): boolean => {
 
         if (document.querySelector(`${this.parentSelectorForStyle}${formId}`) !== null) {
 
@@ -119,7 +119,7 @@ export default class Popup extends Form {
         return false;
     }
 
-    renderIfNotActive = (e: any) => {
+    renderIfNotActive = (e: any): void => {
 
         e.preventDefault();
 

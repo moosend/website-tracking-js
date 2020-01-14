@@ -1,4 +1,6 @@
-import { IFormSettingsGet } from './model';
+import {
+    IFormSettingsGet
+} from './model';
 const cookie = require("js-cookie");
 
 export default class Form {
@@ -39,12 +41,28 @@ export default class Form {
 
         let s = document.createElement('script');
         let scriptsCollection: any = doc.getElementsByTagName('script');
+        console.log(scriptsCollection);
 
         let code = '';
 
         for (let item = 0; item < scriptsCollection.length; item++) {
 
-            code += scriptsCollection[item].text;
+            // Check for inline or external scripts
+            if (scriptsCollection[item].src.length == 0) {
+                code += scriptsCollection[item].text;
+                
+            } else {
+                let srcAtt = scriptsCollection[item].src;
+                let asyncAtt = scriptsCollection[item].async;
+                let deferAtt = scriptsCollection[item].defer;
+
+                let fileref = document.createElement('script');
+                fileref.setAttribute("src", srcAtt);
+                asyncAtt && fileref.setAttribute("async", "");
+                deferAtt && fileref.setAttribute("defer", "");
+
+                element.appendChild(fileref);
+            }
         }
 
         try {
@@ -59,25 +77,29 @@ export default class Form {
     removePreviousIfActive = (selectorToDelete: string): void => {
 
         let previousForms = document.querySelectorAll(`${selectorToDelete}`);
-        
-        for(let i = 0; i < previousForms.length; i++) {
+
+        for (let i = 0; i < previousForms.length; i++) {
             previousForms[i].remove();
         }
     }
 
     addListenerForSubmissionCookies = (entityId: string): void => {
-        
+
         document.addEventListener(`success-form-submit-${entityId}`, (e) => {
-            
-            cookie.set(`msf_submitted_${entityId}`, true, { expires: 3650 });
+
+            cookie.set(`msf_submitted_${entityId}`, true, {
+                expires: 3650
+            });
         });
     }
 
     addListenerForSubmissionIdentifyCookies = (entityId: string): void => {
-        
+
         document.addEventListener(`success-form-submit-${entityId}`, (e) => {
-            
-            cookie.set('USER_EMAIL', (<CustomEvent>event).detail.email, { expires: 3650 });
+
+            cookie.set('USER_EMAIL', ( < CustomEvent > event).detail.email, {
+                expires: 3650
+            });
         });
     }
 
@@ -85,5 +107,5 @@ export default class Form {
 
         let parser = new DOMParser();
         return parser.parseFromString(htmlString, 'text/html');
-    } 
+    }
 }
