@@ -41,7 +41,6 @@ export default class Form {
 
         let s = document.createElement('script');
         let scriptsCollection: any = doc.getElementsByTagName('script');
-        console.log(scriptsCollection);
 
         let code = '';
 
