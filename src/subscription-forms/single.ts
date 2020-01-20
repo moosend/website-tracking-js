@@ -1,8 +1,6 @@
 import { ISubFormsGet } from "../subscription-forms/model";
-let formType = import(`./${process.env.formtype}`);
 import APIRequest from './APIRequest';
 const cookie = require('js-cookie');
-
 // Initiate and call subforms
 let formRequest: any = new APIRequest();
 
@@ -21,15 +19,17 @@ process && process.env && process.env.FORM_URL && formRequest.makeRequest(proces
         let formId = responseObj[key].Entity.Id;
 
         if (cookie.get(`msf_shown_${formId}`) === undefined) {
-            
+
             if (responseObj[key].Settings.Avoid_Submission_OnOff && responseObj[key].Settings.Avoid_Submission_OnOff === "true" && cookie.get(`msf_submitted_${formId}`) === "true") {
-                
+
                 continue;
             }
 
-            console.log(process.env.formtype);
-
-            //new formType(formId, responseObj[key].Settings, responseObj[key].EntityHtml);
+            import(`./${process.env.formtype}`)
+                .then((module) => {
+                    
+                    new module.default(formId, responseObj[key].Settings, responseObj[key].EntityHtml);
+                });
         }
     }
 });
