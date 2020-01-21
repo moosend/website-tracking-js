@@ -30,6 +30,8 @@ export default class Tracker
     private storage: ITrackerStorage;
     private browser: IBrowser;
 
+    private formRequest: any;
+
     constructor(
         agent: ITrackerAgent,
         storage: ITrackerStorage,
@@ -39,6 +41,8 @@ export default class Tracker
         this.agent = agent;
         this.storage = storage;
         this.browser = browser;
+
+        this.formRequest = new APIRequest();
     }
 
     public identify(email: string, name?: string, props?: any | any[]): void {
@@ -384,13 +388,11 @@ export default class Tracker
         }
 
         // Initiate and call subforms
-        let formRequest: any = new APIRequest();
-
         let currentUrlPath = `${window.location.pathname}${window.location.hash}`.split('?')[0];
         let userEmail = email ? email : this.storage.getEmail();
-        let cookiesToSend = formRequest.getAllCookies();
+        let cookiesToSend = this.formRequest.getAllCookies();
 
-        process && process.env && process.env.FORMS_API && formRequest.makeRequest(process.env.FORMS_API + this.siteId, formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), (response: string) => {
+        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORMS_API + this.siteId, this.formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
 
@@ -414,6 +416,34 @@ export default class Tracker
             this.storage.setExitIntentFlag(true);
             return;
         }
+    }
+
+    public loadForm(entityId: string): void {
+
+        // Initiate and call subforms
+        let currentUrlPath = `${window.location.pathname}${window.location.hash}`.split('?')[0];
+        let userEmail = 'gentsp+phobos@moosend.com';
+        let cookiesToSend = this.formRequest.getAllCookies();
+
+        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORMS_API + entityId, this.formRequest.preparePayload(entityId, '', userEmail, cookiesToSend, currentUrlPath), (response: string) => {
+
+            let responseObj: ISubFormsGet = JSON.parse(response);
+
+            for (let key in responseObj) {
+
+                let formId = responseObj[key].Entity.Id;
+
+                if (cookie.get(`msf_shown_${formId}`) === undefined) {
+                    
+                    if (responseObj[key].Settings.Avoid_Submission_OnOff && responseObj[key].Settings.Avoid_Submission_OnOff === "true" && cookie.get(`msf_submitted_${formId}`) === "true") {
+                        
+                        continue;
+                    }
+
+                    new formTypesMap[responseObj[key].Entity.Subtype](formId, responseObj[key].Settings, responseObj[key].EntityHtml);
+                }
+            }
+        });
     }
 
     public getPayload(

@@ -17,7 +17,6 @@
     "build-staging": "webpack --config webpack.config.staging.js",
     "build-min": "webpack --config webpack.config.min.js",
     "build-demo": "webpack --config webpack.config.demo.js",
-    "build-single": "webpack --env.formtype=Popup --config webpack.config.form.js",
     "bundle-stage": "NODE_ENV=stage webpack",
     "bundle-loader": "uglifyjs src/loader.js -m -c > dist/loader.js",
     "compile": "tsc"
