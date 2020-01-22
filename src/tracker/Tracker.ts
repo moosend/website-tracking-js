@@ -422,10 +422,13 @@ export default class Tracker
 
         // Initiate and call subforms
         let currentUrlPath = `${window.location.pathname}${window.location.hash}`.split('?')[0];
-        let userEmail = 'gentsp+phobos@moosend.com';
+
+        const email = getParameterByName("email");
+        let userEmail = email ? email : this.storage.getEmail();
+        
         let cookiesToSend = this.formRequest.getAllCookies();
 
-        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORMS_API + entityId, this.formRequest.preparePayload(entityId, '', userEmail, cookiesToSend, currentUrlPath), (response: string) => {
+        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORM_API + entityId, this.formRequest.preparePayloadForSingle(entityId, '', userEmail, cookiesToSend, currentUrlPath), (response: string) => {
 
             let responseObj: ISubFormsGet = JSON.parse(response);
 

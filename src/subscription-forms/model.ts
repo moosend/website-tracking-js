@@ -26,6 +26,11 @@ export interface ISubFormsPost {
     RemoteWebContext: IContext
 }
 
+export interface ISubFormPost {
+    EntityId: string,
+    RemoteWebContext: IContext
+}
+
 export interface IContext {
     ContactId: string,
     MemberEmail: string,
