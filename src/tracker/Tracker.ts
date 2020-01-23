@@ -46,11 +46,11 @@ export default class Tracker
     }
 
     public identify(email: string, name?: string, props?: any | any[]): void {
-        
+
         if (!this._isInitialized()) {
             return;
         }
-        
+
         let payload: ITrackIdentifyPayload;
 
         // IF email is falsy or is not string THEN abort
@@ -60,7 +60,7 @@ export default class Tracker
 
         // IF email is already in storage and has the same value THEN abort
         if (this.storage.getEmail() === email) {
-            
+
             return;
         }
 
@@ -91,7 +91,7 @@ export default class Tracker
         if (props && !isEmpty(props)) {
             payload.properties = props;
         }
-        
+
         /**
          * the JSON is enhanced from the library with the id captured for the user and the number of sessions.
          */
@@ -392,25 +392,7 @@ export default class Tracker
         let userEmail = email ? email : this.storage.getEmail();
         let cookiesToSend = this.formRequest.getAllCookies();
 
-        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORMS_API + this.siteId, this.formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), (response: string) => {
-
-            let responseObj: ISubFormsGet = JSON.parse(response);
-
-            for (let key in responseObj) {
-
-                let formId = responseObj[key].Entity.Id;
-
-                if (cookie.get(`msf_shown_${formId}`) === undefined) {
-                    
-                    if (responseObj[key].Settings.Avoid_Submission_OnOff && responseObj[key].Settings.Avoid_Submission_OnOff === "true" && cookie.get(`msf_submitted_${formId}`) === "true") {
-                        
-                        continue;
-                    }
-
-                    new formTypesMap[responseObj[key].Entity.Subtype](formId, responseObj[key].Settings, responseObj[key].EntityHtml);
-                }
-            }
-        });
+        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORMS_API + this.siteId, this.formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), this.formRequest.renderForms);
 
         if (exitIntentEventFlag == null) {
             this.storage.setExitIntentFlag(true);
@@ -425,28 +407,10 @@ export default class Tracker
 
         const email = getParameterByName("email");
         let userEmail = email ? email : this.storage.getEmail();
-        
+
         let cookiesToSend = this.formRequest.getAllCookies();
 
-        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORM_API + entityId, this.formRequest.preparePayloadForSingle(entityId, '', userEmail, cookiesToSend, currentUrlPath), (response: string) => {
-
-            let responseObj: ISubFormsGet = JSON.parse(response);
-
-            for (let key in responseObj) {
-
-                let formId = responseObj[key].Entity.Id;
-
-                if (cookie.get(`msf_shown_${formId}`) === undefined) {
-                    
-                    if (responseObj[key].Settings.Avoid_Submission_OnOff && responseObj[key].Settings.Avoid_Submission_OnOff === "true" && cookie.get(`msf_submitted_${formId}`) === "true") {
-                        
-                        continue;
-                    }
-
-                    new formTypesMap[responseObj[key].Entity.Subtype](formId, responseObj[key].Settings, responseObj[key].EntityHtml);
-                }
-            }
-        });
+        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORM_API + entityId, this.formRequest.preparePayloadForSingle(entityId, '', userEmail, cookiesToSend, currentUrlPath), this.formRequest.renderForms);
     }
 
     public getPayload(

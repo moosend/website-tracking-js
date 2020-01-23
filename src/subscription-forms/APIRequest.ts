@@ -1,5 +1,6 @@
 const JSON3 = require("json3");
-import { ISubFormsPost, ISubFormPost } from './model';
+import { ISubFormsPost, ISubFormPost, ISubFormsGet, IFormSettingsGet } from './model';
+import formTypesMap from '../subscription-forms/FormTypes';
 const cookie = require('js-cookie');
 
 export default class APIRequest {
@@ -55,6 +56,31 @@ export default class APIRequest {
                 CurrentUrlPath: currentUrlPath
             }
          }
+    }
+
+    renderForms = (response: string): void => {
+
+        let responseObj: ISubFormsGet = JSON.parse(response);
+
+        for (let key in responseObj) {
+
+            let formId = responseObj[key].Entity.Id;
+
+            if (cookie.get(`msf_shown_${formId}`) === undefined) {
+                
+                if (this.isToBeAvoided(formId, responseObj[key].Settings)) {
+                    
+                    continue;
+                }
+
+                new formTypesMap[responseObj[key].Entity.Subtype](formId, responseObj[key].Settings, responseObj[key].EntityHtml);
+            }
+        }
+    }
+
+    isToBeAvoided = (formId: string, settings: IFormSettingsGet): boolean => {
+        
+        return settings.Avoid_Submission_OnOff && settings.Avoid_Submission_OnOff === "true" && cookie.get(`msf_submitted_${formId}`) === "true";
     }
 
     getAllCookies = () => {
