@@ -23,7 +23,8 @@ export default class Popup extends Form {
             let clickElement: HTMLElement = document.querySelector(`[data-mooform-id="${this.entityId}"]`);
 
             if (clickElement !== null) {
-                clickElement.addEventListener('click', this.renderIfNotActive);
+                
+                clickElement.addEventListener('click', this.renderIfNotActive.bind(this));
             }
         } else {
 
@@ -31,7 +32,7 @@ export default class Popup extends Form {
         }
     }
 
-    renderForm = (): void => {
+    renderForm(): void {
 
         let formEl = this.createWrapper();
         formEl.innerHTML = this.blueprintHtml;
@@ -82,7 +83,7 @@ export default class Popup extends Form {
 
     renderWithDelay(after: number = 0, type: string = "seconds"): void {
 
-        setTimeout(this.renderForm, after * this.timedValues[type]());
+        setTimeout(this.renderForm.bind(this), after * this.timedValues[type]());
     }
 
     renderOnExit(): void {
@@ -119,7 +120,7 @@ export default class Popup extends Form {
         return false;
     }
 
-    renderIfNotActive = (e: any): void => {
+    renderIfNotActive(e: any): void {
 
         e.preventDefault();
 

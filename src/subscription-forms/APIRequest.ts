@@ -8,7 +8,7 @@ export default class APIRequest {
     makeRequest = (url: string, data: ISubFormsPost, cb: Function) => {
 
         let apiRequest: XMLHttpRequest = new XMLHttpRequest();
-
+        
         if (window.XDomainRequest) {
             apiRequest = new XDomainRequest();
             apiRequest.onload = () => {
@@ -21,11 +21,13 @@ export default class APIRequest {
         }
 
         apiRequest.onreadystatechange = () => {
+            
             if (apiRequest.readyState === 4 && apiRequest.status === 200) {
+                
                 cb(apiRequest.responseText);
             }
         };
-
+        
         apiRequest.open("POST", url, true);
         apiRequest.setRequestHeader("Accept", "application/json");
         apiRequest.setRequestHeader("Content-Type", "application/json");

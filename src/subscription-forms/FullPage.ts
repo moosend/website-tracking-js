@@ -13,7 +13,7 @@ export default class Popup extends Form {
         this.renderForm();
     }
 
-    renderForm = (): void => {
+    renderForm(): void {
 
         let formEl = this.createWrapper();
         formEl.innerHTML = this.blueprintHtml;

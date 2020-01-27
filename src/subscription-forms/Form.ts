@@ -35,7 +35,7 @@ export default class Form {
         return formEl;
     }
 
-    attachScripts = (element: HTMLElement): void => {
+    attachScripts(element: HTMLElement): void {
 
         let doc = this.getParsedHtmlToDom(this.blueprintHtml);
 
@@ -73,7 +73,7 @@ export default class Form {
         }
     }
 
-    removePreviousIfActive = (selectorToDelete: string): void => {
+    removePreviousIfActive(selectorToDelete: string): void {
 
         let previousForms = document.querySelectorAll(`${selectorToDelete}`);
 
@@ -82,7 +82,7 @@ export default class Form {
         }
     }
 
-    addListenerForSubmissionCookies = (entityId: string): void => {
+    addListenerForSubmissionCookies(entityId: string): void {
 
         document.addEventListener(`success-form-submit-${entityId}`, (e) => {
 
@@ -92,7 +92,7 @@ export default class Form {
         });
     }
 
-    addListenerForSubmissionIdentifyCookies = (entityId: string): void => {
+    addListenerForSubmissionIdentifyCookies(entityId: string): void {
 
         document.addEventListener(`success-form-submit-${entityId}`, (e) => {
 
