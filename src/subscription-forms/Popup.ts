@@ -70,7 +70,7 @@ export default class Popup extends Form {
 
         let styleGlobal = document.createElement("style");
         styleGlobal.innerHTML = `${this.parentSelectorForStyle}${this.entityId} ${this.styleToAttach}`;
-
+        
         let elementWrapper = document.querySelector(`${this.parentSelectorForStyle}${this.entityId} .moosend-main-form-wrapper`);
         formEl.insertBefore(styleGlobal, elementWrapper);
     }
@@ -98,14 +98,14 @@ export default class Popup extends Form {
         this.renderForm();
     }
 
-    setIntervalToShowCookie = (formId: string, after: number = 0, type: string = "seconds"): void => {
+    setIntervalToShowCookie(formId: string, after: number = 0, type: string = "seconds"): void {
 
         let typeValue = this.getTypeValue(after, type);
 
         cookie.set(`msf_shown_${formId}`, true, { expires: typeValue });
     }
 
-    getTypeValue = (after: number = 0, type: string = "seconds"): Date => {
+    getTypeValue(after: number = 0, type: string = "seconds"): Date {
 
         return new Date(new Date().getTime() + after * this.timedValues[type]());
     }
