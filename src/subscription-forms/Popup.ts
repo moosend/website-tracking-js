@@ -106,11 +106,11 @@ export default class Popup extends Form {
     }
 
     getTypeValue(after: number = 0, type: string = "seconds"): Date {
-
+        
         return new Date(new Date().getTime() + after * this.timedValues[type]());
     }
 
-    isPopupActive = (formId: string): boolean => {
+    isPopupActive(formId: string): boolean {
 
         if (document.querySelector(`${this.parentSelectorForStyle}${formId}`) !== null) {
 

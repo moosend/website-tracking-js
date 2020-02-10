@@ -78,7 +78,7 @@ export default class Row extends Form {
         return fixedWrapper;
     }
 
-    addBlueprintHeight = (blueprintHtml: HTMLElement) => {
+    addBlueprintHeight(blueprintHtml: HTMLElement) {
 
         document.body.style.marginTop = (blueprintHtml.offsetHeight).toString() + "px";
     }

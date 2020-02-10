@@ -3,6 +3,7 @@ import Form from '../src/subscription-forms/Form';
 import test = require("tape");
 import sinon = require("sinon");
 import { IFormSettingsGet } from '../src/subscription-forms/model';
+import tape = require('tape');
 const cookie = require('js-cookie');
 
 test('Creates a basic popup if trigger is not given.', (t: test.Test) => {
@@ -138,9 +139,60 @@ test('Tests Popup setIntervalToShowCookie implementation', (t: test.Test) => {
     let popUp = new Popup('b835a45dd3e54d43ae1c61f1164cca02', { } as IFormSettingsGet, "<div class='test'>Form</div>");
     
     setCookieSpy.restore();
+    getTypeValueSpy.restore();
 
     t.assert(setCookieSpy.calledOnce, 'setCookie is called.');
-    t.assert(getTypeValueSpy.calledOnce, 'getTypeValueSpy is called.');
+    t.assert(getTypeValueSpy.calledOnce, 'getTypeValue is called.');
+
+    t.end();
+});
+
+test('Tests Popup get type value implementation', (t: test.Test) => {
+
+    let getTypeValueSpy = sinon.spy(Popup.prototype, 'getTypeValue');
+    let getTimeSpy = sinon.spy(Date.prototype, 'getTime');
+    
+    let popUp = new Popup('b835a45dd3e54d43ae1c61f1164cca02', { } as IFormSettingsGet, "<div class='test'>Form</div>");
+
+    getTypeValueSpy.restore();
+    getTimeSpy.restore();
+
+    t.assert(getTypeValueSpy.calledOnce, 'getTypeValue is called.');
+    t.assert(getTimeSpy.calledOnce, 'Date getTime() is called.');
+
+    t.end();
+});
+
+test('Tests Popup get type value implementation', (t: test.Test) => {
+
+    let querySelectorSpy = sinon.stub(document, 'querySelector').returns(null);
+    let isPopupActiveSpy = sinon.spy(Popup.prototype, 'isPopupActive');
+
+    Popup.prototype.isPopupActive('123456789');
+
+    querySelectorSpy.restore();
+    isPopupActiveSpy.restore();
+
+    t.assert(querySelectorSpy.calledOnce, 'querySelector is called once.');
+    t.assert(isPopupActiveSpy.returned(false), 'querySelector is called once.');
+
+    t.end();
+});
+
+test('Popup on click renderIfNotActive renders form if no popup is active', (t: test.Test) => {
+
+    let isPopupActiveSpy = sinon.stub(Popup.prototype, 'isPopupActive').returns(false);
+    let renderFormSpy = sinon.spy(Popup.prototype, 'renderForm');
+    let preventDefaultStub = sinon.stub(Event.prototype, 'preventDefault').returns(true);
+
+    let popUp = new Popup('b835a45dd3e54d43ae1c61f1164cca02', { Popup_Trigger: 'click' } as IFormSettingsGet, "<div class='test'>Form</div>");
+    popUp.renderIfNotActive(new Event(''));
+
+    isPopupActiveSpy.restore();
+    renderFormSpy.restore();
+    preventDefaultStub.restore();
+
+    t.assert(renderFormSpy.calledOnce, 'renderForm is called once.');
 
     t.end();
 });
