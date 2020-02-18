@@ -18,18 +18,13 @@ export default class Inline extends Form {
 
         document.querySelector(selector).appendChild(formEl);
 
-        this.attachStyle(formEl);
+        this.addListenerForSubmissionCookies(this.entityId);
+
+        // Add user_email cookie for PHP plugins
+        this.addListenerForSubmissionIdentifyCookies(this.entityId);
+        
         this.addCloseEventListener(formEl, this.entityId);
         this.attachScripts(formEl);
-    }
-
-    attachStyle(formEl: HTMLElement): void {
-
-        let styleGlobal = document.createElement("style");
-        styleGlobal.innerHTML = `#mooform${this.entityId} ${this.styleToAttach}` ;
-
-        let elementWrapper = document.querySelector(".moosend-main-form-wrapper");
-        formEl.insertBefore(styleGlobal, elementWrapper);
     }
 
     addCloseEventListener(formEl: HTMLElement, entityId: string): void {

@@ -96,7 +96,7 @@ export default class Form {
 
         document.addEventListener(`success-form-submit-${entityId}`, (e) => {
 
-            cookie.set('USER_EMAIL', ( < CustomEvent > event).detail.email, {
+            cookie.set('USER_EMAIL', (<CustomEvent>event).detail.email, {
                 expires: 3650
             });
         });

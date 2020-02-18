@@ -10,7 +10,17 @@ export default class Popup extends Form {
 
         super(entityId, settings, blueprintHtml);
 
-        this.renderForm();
+        if (this.settings.Popup_Trigger == "visit") {
+
+            this.renderWithDelay(parseInt(this.settings.Timed_Show_After), this.settings.Timed_Show_Type);
+
+        } else if (this.settings.Popup_Trigger == "exit") {
+
+            this.renderOnExit();
+        } else {
+
+            this.renderForm();
+        }
     }
 
     renderForm(): void {
@@ -29,6 +39,8 @@ export default class Popup extends Form {
 
         // Add user_email cookie for PHP plugins
         this.addListenerForSubmissionIdentifyCookies(this.entityId);
+
+        this.setIntervalToShowCookie(this.entityId, parseInt(this.settings.Timed_Last_Appearance_After), this.settings.Timed_Last_Appearance_Type);
 
         this.attachStyle(formEl);
         this.addCloseEventListener(formEl, this.entityId);
@@ -59,5 +71,34 @@ export default class Popup extends Form {
         }
 
         return false;
+    }
+
+    renderWithDelay(after: number = 0, type: string = "seconds"): void {
+
+        setTimeout(this.renderForm.bind(this), after * this.timedValues[type]());
+    }
+
+    renderOnExit(): void {
+
+        document.documentElement.addEventListener("mouseleave", this.onMouseOut);
+    }
+
+    onMouseOut = (e: any, after: number = 0, type: string = "seconds"): void => {
+        // Remove this event listener
+        document.documentElement.removeEventListener("mouseleave", this.onMouseOut);
+
+        this.renderForm();
+    }
+
+    setIntervalToShowCookie(formId: string, after: number = 0, type: string = "seconds"): void {
+
+        let typeValue = this.getTypeValue(after, type);
+
+        cookie.set(`msf_shown_${formId}`, true, { expires: typeValue });
+    }
+
+    getTypeValue(after: number = 0, type: string = "seconds"): Date {
+        
+        return new Date(new Date().getTime() + after * this.timedValues[type]());
     }
 }
