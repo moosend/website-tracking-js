@@ -3,33 +3,27 @@ import Form from './Form';
 export default class Inline extends Form {
 
     styleToAttach = "{ width: 100%; max-width: 500px; }";
+    selectorsToShow: NodeList;
 
     constructor(entityId: string, settings: any, blueprintHtml: string) {
 
         super(entityId, settings, blueprintHtml);
 
-        this.renderForm('body');
+        this.renderForm(`div[data-mooform-id="${entityId}"]`);
     }
 
     renderForm = (selector: string): void => {
 
-        let formEl = this.createWrapper();
-        formEl.innerHTML = this.blueprintHtml;
+        this.selectorsToShow = document.querySelectorAll(selector);
 
-        document.querySelector(selector).appendChild(formEl);
+        for (let i = 0; i < this.selectorsToShow.length; i++) {
 
-        this.addListenerForSubmissionCookies(this.entityId);
-
-        // Add user_email cookie for PHP plugins
-        this.addListenerForSubmissionIdentifyCookies(this.entityId);
-        
-        this.addCloseEventListener(formEl, this.entityId);
-        this.attachScripts(formEl);
-    }
-
-    addCloseEventListener(formEl: HTMLElement, entityId: string): void {
-        document && document.addEventListener(`moosend-form-close-event-${entityId}`, function () {
-            formEl.remove();
-        });
+            let formEl = this.createWrapper();
+            formEl.innerHTML = this.blueprintHtml;
+            
+            this.selectorsToShow[i].appendChild(formEl);
+            
+            this.attachScripts(formEl);
+        }
     }
 }
