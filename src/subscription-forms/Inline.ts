@@ -1,8 +1,7 @@
 import Form from './Form';
 
 export default class Inline extends Form {
-
-    styleToAttach = "{ width: 100%; max-width: 500px; }";
+    
     selectorsToShow: NodeList;
 
     constructor(entityId: string, settings: any, blueprintHtml: string) {
@@ -12,7 +11,7 @@ export default class Inline extends Form {
         this.renderForm(`div[data-mooform-id="${entityId}"]`);
     }
 
-    renderForm = (selector: string): void => {
+    renderForm(selector: string): void {
 
         this.selectorsToShow = document.querySelectorAll(selector);
 

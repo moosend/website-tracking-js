@@ -3,7 +3,6 @@ import Form from '../src/subscription-forms/Form';
 import test = require("tape");
 import sinon = require("sinon");
 import { IFormSettingsGet } from '../src/subscription-forms/model';
-import tape = require('tape');
 const cookie = require('js-cookie');
 
 test('Creates a basic popup if trigger is not given.', (t: test.Test) => {
@@ -163,7 +162,7 @@ test('Tests Popup get type value implementation', (t: test.Test) => {
     t.end();
 });
 
-test('Tests Popup get type value implementation', (t: test.Test) => {
+test('Tests Popup is popup active implementation', (t: test.Test) => {
 
     let querySelectorSpy = sinon.stub(document, 'querySelector').returns(null);
     let isPopupActiveSpy = sinon.spy(Popup.prototype, 'isPopupActive');

@@ -63,7 +63,7 @@ export default class Popup extends Form {
         });
     }
 
-    isPopupActive = (formId: string) => {
+    isPopupActive(formId: string) {
 
         if (document.querySelector(`${this.parentSelectorForStyle}${formId}`) !== null) {
 
