@@ -366,16 +366,19 @@ export default class Tracker
         const userId = this.storage.getUserId();
         const sessionId = this.storage.getSessionId();
 
-        this.browser.fingerPrint((browserFingerprint: IBrowserComponents) =>
-            this.ping(browserFingerprint),
-        );
-
         if (!userId) {
             let generatedUserId = uuidV4();
             generatedUserId = generatedUserId.replace(/-/g, "");
 
             this.storage.setUserId(generatedUserId, { expires: 3650 });
+
+            // Send PING only when a contact ID is generated
+            this.browser.fingerPrint((browserFingerprint: IBrowserComponents) => {
+                
+                this.ping(browserFingerprint)
+            });
         }
+
         if (!sessionId) {
             let generatedSessionId = uuidV4();
             generatedSessionId = generatedSessionId.replace(/-/g, "");
