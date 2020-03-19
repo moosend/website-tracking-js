@@ -10,7 +10,6 @@ test("Tracker Initialisation", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    let tBrowser: IBrowser;
 
     tAgent = mock.createAgent(t);
 
@@ -34,15 +33,9 @@ test("Tracker Initialisation", (t: test.Test) => {
         },
     });
 
-    tBrowser = mock.createBrowser(t, {
-        fingerPrint() {
-            t.pass("IBrowser.fingerPrint was called during initialisation");
-        },
-    });
+    t.plan(5);
 
-    t.plan(6);
-
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     tracker.init("f245124e-8f61-4277-a089-8d233bc99491", false);
 });
@@ -51,7 +44,6 @@ test("Tracker initialization which has siteId without dashes", (t: test.Test) =>
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    let tBrowser: IBrowser;
 
     tAgent = mock.createAgent(t);
 
@@ -72,15 +64,9 @@ test("Tracker initialization which has siteId without dashes", (t: test.Test) =>
         },
     });
 
-    tBrowser = mock.createBrowser(t, {
-        fingerPrint() {
-            t.pass("IBrowser.fingerPrint was called during initialisation");
-        },
-    });
+    t.plan(4);
 
-    t.plan(5);
-
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     tracker.init("f245124e8f614277a0898d233bc99491", false);
 
@@ -92,13 +78,12 @@ test("Tracker initialization should throw error if siteId has invalid UUID", (t:
     // tslint:disable-next-line:prefer-const
     let tStorage: ITrackerStorage;
     // tslint:disable-next-line:prefer-const
-    let tBrowser: IBrowser;
 
     tAgent = mock.createAgent(t);
 
     t.plan(1);
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.throws(() => tracker.init("123", false), /siteId should be a valid uuid/, "throw siteId should be a valid uuid");
 
@@ -116,7 +101,6 @@ test("Tracker Identify API", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tAgent = mock.createAgent(t, {
         sendIdentify: (payload: ITrackIdentifyPayload): void => {
@@ -149,7 +133,7 @@ test("Tracker Identify API", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(6);
 
@@ -160,7 +144,6 @@ test("Tracker Identify API", (t: test.Test) => {
 test("Tracker Track getPayload", (t: test.Test) => {
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tStorage = mock.createStorage(t, {
         getSessionId() {
@@ -180,7 +163,7 @@ test("Tracker Track getPayload", (t: test.Test) => {
     const getUserId: any = sinon.spy(tStorage, "getUserId");
     const getEmail: any = sinon.spy(tStorage, "getEmail");
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     const getPayload: any = sinon.spy(tracker, "getPayload");
 
@@ -198,7 +181,6 @@ test("Tracker Track getPayload", (t: test.Test) => {
 test("Tracker Track with Different ActionType", (t: test.Test) => {
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tStorage = mock.createStorage(t, {
         getUserId() {
@@ -214,7 +196,7 @@ test("Tracker Track with Different ActionType", (t: test.Test) => {
     const getUserId: any = sinon.spy(tStorage, "getUserId");
     const getEmail: any = sinon.spy(tStorage, "getEmail");
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     const getPayload: any = sinon.spy(tracker, "getPayload");
 
@@ -232,7 +214,6 @@ test("Tracker Track API", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tStorage = mock.createStorage(t, {
         getSessionId() {
@@ -252,7 +233,7 @@ test("Tracker Track API", (t: test.Test) => {
     const getUserId: any = sinon.spy(tStorage, "getUserId");
     const getEmail: any = sinon.spy(tStorage, "getEmail");
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     tracker.init("f245124e-8f61-4277-a089-8d233bc99491", false);
     tracker.track(TrackerActions.PAGE_VIEWED, [{ status: "completed" }]);
@@ -274,7 +255,6 @@ test("Tracker Track Product View", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     const itemCode = "101";
     const itemPrice = 12.02;
@@ -329,7 +309,7 @@ test("Tracker Track Product View", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
     const formatProductPayload = sinon.spy(tracker, "formatProductPayload");
 
     t.plan(7);
@@ -365,7 +345,6 @@ test("Tracker Track Product View with Default Values", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     const itemCode = "101";
     const itemPrice = 12.02;
@@ -423,7 +402,7 @@ test("Tracker Track Product View with Default Values", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
     const formatProductPayload = sinon.spy(tracker, "formatProductPayload");
 
     t.plan(10);
@@ -457,7 +436,6 @@ test("Tracker trackExitIntent API", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tStorage = mock.createStorage(t, {
         getCampaignId: () => {
@@ -491,7 +469,7 @@ test("Tracker trackExitIntent API", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(6);
 
@@ -509,7 +487,6 @@ test("Tracker trackPageView API", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tStorage = mock.createStorage(t, {
         getCampaignId: () => {
@@ -542,7 +519,7 @@ test("Tracker trackPageView API", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(6);
 
@@ -568,7 +545,6 @@ test("Tracker trackAddToOrder API", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tStorage = mock.createStorage(t, {
         getCampaignId: () => {
@@ -613,7 +589,7 @@ test("Tracker trackAddToOrder API", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(6);
 
@@ -650,7 +626,6 @@ test("Tracker trackAddToOrder API with 2 parameters (product and extraProps only
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tStorage = mock.createStorage(t, {
         getCampaignId: () => {
@@ -695,7 +670,7 @@ test("Tracker trackAddToOrder API with 2 parameters (product and extraProps only
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(6);
 
@@ -711,7 +686,6 @@ test("trackAddToOrder test default values with 2 parameters (product and extraPr
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     const product: IProduct = {
         itemCode: "item-101",
@@ -741,7 +715,7 @@ test("trackAddToOrder test default values with 2 parameters (product and extraPr
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(7);
 
@@ -758,7 +732,6 @@ test("trackAddToOrder test default values", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     const product: IProduct = {
         itemCode: "item-101",
@@ -788,7 +761,7 @@ test("trackAddToOrder test default values", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(7);
 
@@ -804,7 +777,6 @@ test("Tracker trackAddToOrder API invalid invocation", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tAgent = mock.createAgent(t);
     tStorage = mock.createStorage(t, {
@@ -818,7 +790,7 @@ test("Tracker trackAddToOrder API invalid invocation", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(8);
 
@@ -853,7 +825,6 @@ test("Tracker trackOrderCompleted API", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     tStorage = mock.createStorage(t, {
         getCampaignId: () => {
@@ -889,7 +860,7 @@ test("Tracker trackOrderCompleted API", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(6);
 
@@ -901,13 +872,12 @@ test("Tracker trackOrderCompleted API invalid invocation", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
     // let consoleSpy = sinon.spy(console, 'log');
 
     tAgent = mock.createAgent(t);
     tStorage = mock.createStorage(t);
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(4);
 
@@ -948,7 +918,6 @@ test("Tracker trackOrderCompleted test default values", (t: test.Test) => {
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     const product: IProduct = {
         itemCode: "Product-101",
@@ -975,7 +944,7 @@ test("Tracker trackOrderCompleted test default values", (t: test.Test) => {
         },
     });
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     t.plan(5);
 
@@ -991,7 +960,6 @@ test("Tracker should be initialized with custom userId cookie name", (t: test.Te
 
     let tAgent: ITrackerAgent;
     let tStorage: ITrackerStorage;
-    const tBrowser: IBrowser = mock.createBrowser(t);
 
     const userIdName = "userIdExample";
     const sessionIdName = "sessionIdExample";
@@ -1013,7 +981,7 @@ test("Tracker should be initialized with custom userId cookie name", (t: test.Te
 
     tAgent = mock.createAgent(t);
 
-    const tracker = new Tracker(tAgent, tStorage, tBrowser);
+    const tracker = new Tracker(tAgent, tStorage);
 
     tracker.setCookieNames({ userIdName, sessionIdName, emailName, exitIntentFlagName, campaignIdName, memberIdName});
     tracker.init(siteId, false);

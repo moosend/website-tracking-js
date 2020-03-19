@@ -55,7 +55,6 @@
     "@types/uuid": "^3.4.3",
     "cross-env": "^5.1.1",
     "es5-shim": "^4.5.9",
-    "fingerprintjs2": "^1.5.1",
     "js-cookie": "^2.2.0",
     "json3": "^3.3.2",
     "lodash": "^4.16.6",

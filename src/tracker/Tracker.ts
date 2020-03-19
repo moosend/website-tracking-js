@@ -24,23 +24,20 @@ export enum TrackerActions {
 }
 
 export default class Tracker
-    implements IdentifyAPI, TrackingAPI, PingAPI, PayloadAPI {
+    implements IdentifyAPI, TrackingAPI, PayloadAPI {
     private siteId: string;
     private agent: ITrackerAgent;
     private storage: ITrackerStorage;
-    private browser: IBrowser;
 
     private formRequest: any;
 
     constructor(
         agent: ITrackerAgent,
         storage: ITrackerStorage,
-        browser: IBrowser,
     ) {
 
         this.agent = agent;
         this.storage = storage;
-        this.browser = browser;
 
         this.formRequest = new APIRequest();
     }
@@ -176,33 +173,6 @@ export default class Tracker
         }
 
         this.agent.sendTrack(payload);
-    }
-
-    public ping(browserComponents: IBrowserComponents): void {
-        if (!this._isInitialized()) {
-            return;
-        }
-
-        const payload: ITrackPingPayload = {
-            BrowserComponents: browserComponents,
-            ContactId: this.storage.getUserId(),
-            actionType: TrackerActions.PING,
-            sessionId: this.storage.getSessionId(),
-            siteId: this.siteId,
-        };
-
-        const email = this.storage.getEmail();
-        const campaignId = this.storage.getCampaignId();
-
-        if (email) {
-            payload.ContactEmailAddress = email;
-        }
-
-        if (campaignId) {
-            payload.CampaignId = campaignId;
-        }
-
-        this.agent.sendPing(payload);
     }
 
     public trackAddToOrder(
@@ -371,12 +341,6 @@ export default class Tracker
             generatedUserId = generatedUserId.replace(/-/g, "");
 
             this.storage.setUserId(generatedUserId, { expires: 3650 });
-
-            // Send PING only when a contact ID is generated
-            this.browser.fingerPrint((browserFingerprint: IBrowserComponents) => {
-                
-                this.ping(browserFingerprint)
-            });
         }
 
         if (!sessionId) {

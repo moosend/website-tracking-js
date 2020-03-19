@@ -1,6 +1,5 @@
 import config from "../common/config";
 import CookieStorage from "../storage/CookieStorage";
-import Browser from "./Browser";
 import Tracker from "./Tracker";
 import TrackerAgent from "./TrackerAgent";
 import TrackerStorage from "./TrackerStorage";
@@ -15,7 +14,7 @@ export default {
             return this.CreateWithCookieStorageInstance;
         }
 
-        this.CreateWithCookieStorageInstance = new Tracker(new TrackerAgent(config.apiUrl), new TrackerStorage(new CookieStorage(cookieSettings)), new Browser());
+        this.CreateWithCookieStorageInstance = new Tracker(new TrackerAgent(config.apiUrl), new TrackerStorage(new CookieStorage(cookieSettings)));
 
         return this.CreateWithCookieStorageInstance;
     },

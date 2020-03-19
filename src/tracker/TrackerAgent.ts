@@ -16,10 +16,6 @@ export default class TrackerAgent implements ITrackerAgent {
         this._postData(this.url + "/identify", payload);
     }
 
-    public sendPing(payload: ITrackPingPayload): void {
-        this._postData(this.url + "/ping", payload);
-    }
-
     private _postData(url: string, data: any): void {
 
         // tslint:disable-next-line:no-empty

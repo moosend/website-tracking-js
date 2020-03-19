@@ -8,7 +8,6 @@ require('jsdom-global')();
 interface IMockAPI {
   createStorage(t: tape.Test, props?: any): ITrackerStorage;
   createAgent(t: tape.Test, overrides?: any): ITrackerAgent;
-  createBrowser(t: tape.Test, overrides?: any): IBrowser;
 }
 
 export default {
@@ -50,18 +49,6 @@ export default {
       sendIdentify: (overrides.sendIdentify instanceof Function && overrides.sendIdentify) || _noop,
       sendTrack:    (overrides.sendTrack instanceof Function && overrides.sendTrack) || _noop,
     };
-  },
-
-  createBrowser(t: tape.Test, overrides: any = {}): IBrowser {
-    const mock: IBrowser = [
-      "fingerPrint",
-    ].reduce((acc: any, next: string) => {
-      const override = overrides[next];
-      acc[next] = override instanceof Function ? override : _noop;
-      return acc;
-    }, {});
-
-    return mock;
   },
 };
 
