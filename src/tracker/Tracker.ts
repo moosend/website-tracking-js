@@ -20,7 +20,6 @@ export enum TrackerActions {
     ORDER_COMPLETED = "ORDER_COMPLETED",
     PAGE_VIEWED = "PAGE_VIEWED",
     EXIT_INTENT = "EXIT_INTENT",
-    PING = "PING",
 }
 
 export default class Tracker
