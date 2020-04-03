@@ -20,11 +20,14 @@ export default class Popup extends Form {
 
         } else if (this.settings.Popup_Trigger == "click") {
 
-            let clickElement: HTMLElement = document.querySelector(`[data-mooform-id="${this.entityId}"]`);
-
-            if (clickElement !== null) {
+            let clickElements = Array.from(document.querySelectorAll(`[data-mooform-id="${this.entityId}"]`));
+            
+            if (clickElements !== null) {
                 
-                clickElement.addEventListener('click', this.renderIfNotActive.bind(this));
+                clickElements.forEach((element) => {
+
+                    element.addEventListener('click', this.renderIfNotActive.bind(this));
+                });
             }
         } else {
 

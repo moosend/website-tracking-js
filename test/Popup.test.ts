@@ -49,8 +49,9 @@ test('Creates a popup on exit', (t: test.Test) => {
 
 test('Creates a popup on click trigger', (t: test.Test) => {
 
-    let querySelectorSpy = sinon.stub(document, 'querySelector');
-    querySelectorSpy.returns(document.createElement('div'));
+    let querySelectorSpy = sinon.stub(document, 'querySelectorAll');
+    const elements = [document.createElement('div')];
+    querySelectorSpy.returns(elements);
 
     let addEventListenerSpy = sinon.spy(HTMLElement.prototype, 'addEventListener');
     
