@@ -95,10 +95,15 @@ export default class Form {
     addListenerForSubmissionIdentifyCookies(entityId: string): void {
 
         document.addEventListener(`success-form-submit-${entityId}`, (e) => {
-
+            
             cookie.set('USER_EMAIL', (<CustomEvent>event).detail.email, {
                 expires: 3650
             });
+
+            // Reappend user id value in PHP plugin cookie
+            if(cookie.get('MOOSEND_USER_ID') && cookie.get('uid')) {
+                cookie.set('MOOSEND_USER_ID', cookie.get('uid'));
+            }
         });
     }
 

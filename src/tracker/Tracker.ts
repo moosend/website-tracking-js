@@ -6,12 +6,9 @@ const isArray = require("lodash/isArray");
 
 import * as Utilities from "../common/utils";
 import { getParameterByName } from "../common/utils";
-import CookieNames from "../cookies/CookieNames";
 
 // Subscription Forms Modules
-import { ISubFormsGet } from "../subscription-forms/model";
 import APIRequest from '../subscription-forms/APIRequest';
-import formTypesMap from '../subscription-forms/FormTypes';
 const cookie = require('js-cookie');
 
 export enum TrackerActions {
