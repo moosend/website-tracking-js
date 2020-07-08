@@ -11,8 +11,8 @@ export default {
     CreateWithCookieStorage(cookieSettings?: any, url?: string) {
 
         const apiUrl = url ? url : config.apiUrl;
-
-        if (this.CreateWithCookieStorageInstance !== null) {
+        
+        if (this.CreateWithCookieStorageInstance !== null && url === undefined) {
             return this.CreateWithCookieStorageInstance;
         }
 
