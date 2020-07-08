@@ -8,13 +8,15 @@ export default {
 
     CreateWithCookieStorageInstance: null,
 
-    CreateWithCookieStorage(cookieSettings?: any) {
+    CreateWithCookieStorage(cookieSettings?: any, url?: string) {
+
+        const apiUrl = url ? url : config.apiUrl;
 
         if (this.CreateWithCookieStorageInstance !== null) {
             return this.CreateWithCookieStorageInstance;
         }
 
-        this.CreateWithCookieStorageInstance = new Tracker(new TrackerAgent(config.apiUrl), new TrackerStorage(new CookieStorage(cookieSettings)));
+        this.CreateWithCookieStorageInstance = new Tracker(new TrackerAgent(apiUrl), new TrackerStorage(new CookieStorage(cookieSettings)));
 
         return this.CreateWithCookieStorageInstance;
     },

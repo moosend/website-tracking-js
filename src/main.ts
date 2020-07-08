@@ -9,11 +9,15 @@ import CookieStorage from "./storage/CookieStorage";
 import { TrackerActions } from "./tracker/Tracker";
 import TrackerFactory from "./tracker/TrackerFactory";
 import TrackerStorage from "./tracker/TrackerStorage";
+import config from "./common/config";
 
 const queryString = require("querystring");
 
 const trackerStorage = new TrackerStorage(new CookieStorage());
 const tracker: TrackingAPI = TrackerFactory.CreateWithCookieStorage();
+
+// An instance for staging use, optional
+const trackerStaging: TrackingAPI = TrackerFactory.CreateWithCookieStorage(undefined, config.apiUrlStaging);
 
 if (typeof location === "object" && location.search) {
 
@@ -30,6 +34,7 @@ if (typeof location === "object" && location.search) {
 }
 
 export default tracker;
+export { trackerStaging };
 
 export { TrackerActions };
 export { TrackerFactory };
