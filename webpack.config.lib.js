@@ -41,7 +41,7 @@ module.exports = {
 
     plugins: [
         new WebpackMd5Hash(),
-        // new webpack.DefinePlugin(GLOBALS),
+        new webpack.DefinePlugin(GLOBALS),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.optimize.UglifyJsPlugin({
             comments: false
