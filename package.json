@@ -1,6 +1,6 @@
 {
   "name": "mootracker",
-  "version": "0.13.7",
+  "version": "0.13.8",
   "description": "Tracking API",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
