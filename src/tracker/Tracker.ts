@@ -311,7 +311,7 @@ export default class Tracker
         this.storage.setCookieNames(cookieNames);
     }
 
-    public init(siteId: string, exitIntentEventFlag: boolean): void {
+    public init(siteId: string, exitIntentEventFlag: boolean, staging?: boolean): void {
         if (!siteId) {
             throw new Error("siteId cannot be undefined or empty");
         }
@@ -355,7 +355,9 @@ export default class Tracker
         let userEmail = email ? email : this.storage.getEmail();
         let cookiesToSend = this.formRequest.getAllCookies();
 
-        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORMS_API + this.siteId, this.formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), this.formRequest.renderForms);
+        let formsUrl = staging ? 'https://forms.moooo.co/api/forms/' : process.env.FORMS_API;
+
+        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(formsUrl + this.siteId, this.formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), this.formRequest.renderForms);
 
         if (exitIntentEventFlag == null) {
             this.storage.setExitIntentFlag(true);
@@ -363,7 +365,7 @@ export default class Tracker
         }
     }
 
-    public loadForm(entityId: string): void {
+    public loadForm(entityId: string, staging?: boolean): void {
 
         // Initiate and call subforms
         let currentUrlPath = `${window.location.pathname}${window.location.hash}`.split('?')[0];
@@ -373,7 +375,9 @@ export default class Tracker
 
         let cookiesToSend = this.formRequest.getAllCookies();
 
-        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(process.env.FORM_API + entityId, this.formRequest.preparePayloadForSingle(entityId, '', userEmail, cookiesToSend, currentUrlPath), this.formRequest.renderForms);
+        let formsUrl = staging ? 'https://forms.moooo.co/api/form/' : process.env.FORMS_API;
+
+        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(formsUrl + entityId, this.formRequest.preparePayloadForSingle(entityId, '', userEmail, cookiesToSend, currentUrlPath), this.formRequest.renderForms);
     }
 
     public getPayload(
