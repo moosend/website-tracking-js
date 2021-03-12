@@ -17,7 +17,7 @@ interface IdentifyAPI {
 
 interface TrackingAPI {
     setCookieNames(cookieNames: ICookieNames): void;
-    init(siteId: string, exitIntentFlag: boolean): void;
+    init(siteId: string, exitIntentFlag: boolean, staging?: boolean): void;
     /**
      *  Send action track info
      *  @description Makes a POST to http://requestb.in/15t3ics1
