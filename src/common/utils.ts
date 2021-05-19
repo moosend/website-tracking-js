@@ -36,7 +36,7 @@ export const isUrl = (url: string): boolean => {
 };
 
 export const isValidUUID = (uuidString: string) => {
-    const validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const validUUIDRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
     return (
         validUUIDRegex.test(uuidString) ||
