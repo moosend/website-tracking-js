@@ -58,7 +58,7 @@ const cmid = getParameterByName("cmid");
 const mid = getParameterByName("mid");
 
 if (cmid != null && isValidUUID(cmid)) {
-    trackerStorage.setCampaignId(cmid);
+    trackerStorage.setCampaignId(cmid, { expires: 30 });
 }
 
 if (mid != null && isValidUUID(mid)) {
