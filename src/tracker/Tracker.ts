@@ -8,8 +8,8 @@ import * as Utilities from "../common/utils";
 import { getParameterByName } from "../common/utils";
 
 // Subscription Forms Modules
-import APIRequest from '../subscription-forms/APIRequest';
-const cookie = require('js-cookie');
+import APIRequest from "../subscription-forms/APIRequest";
+const cookie = require("js-cookie");
 
 export enum TrackerActions {
     ADDED_TO_ORDER = "ADDED_TO_ORDER", // || Basically Add to Cart
@@ -19,19 +19,14 @@ export enum TrackerActions {
     EXIT_INTENT = "EXIT_INTENT",
 }
 
-export default class Tracker
-    implements IdentifyAPI, TrackingAPI, PayloadAPI {
+export default class Tracker implements IdentifyAPI, TrackingAPI, PayloadAPI {
     private siteId: string;
     private agent: ITrackerAgent;
     private storage: ITrackerStorage;
 
     private formRequest: any;
 
-    constructor(
-        agent: ITrackerAgent,
-        storage: ITrackerStorage,
-    ) {
-
+    constructor(agent: ITrackerAgent, storage: ITrackerStorage) {
         this.agent = agent;
         this.storage = storage;
 
@@ -39,7 +34,6 @@ export default class Tracker
     }
 
     public identify(email: string, name?: string, props?: any | any[]): void {
-
         if (!this._isInitialized()) {
             return;
         }
@@ -53,7 +47,6 @@ export default class Tracker
 
         // IF email is already in storage and has the same value THEN abort
         if (this.storage.getEmail() === email) {
-
             return;
         }
 
@@ -311,7 +304,11 @@ export default class Tracker
         this.storage.setCookieNames(cookieNames);
     }
 
-    public init(siteId: string, exitIntentEventFlag: boolean, staging?: boolean): void {
+    public init(
+        siteId: string,
+        exitIntentEventFlag: boolean,
+        staging?: boolean,
+    ): void {
         if (!siteId) {
             throw new Error("siteId cannot be undefined or empty");
         }
@@ -320,7 +317,10 @@ export default class Tracker
             throw new Error("siteId should be a valid uuid");
         }
 
-        if (exitIntentEventFlag != null && typeof exitIntentEventFlag !== "boolean") {
+        if (
+            exitIntentEventFlag != null &&
+            typeof exitIntentEventFlag !== "boolean"
+        ) {
             throw new Error("exitIntentEventFlag should be a boolean");
         } else {
             this.storage.setExitIntentFlag(exitIntentEventFlag);
@@ -351,13 +351,29 @@ export default class Tracker
         }
 
         // Initiate and call subforms
-        let currentUrlPath = `${window.location.pathname}${window.location.hash}`.split('?')[0];
+        let currentUrlPath =
+            `${window.location.pathname}${window.location.hash}`.split("?")[0];
         let userEmail = email ? email : this.storage.getEmail();
         let cookiesToSend = this.formRequest.getAllCookies();
 
-        let formsUrl = staging ? 'https://forms.moooo.co/api/forms/' : process.env.FORMS_API;
+        let formsUrl = staging
+            ? "https://forms.moooo.co/api/forms/"
+            : process.env.FORMS_API;
 
-        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(formsUrl + this.siteId, this.formRequest.preparePayload(this.siteId, userId, userEmail, cookiesToSend, currentUrlPath), this.formRequest.renderForms);
+        process &&
+            process.env &&
+            process.env.FORMS_API &&
+            this.formRequest.makeRequest(
+                formsUrl + this.siteId,
+                this.formRequest.preparePayload(
+                    this.siteId,
+                    userId,
+                    userEmail,
+                    cookiesToSend,
+                    currentUrlPath,
+                ),
+                this.formRequest.renderForms,
+            );
 
         if (exitIntentEventFlag == null) {
             this.storage.setExitIntentFlag(true);
@@ -366,25 +382,39 @@ export default class Tracker
     }
 
     public loadForm(entityId: string, staging?: boolean): void {
-
         // Initiate and call subforms
-        let currentUrlPath = `${window.location.pathname}${window.location.hash}`.split('?')[0];
+        let currentUrlPath =
+            `${window.location.pathname}${window.location.hash}`.split("?")[0];
 
         const email = getParameterByName("email");
         let userEmail = email ? email : this.storage.getEmail();
 
         let cookiesToSend = this.formRequest.getAllCookies();
 
-        let formsUrl = staging ? 'https://forms.moooo.co/api/form/' : process.env.FORMS_API;
+        let formsUrl = staging
+            ? "https://forms.moooo.co/api/form/"
+            : process.env.FORM_API;
 
-        process && process.env && process.env.FORMS_API && this.formRequest.makeRequest(formsUrl + entityId, this.formRequest.preparePayloadForSingle(entityId, '', userEmail, cookiesToSend, currentUrlPath), this.formRequest.renderForms);
+        process &&
+            process.env &&
+            process.env.FORMS_API &&
+            this.formRequest.makeRequest(
+                formsUrl + entityId,
+                this.formRequest.preparePayloadForSingle(
+                    entityId,
+                    "",
+                    userEmail,
+                    cookiesToSend,
+                    currentUrlPath,
+                ),
+                this.formRequest.renderForms,
+            );
     }
 
     public getPayload(
         action: ActionType | any,
         props?: any[],
     ): ITrackPayload | ITrackPageViewPayload | ITrackIdentifyPayload {
-
         const payload: ITrackPayload = {
             ContactId: this.storage.getUserId(),
             actionType: action,
@@ -434,23 +464,35 @@ export default class Tracker
             );
         }
 
-        if (!Utilities.isNumber(product.itemQuantity) || !product.itemQuantity) {
+        if (
+            !Utilities.isNumber(product.itemQuantity) ||
+            !product.itemQuantity
+        ) {
             product.itemQuantity = 1;
             console.warn("itemQuantity is missing, defaults to 1");
         }
 
-        if (!Utilities.isNumber(product.itemTotalPrice) || !product.itemTotalPrice) {
+        if (
+            !Utilities.isNumber(product.itemTotalPrice) ||
+            !product.itemTotalPrice
+        ) {
             product.itemTotalPrice = 0;
             console.warn("itemTotalPrice is missing, defaults to 0");
         }
 
-        if (product.itemName !== undefined && !Utilities.isString(product.itemName)) {
+        if (
+            product.itemName !== undefined &&
+            !Utilities.isString(product.itemName)
+        ) {
             throw new Error(
                 "itemName type should be a string : " + productJson,
             );
         }
 
-        if (product.itemImage !== undefined && !Utilities.isUrl(product.itemImage)) {
+        if (
+            product.itemImage !== undefined &&
+            !Utilities.isUrl(product.itemImage)
+        ) {
             throw new Error("itemImage should be a valid URL : " + productJson);
         }
 
