@@ -22,7 +22,7 @@
     "compile": "tsc"
   },
   "author": "igor ovsiannikov <garek@mail.ru>",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "devDependencies": {
     "autoprefixer": "^7.1.6",
     "awesome-typescript-loader": "^3.4.0",
