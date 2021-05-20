@@ -399,7 +399,7 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PayloadAPI {
             process.env &&
             process.env.FORMS_API &&
             this.formRequest.makeRequest(
-                formsUrl + entityId,
+                process.env.FORM_API + entityId,
                 this.formRequest.preparePayloadForSingle(
                     entityId,
                     "",
