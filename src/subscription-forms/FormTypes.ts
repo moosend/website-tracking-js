@@ -15,6 +15,8 @@ const formTypesMap = {
     4: ScrollBox,
     // Fullpage
     5: FullPage,
-}
+    // Promotion
+    6: Popup,
+};
 
 export default formTypesMap;
