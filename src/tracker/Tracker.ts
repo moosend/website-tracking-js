@@ -393,13 +393,13 @@ export default class Tracker implements IdentifyAPI, TrackingAPI, PayloadAPI {
 
         let formsUrl = staging
             ? "https://forms.moooo.co/api/form/"
-            : process.env.FORM_API;
+            : process.env.FORMS_API;
 
         process &&
             process.env &&
-            process.env.FORM_API &&
+            process.env.FORMS_API &&
             this.formRequest.makeRequest(
-                process.env.FORM_API + entityId,
+                process.env.FORMS_API + entityId,
                 this.formRequest.preparePayloadForSingle(
                     entityId,
                     "",
