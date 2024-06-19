@@ -49,7 +49,7 @@ moo.track(action: string, [{ key1: value1 }, { key2: value2 }]);
 moo.trackLogin(); // Will send LOGIN event with no context
 moo.trackPageView(); // Will send PAGE_VIEW event with { url: string }
 
-// Events known on server side
+// Events known on server side.
 
 // Will add item to order or increase the item count if already in order.
 // If there is no STARTED order it will be created
