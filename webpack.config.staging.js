@@ -3,7 +3,7 @@ const WebpackMd5Hash = require("webpack-md5-hash");
 const path = require("path");
 
 const GLOBALS = {
-    "process.env.NODE_ENV": JSON.stringify("production"),
+    "process.env.NODE_ENV": JSON.stringify("stage"),
     __DEV__: false,
     "process.env.API_URL": JSON.stringify("https://t.stat-track-staging.com"),
     "process.env.FORMS_API": JSON.stringify(
